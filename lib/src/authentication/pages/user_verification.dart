@@ -10,6 +10,10 @@ class VerificationScreen extends StatefulWidget {
 class _VerificationScreenState extends State<VerificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: FloatingActionButton(onPressed: () {
+        Navigator.pop(context);
+      }),
+    );
   }
 }

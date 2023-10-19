@@ -6,9 +6,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // use alternate method to return this
   await Supabase.initialize(
-      url: 'https://chmtrezjfdbranykodpp.supabase.co',
+      url: 'https://odlnrfizgyyjnipouhct.supabase.co',
       anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNobXRyZXpqZmRicmFueWtvZHBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY0OTcyODUsImV4cCI6MjAxMjA3MzI4NX0.3LllHtTHpNEe5V6uqk43oTylazVncs9a1Ek1LVzVpaM');
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kbG5yZml6Z3l5am5pcG91aGN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc2MjY1OTIsImV4cCI6MjAxMzIwMjU5Mn0.I7J1ijBoasLDeYO7cBk_CTTk9FbKjrJ-yCJQ4erDdKQ');
   runApp(const MyApp());
 }
 

@@ -39,6 +39,7 @@ dependencies:
   csc_picker: ^0.2.7
   supabase_flutter: ^1.10.22
   image_picker: ^1.0.4
+  connectivity_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:

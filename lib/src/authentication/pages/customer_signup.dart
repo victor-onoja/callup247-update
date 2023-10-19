@@ -1,10 +1,12 @@
 import 'package:callup247/main.dart';
+import 'package:callup247/src/authentication/pages/user_verification.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class CustomerSignUpScreen extends StatefulWidget {
   const CustomerSignUpScreen({super.key});
@@ -14,12 +16,11 @@ class CustomerSignUpScreen extends StatefulWidget {
 }
 
 class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
-  // use case pick image
+  // 01 - use case pick image
+
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
-
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -27,78 +28,140 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     }
   }
 
-  // use case upload image
+  // 02 - use case upload image
+
   Future<void> _uploadImage() async {
-    final filename = _fullnameController.text;
+    final filename = _fullnameController.text.trim();
     try {
+      // print('upload image start');
       await supabase.storage.from('avatars').upload(
             filename,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
       if (mounted) {
-        print('img uploaded');
+        // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error: ${error.message}');
+      // print('postgres error: ${error.message}');
     } catch (error) {
-      print('Unexpected error');
+      // print(error);
     }
   }
 
-  // use case sign up
-  Future<void> _signup(BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
-    final fullname = _fullnameController.text.trim();
-    final phonenumber = _phonenumberController.text.trim();
+  // 03 - use case create user
+
+  Future<void> _createUser(BuildContext context) async {
     final emailaddress = _emailaddressController.text.trim();
+    final password = _passwordController.text.trim();
+    try {
+      // print('create user start');
+      setState(() {
+        loading = true;
+      });
+      await supabase.auth.signUp(password: password, email: emailaddress);
+      if (mounted) {
+        // print('create user success');
+      }
+    } on PostgrestException catch (error) {
+      // print(error.message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      setState(() {
+        loading = false;
+      });
+    } catch (error) {
+      // print(error);
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } finally {
+      if (mounted) {
+        // print('finished');
+      }
+    }
+  }
+
+  // 04 - use case update profiles table
+
+  Future<void> _updateProfile(BuildContext context) async {
+    final fullname = _fullnameController.text.trim();
     final country = countryValue;
     final state = stateValue;
     final city = cityValue;
     final homeaddress = _homeadressController.text.trim();
-    final displaypicture =
-        supabase.storage.from('avatars').getPublicUrl(_fullnameController.text);
-
+    final displaypicture = supabase.storage
+        .from('avatars')
+        .getPublicUrl(_fullnameController.text.trim());
+    final phonenumber = _phonenumberController.text.trim();
+    final user = supabase.auth.currentUser;
     final details = {
+      'id': user!.id,
+      'updated_at': DateTime.now().toIso8601String(),
       'full_name': fullname,
-      'phone_number': phonenumber,
-      'email_address': emailaddress,
       'country': country,
       'state': state,
       'city': city,
       'home_address': homeaddress,
-      'display_picture': displaypicture
+      'avatar_url': displaypicture,
+      'phone_number': phonenumber
     };
-
+    // print('update profile start');
     try {
-      print(0);
-      await supabase.from('customers').insert(details);
+      await supabase.from('profiles').upsert(details);
       if (mounted) {
-        print('1');
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Welcome to callup247'),
-          backgroundColor: Colors.greenAccent,
+        // print('update profile successful');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Welcome to callup247!!',
+            style:
+                responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+          ),
+          backgroundColor: Colors.green,
         ));
       }
     } on PostgrestException catch (error) {
-      print(error.message);
+      // print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: const Duration(seconds: 5),
-        content: Text(error.message),
+        content: Text(
+          'Server Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
         backgroundColor: Colors.red,
       ));
+      setState(() {
+        loading = false;
+      });
     } catch (error) {
-      print('3');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Unexpected Error Occured'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
         backgroundColor: Colors.red,
       ));
+      setState(() {
+        loading = false;
+      });
     } finally {
-      print(4);
       if (mounted) {
-        print('5');
+        // print('update profile finished');
         setState(() {
           loading = false;
         });
@@ -106,7 +169,19 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     }
   }
 
-  // variables
+  // 05 - use case check network
+
+  Future<bool> checkInternetConnectivity() async {
+    try {
+      final response = await http.get(Uri.parse('https://www.google.com'));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // 06 - variables
+
   bool isPasswordVisible = false;
   String? countryValue = "";
   String? stateValue = "";
@@ -116,20 +191,24 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   final _phonenumberController = TextEditingController();
   final _emailaddressController = TextEditingController();
   final _homeadressController = TextEditingController();
+  final _passwordController = TextEditingController();
   var loading = false;
   final _formKey = GlobalKey<FormState>();
 
-// dispose
+// 07 - dispose
+
   @override
   void dispose() {
     _emailaddressController.dispose();
     _fullnameController.dispose();
     _homeadressController.dispose();
     _phonenumberController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  // build method
+  // 08 - build method
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,6 +243,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
               child: Column(
                 children: [
                   // full name
+
                   TextFormField(
                     controller: _fullnameController,
                     cursorColor: Colors.white,
@@ -182,7 +262,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       return null;
                     },
                   ),
+
                   // Phone Number
+
                   TextFormField(
                     controller: _phonenumberController,
                     cursorColor: Colors.white,
@@ -201,7 +283,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       // Phone number regex pattern (allowing only digits, optional '+' at the beginning)
                       const phonePattern = r'^\+?[0-9]+$';
                       final regExp = RegExp(phonePattern);
-
                       if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid phone number';
                       }
@@ -209,7 +290,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       return null;
                     },
                   ),
+
                   // email address
+
                   TextFormField(
                     controller: _emailaddressController,
                     cursorColor: Colors.white,
@@ -229,7 +312,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       const emailPattern =
                           r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
                       final regExp = RegExp(emailPattern);
-
                       if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
@@ -238,7 +320,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                     },
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
                   // Country Picker
+
                   CSCPicker(
                     flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
                     dropdownDecoration: BoxDecoration(
@@ -271,7 +355,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       });
                     },
                   ),
+
                   // home address
+
                   TextFormField(
                     controller: _homeadressController,
                     cursorColor: Colors.white,
@@ -291,8 +377,61 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       return null; // Return null to indicate a valid input.
                     },
                   ),
+
+                  // Password
+
+                  TextFormField(
+                    controller: _passwordController,
+                    cursorColor: Colors.white,
+                    style: responsiveTextStyle(context, 16, Colors.white, null),
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle:
+                          responsiveTextStyle(context, 14, Colors.black, null),
+                      focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    obscureText: !isPasswordVisible,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      // Password strength validation criteria
+                      const lengthCriteria = 8; // Minimum length requirement
+                      // final uppercaseCriteria = RegExp(r'[A-Z]');
+                      // final lowercaseCriteria = RegExp(r'[a-z]');
+                      // final digitCriteria = RegExp(r'[0-9]');
+                      // final specialCharCriteria =
+                      //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+                      if (value.length < lengthCriteria) {
+                        return 'Password must be at least $lengthCriteria characters long';
+                      }
+                      // if (!uppercaseCriteria.hasMatch(value) ||
+                      //     !lowercaseCriteria.hasMatch(value) ||
+                      //     !digitCriteria.hasMatch(value) ||
+                      //     !specialCharCriteria.hasMatch(value)) {
+                      //   return 'Password must include uppercase, lowercase, digit, and special characters';
+                      // }
+                      return null;
+                    },
+                  ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
                   // display picture
+
                   GestureDetector(
                     onTap: () {
                       _pickImage();
@@ -321,16 +460,49 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+
+                  // sign up button
+
                   loading
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
-                          onPressed: () {
+                          onPressed: () async {
+                            print('test for network');
+                            // Check network connectivity
+                            bool isConnected =
+                                await checkInternetConnectivity();
+                            if (!isConnected) {
+                              // Show a snackbar for no network
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'No internet connection. Please check your network settings.',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              return; // Exit the function if there's no network
+                            }
                             // Add your sign-up logic here.
                             if (_formKey.currentState!.validate()) {
-                              _uploadImage();
-                              _signup(context);
+                              // Run _createUser and wait for it to finish
+                              await _createUser(context);
+                              // Only run _uploadImage if _createUser has finished successfully
+                              if (_image != null) {
+                                await _uploadImage();
+                              }
+                              // Now run _updateProfile
+                              await _updateProfile(context);
+                              await Future.delayed(const Duration(seconds: 2));
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const VerificationScreen(),
+                                ),
+                              );
                             }
                           },
                           child: Text(
