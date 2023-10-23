@@ -73,7 +73,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
                     onTap: () {
                       // Delay navigation by 300 milliseconds (adjust as needed)
                       Future.delayed(const Duration(milliseconds: 300), () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 const GuestHomePage(),

@@ -4,7 +4,7 @@ import 'src/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // use alternate method to return this
+  // todo: use alternate method to return this
   await Supabase.initialize(
       url: 'https://odlnrfizgyyjnipouhct.supabase.co',
       anonKey:

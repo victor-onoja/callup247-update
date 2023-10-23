@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_verification.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
@@ -5,6 +7,7 @@ import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -103,11 +106,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     final country = countryValue;
     final state = stateValue;
     final city = cityValue;
-    final homeaddress = _homeadressController.text.trim();
     final displaypicture = supabase.storage
         .from('avatars')
         .getPublicUrl(_fullnameController.text.trim());
-    final phonenumber = _phonenumberController.text.trim();
     final user = supabase.auth.currentUser;
     final details = {
       'id': user!.id,
@@ -116,9 +117,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       'country': country,
       'state': state,
       'city': city,
-      'home_address': homeaddress,
       'avatar_url': displaypicture,
-      'phone_number': phonenumber
     };
     // print('update profile start');
     try {
@@ -169,6 +168,37 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     }
   }
 
+  // 05 - use case save user information locally
+  Future<void> _saveProfileLocally() async {
+    final fullname = _fullnameController.text.trim();
+    final emailaddress = _emailaddressController.text.trim();
+    final country = countryValue as String;
+    final state = stateValue as String;
+    final city = cityValue as String;
+    final displaypicture = supabase.storage
+        .from('avatars')
+        .getPublicUrl(_fullnameController.text.trim());
+
+    // Create a map to represent the user's profile data
+    final userProfile = {
+      'fullname': fullname,
+      'email': emailaddress,
+      'country': country,
+      'state': state,
+      'city': city,
+      'displaypicture': displaypicture,
+    };
+
+    // Encode the map to JSON and save it as a single string
+    final jsonString = json.encode(userProfile);
+
+    // Obtain shared preferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Set the JSON string in SharedPreferences
+    await prefs.setString('userprofile', jsonString);
+  }
+
   // 05 - use case check network
 
   Future<bool> checkInternetConnectivity() async {
@@ -183,15 +213,15 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   // 06 - variables
 
   bool isPasswordVisible = false;
+  bool isPasswordConfirmVisible = false;
   String? countryValue = "";
   String? stateValue = "";
   String? cityValue = "";
   File? _image;
   final _fullnameController = TextEditingController();
-  final _phonenumberController = TextEditingController();
   final _emailaddressController = TextEditingController();
-  final _homeadressController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
   var loading = false;
   final _formKey = GlobalKey<FormState>();
 
@@ -201,8 +231,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   void dispose() {
     _emailaddressController.dispose();
     _fullnameController.dispose();
-    _homeadressController.dispose();
-    _phonenumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -250,43 +278,17 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                     textCapitalization: TextCapitalization.words,
                     style: responsiveTextStyle(context, 16, Colors.white, null),
                     decoration: InputDecoration(
-                        labelText: 'Full Name',
+                        labelText: 'First & Last Name',
                         labelStyle: responsiveTextStyle(
                             context, 14, Colors.black87, null),
                         focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.black87))),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Please enter your full name';
+                        return 'Please enter your first and last name';
+                      } else if (value.split(' ').length < 2) {
+                        return 'Please enter both your first and last name';
                       }
-                      return null;
-                    },
-                  ),
-
-                  // Phone Number
-
-                  TextFormField(
-                    controller: _phonenumberController,
-                    cursorColor: Colors.white,
-                    keyboardType: TextInputType.phone,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black87, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87))),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      // Phone number regex pattern (allowing only digits, optional '+' at the beginning)
-                      const phonePattern = r'^\+?[0-9]+$';
-                      final regExp = RegExp(phonePattern);
-                      if (!regExp.hasMatch(value)) {
-                        return 'Please enter a valid phone number';
-                      }
-                      // You can add more specific validation logic here if needed.
                       return null;
                     },
                   ),
@@ -356,26 +358,15 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                     },
                   ),
 
-                  // home address
-
-                  TextFormField(
-                    controller: _homeadressController,
-                    cursorColor: Colors.white,
-                    textCapitalization: TextCapitalization.words,
-                    keyboardType: TextInputType.streetAddress,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                        labelText: 'Home Address',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black87, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87))),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your home address';
-                      }
-                      return null; // Return null to indicate a valid input.
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '-- this information is used to help find service providers close to you :)',
+                        style: responsiveTextStyle(
+                            context, 8, Colors.blueGrey, null),
+                      ),
+                    ],
                   ),
 
                   // Password
@@ -428,6 +419,47 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                       return null;
                     },
                   ),
+
+                  // Confirm Password
+
+                  TextFormField(
+                    controller: _confirmpasswordController,
+                    cursorColor: Colors.white,
+                    style: responsiveTextStyle(context, 16, Colors.white, null),
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle:
+                          responsiveTextStyle(context, 14, Colors.black, null),
+                      focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isPasswordConfirmVisible =
+                                !isPasswordConfirmVisible;
+                          });
+                        },
+                        child: Icon(
+                          isPasswordConfirmVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    obscureText: !isPasswordConfirmVisible,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please re-type your password';
+                      }
+                      // todo: confiirm password validation logic
+                      if (value != _passwordController.text) {
+                        return 'passwords must match';
+                      }
+
+                      return null;
+                    },
+                  ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
 
                   // display picture
@@ -461,6 +493,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
+                  // todo: add terms and conditions document, agreement
+
                   // sign up button
 
                   loading
@@ -488,21 +522,57 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                             }
                             // Add your sign-up logic here.
                             if (_formKey.currentState!.validate()) {
-                              // Run _createUser and wait for it to finish
-                              await _createUser(context);
-                              // Only run _uploadImage if _createUser has finished successfully
-                              if (_image != null) {
-                                await _uploadImage();
+                              setState(() {
+                                loading = true;
+                              });
+
+                              try {
+                                // Run _createUser and wait for it to finish
+                                await _createUser(context);
+
+                                // Only run _uploadImage if _createUser has finished successfully
+                                if (_image != null) {
+                                  await _uploadImage();
+                                }
+
+                                // Update profile locally and remotely
+                                await _saveProfileLocally();
+                                await _updateProfile(context);
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Welcome to callup247!!',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ));
+
+                                // Delay and navigate
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const VerificationScreen(),
+                                  ),
+                                );
+                              } catch (error) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'An error occurred. Please try again later.',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                              } finally {
+                                setState(() {
+                                  loading = false;
+                                });
                               }
-                              // Now run _updateProfile
-                              await _updateProfile(context);
-                              await Future.delayed(const Duration(seconds: 2));
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const VerificationScreen(),
-                                ),
-                              );
                             }
                           },
                           child: Text(
