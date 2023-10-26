@@ -1,25 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../profile/pages/guest_profile_page.dart';
 import '../../responsive_text_styles.dart';
 import '../widgets/service_provider_card.dart';
 
-class GuestHomePage extends StatefulWidget {
-  const GuestHomePage({super.key});
+class CustomerHomePage extends StatefulWidget {
+  const CustomerHomePage({super.key});
 
   @override
-  State<GuestHomePage> createState() => _GuestHomePageState();
+  State<CustomerHomePage> createState() => _CustomerHomePageState();
 }
 
-class _GuestHomePageState extends State<GuestHomePage>
+class _CustomerHomePageState extends State<CustomerHomePage>
     with SingleTickerProviderStateMixin {
-  // init
-  @override
-  void initState() {
-    super.initState();
+  // use case initialize data
+  Future<void> _initializeData() async {
     _acontroller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 8), // Adjust the duration as needed
     )..repeat(); // This will make the animation loop
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+      // To access specific fields like full name and email address:
+      final userFullName = userProfileMap['fullname'];
+      final userPfp = userProfileMap['displaypicture'];
+      setState(() {
+        fullname = userFullName;
+        pfp = userPfp;
+      });
+      // You can now use fullName and emailAddress as needed.
+    } else {
+      // Handle the case where no user profile data is found in SharedPreferences.
+      // error in signup, please go back to signup ==> snackbar
+      print('no data found');
+    }
+  }
+
+  // init
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
   }
 
   // dispose
@@ -37,6 +62,8 @@ class _GuestHomePageState extends State<GuestHomePage>
   String searchchoice = '';
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
+  String fullname = '';
+  String pfp = '';
 
   // services list
   List<String> servicesList = [
@@ -396,6 +423,7 @@ class _GuestHomePageState extends State<GuestHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -430,9 +458,8 @@ class _GuestHomePageState extends State<GuestHomePage>
                           Row(
                             children: [
                               // customer pfp
-                              const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/guest_dp.png'),
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(pfp),
                                 radius: 30,
                               ),
                               // end of customer pfp
@@ -442,17 +469,17 @@ class _GuestHomePageState extends State<GuestHomePage>
                                     PopupMenuItem(
                                       textStyle: responsiveTextStyle(context,
                                           16, Colors.black, FontWeight.bold),
-                                      value: 'editProfile',
+                                      value: 'changePfp',
                                       child: const Text(
-                                        'Edit Profile',
+                                        'Change Pfp',
                                       ),
                                     ),
                                     PopupMenuItem(
                                       textStyle: responsiveTextStyle(context,
                                           16, Colors.black, FontWeight.bold),
-                                      value: 'theme',
+                                      value: 'editProfile',
                                       child: const Text(
-                                        'Theme',
+                                        'Edit Profile',
                                       ),
                                     ),
                                     PopupMenuItem(
@@ -481,16 +508,14 @@ class _GuestHomePageState extends State<GuestHomePage>
                                     // Navigate to the edit profile screen
                                   } else if (value == 'theme') {
                                     // Navigate to the theme screen
-                                  } else if (value == 'signOut') {
-                                    Navigator.pop(context);
-                                  }
+                                  } // Add more cases for other menu items
                                 },
                               ),
                             ],
                           ),
                           // customer name
                           Text(
-                            'guestuser',
+                            fullname,
                             style: responsiveTextStyle(
                                 context, 16, Colors.white, FontWeight.bold),
                           ),
@@ -610,47 +635,62 @@ class _GuestHomePageState extends State<GuestHomePage>
                             SizedBox(
                                 height: MediaQuery.of(context).size.height *
                                     0.0125),
-                            // saved searches
-                            ServiceProviderCard(
-                              saved: true,
-                              name: 'John Doe',
-                              bio:
-                                  'Experienced plumber with 5+ years of experience in fixing pipes.',
-                              image: 'assets/plumber.jpg',
-                              onPressedButton1: () {
-                                // Implement the action for Button 1 here.
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const GuestProfilePage(),
-                                  ),
-                                );
-                              },
-
-                              isOnline:
-                                  true, // Set whether the service provider is online or offline.
-                            ),
+                            Image.asset('assets/search.png'),
                             SizedBox(
                                 height: MediaQuery.of(context).size.height *
                                     0.0125),
-                            ServiceProviderCard(
-                              saved: true,
-                              name: 'Senior Centy',
-                              bio:
-                                  'Experienced barber with 5+ years of experience in cutting hair.',
-                              image: 'assets/barber.jpg',
-                              onPressedButton1: () {
-                                // Implement the action for Button 1 here.
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const GuestProfilePage(),
-                                  ),
-                                );
-                              },
-                              isOnline:
-                                  false, // Set whether the service provider is online or offline.
-                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'No saved search yet?\nStart searching now',
+                                  style: responsiveTextStyle(
+                                      context, 16, Colors.black, null),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            )
+                            // saved searches
+                            // ServiceProviderCard(
+                            //   saved: true,
+                            //   name: 'John Doe',
+                            //   bio:
+                            //       'Experienced plumber with 5+ years of experience in fixing pipes.',
+                            //   image: 'assets/plumber.jpg',
+                            //   onPressedButton1: () {
+                            //     // Implement the action for Button 1 here.
+                            //     Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (BuildContext context) =>
+                            //             const GuestProfilePage(),
+                            //       ),
+                            //     );
+                            //   },
+
+                            //   isOnline:
+                            //       true, // Set whether the service provider is online or offline.
+                            // ),
+                            // SizedBox(
+                            //     height: MediaQuery.of(context).size.height *
+                            //         0.0125),
+                            // ServiceProviderCard(
+                            //   saved: true,
+                            //   name: 'Senior Centy',
+                            //   bio:
+                            //       'Experienced barber with 5+ years of experience in cutting hair.',
+                            //   image: 'assets/barber.jpg',
+                            //   onPressedButton1: () {
+                            //     // Implement the action for Button 1 here.
+                            //     Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (BuildContext context) =>
+                            //             const GuestProfilePage(),
+                            //       ),
+                            //     );
+                            //   },
+                            //   isOnline:
+                            //       false, // Set whether the service provider is online or offline.
+                            // ),
                             // end of saved search
                           ],
                         )),

@@ -4,6 +4,7 @@ import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_verification.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:csc_picker/csc_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -99,12 +100,35 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     }
   }
 
+  // 0? - use case signin user
+
+  Future<void> _signInUser() async {
+    final emailaddress = _emailaddressController.text.trim();
+
+    try {
+      await supabase.auth.signInWithOtp(
+        email: emailaddress,
+        emailRedirectTo:
+            kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
+      );
+      if (mounted) {
+        print('success');
+      }
+    } on PostgrestException catch (error) {
+      print(error.message);
+    } catch (error) {
+      print(error);
+    } finally {
+      if (mounted) {}
+    }
+  }
+
   // 04 - use case update profiles table
 
   Future<void> _updateProfile(BuildContext context) async {
     final fullname = _fullnameController.text.trim();
-    final country = countryValue;
-    final state = stateValue;
+    final country = countryValue as String;
+    final state = stateValue as String;
     final city = cityValue;
     final displaypicture = supabase.storage
         .from('avatars')
@@ -123,7 +147,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        // print('update profile successful');
+        print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
@@ -134,7 +158,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         ));
       }
     } on PostgrestException catch (error) {
-      // print(error.message);
+      print(error.message + 'update profile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -147,6 +171,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
     } catch (error) {
+      print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -169,12 +194,13 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   }
 
   // 05 - use case save user information locally
+
   Future<void> _saveProfileLocally() async {
     final fullname = _fullnameController.text.trim();
     final emailaddress = _emailaddressController.text.trim();
     final country = countryValue as String;
     final state = stateValue as String;
-    final city = cityValue as String;
+    final city = cityValue;
     final displaypicture = supabase.storage
         .from('avatars')
         .getPublicUrl(_fullnameController.text.trim());
@@ -538,6 +564,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                 // Update profile locally and remotely
                                 await _saveProfileLocally();
                                 await _updateProfile(context);
+                                await _signInUser();
 
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(

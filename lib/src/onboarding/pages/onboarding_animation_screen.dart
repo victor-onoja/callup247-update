@@ -16,16 +16,18 @@ class OnboardingAnimationScreen extends StatefulWidget {
 
 class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
     with TickerProviderStateMixin {
+  // variables
   int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
   late Timer _timer; // Declare a Timer object
 
+  // init state
   @override
   void initState() {
     super.initState();
 
     // Start the timer to automatically move to the next page after 5 seconds
-    _timer = Timer(const Duration(seconds: 8), () {
+    _timer = Timer(const Duration(seconds: 4), () {
       _moveToNextPage();
     });
 
@@ -35,6 +37,7 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
     });
   }
 
+  // dispose
   @override
   void dispose() {
     // Dispose of the timer when the screen is disposed
@@ -42,6 +45,7 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
     super.dispose();
   }
 
+// use case: ???
   void _moveToNextPage() {
     if (_currentPage < 2) {
       // Check if it's not the last page
