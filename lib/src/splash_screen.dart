@@ -1,5 +1,9 @@
+import 'package:callup247/main.dart';
+import 'package:callup247/src/home/pages/customer_home.dart';
+import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'onboarding/pages/onboarding_animation_screen.dart';
+import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,14 +50,58 @@ class SplashScreenState extends State<SplashScreen>
     // After the animations, navigate to the next screen
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (BuildContext context) =>
-                const OnboardingAnimationScreen(),
-          ),
-        );
+        _redirect();
       }
     });
+  }
+
+  // 05 - use case check network
+
+  Future<bool> checkInternetConnectivity() async {
+    try {
+      final response = await http.get(Uri.parse('https://www.google.com'));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // use case splash navigation
+
+  Future<void> _redirect() async {
+    bool isConnected = await checkInternetConnectivity();
+    if (!isConnected) {
+      // Show a snackbar for no network
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 10),
+        content: Text(
+          'No internet connection. Please check your network settings.',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      return; // Exit the function if there's no network
+    }
+    await Future.delayed(Duration.zero);
+    if (!mounted) {
+      return;
+    }
+
+    final session = supabase.auth.currentSession;
+    if (session != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => const CustomerHomePage(),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => const OnboardingAnimationScreen(),
+        ),
+      );
+    }
   }
 
   @override

@@ -1,7 +1,11 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:callup247/main.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../profile/pages/guest_profile_page.dart';
 import '../../responsive_text_styles.dart';
 import '../widgets/service_provider_card.dart';
@@ -16,6 +20,7 @@ class CustomerHomePage extends StatefulWidget {
 class _CustomerHomePageState extends State<CustomerHomePage>
     with SingleTickerProviderStateMixin {
   // use case initialize data
+
   Future<void> _initializeData() async {
     _acontroller = AnimationController(
       vsync: this,
@@ -37,6 +42,91 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       // Handle the case where no user profile data is found in SharedPreferences.
       // error in signup, please go back to signup ==> snackbar
       print('no data found');
+    }
+  }
+
+  // use case update user information locally (pfp change)
+
+  // Future<void> _updateProfileLocallyPfpChange() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final userProfileJson = prefs.getString('userprofile');
+  //   if (userProfileJson != null) {
+  //     final userProfileMap = json.decode(userProfileJson);
+  //     userProfileMap['displaypicture'] =
+  //         supabase.storage.from('avatars').getPublicUrl(fullname);
+  //     newPfp = userProfileMap['displaypicture'];
+  //   } else {}
+  // }
+
+  // 05 - use case check valid image
+
+  Future<bool> checkPfpValidity() async {
+    try {
+      final response = await http.get(Uri.parse(pfp));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // use case display userpfp
+
+  Future<ImageProvider> _pfpImageProvider(String imageUrl) async {
+    // Check if the image URL is valid
+    bool isImageValid = await checkPfpValidity();
+
+    if (isImageValid) {
+      // Image URL is valid, return the NetworkImage
+      return NetworkImage(imageUrl);
+    } else {
+      // Image URL is not valid, return a placeholder image using AssetImage
+      return const AssetImage('assets/guest_dp.png');
+    }
+  }
+
+  // 01 - use case pick image
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  // 02 - use case upload image
+
+  Future<void> _uploadImage() async {
+    final filename = fullname;
+    try {
+      // print('upload image start');
+      // print(filename);
+      // print(_image);
+      await supabase.storage.from('avatars').update(
+            filename,
+            _image!,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+          );
+      if (mounted) {
+        // print('img uploaded');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Profile picture updated successfully :)',
+            style:
+                responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+          ),
+          backgroundColor: Colors.green,
+        ));
+        setState(() {
+          pfpChange = true;
+        });
+      }
+    } on PostgrestException catch (error) {
+      // print('postgres error: ${error.message}');
+    } catch (error) {
+      // print(error);
     }
   }
 
@@ -64,6 +154,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   bool isSearching = false; // Initially the user is not searching
   String fullname = '';
   String pfp = '';
+  File? _image;
+  bool pfpChange = false;
 
   // services list
   List<String> servicesList = [
@@ -458,10 +550,32 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                           Row(
                             children: [
                               // customer pfp
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(pfp),
-                                radius: 30,
-                              ),
+                              pfpChange
+                                  ? CircleAvatar(
+                                      backgroundImage: FileImage(_image!),
+                                      radius: 30,
+                                    )
+                                  :
+                                  // Wrap your CircleAvatar with a FutureBuilder
+                                  FutureBuilder<ImageProvider>(
+                                      future: _pfpImageProvider(pfp),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          // If the future is complete, you can use the ImageProvider
+                                          // print('object');
+
+                                          return CircleAvatar(
+                                            backgroundImage: snapshot.data,
+                                            radius: 30,
+                                          );
+                                        } else {
+                                          // While the future is loading, you can show a placeholder or loading indicator
+                                          return const CircularProgressIndicator(); // or any other placeholder widget
+                                        }
+                                      },
+                                    ),
+
                               // end of customer pfp
                               PopupMenuButton(
                                 itemBuilder: (BuildContext context) {
@@ -469,17 +583,25 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     PopupMenuItem(
                                       textStyle: responsiveTextStyle(context,
                                           16, Colors.black, FontWeight.bold),
-                                      value: 'changePfp',
+                                      value: 'changeDisplayPicture',
                                       child: const Text(
-                                        'Change Pfp',
+                                        'Change Display Picture',
                                       ),
                                     ),
                                     PopupMenuItem(
                                       textStyle: responsiveTextStyle(context,
                                           16, Colors.black, FontWeight.bold),
-                                      value: 'editProfile',
+                                      value: 'editLocation',
                                       child: const Text(
-                                        'Edit Profile',
+                                        'Edit Location',
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      textStyle: responsiveTextStyle(context,
+                                          16, Colors.black, FontWeight.bold),
+                                      value: 'becomeAServiceProvider',
+                                      child: const Text(
+                                        'Become a Service Provider',
                                       ),
                                     ),
                                     PopupMenuItem(
@@ -504,8 +626,81 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                 },
                                 onSelected: (value) {
                                   // Handle the selected menu item (navigate to the corresponding screen)
-                                  if (value == 'editProfile') {
-                                    // Navigate to the edit profile screen
+                                  if (value == 'changeDisplayPicture') {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Please Pick a new Image'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      pfpChange = false;
+                                                    });
+                                                    _pickImage();
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.camera_alt,
+                                                    size: 100,
+                                                    color: Colors.black54,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                    '1) Tap the camera icon to pick an image\n2) Tap the refresh button to confirm your image before uploading :)')
+                                              ],
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    if (_image != null) {
+                                                      Navigator.pop(context);
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: const Text(
+                                                                  'Here\'s your image :)'),
+                                                              content:
+                                                                  Image.file(
+                                                                      _image!),
+                                                              actions: [
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    _uploadImage();
+
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: const Text(
+                                                                      'Upload'),
+                                                                ),
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Cancel'))
+                                                              ],
+                                                            );
+                                                          });
+                                                    }
+                                                  },
+                                                  child: const Text('Refresh')),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'))
+                                            ],
+                                          );
+                                        });
                                   } else if (value == 'theme') {
                                     // Navigate to the theme screen
                                   } // Add more cases for other menu items

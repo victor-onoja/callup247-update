@@ -11,6 +11,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -25,11 +26,25 @@ class OnboardingChoiceScreen extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: 32.0,
-                vertical: MediaQuery.of(context).size.height * 0.15),
+                vertical: MediaQuery.of(context).size.height * 0.1),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(
+                        Icons.login,
+                        color: Colors.black54,
+                      ),
+                      label: const Text('Already have an account? Login here'),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 Text(
                   'Use this app as a:',
                   style: responsiveTextStyle(context, 28, null, null),

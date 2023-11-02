@@ -546,6 +546,19 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                               ));
                               return; // Exit the function if there's no network
                             }
+
+                            if (_image == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'Please add a display picture :)',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              return;
+                            }
                             // Add your sign-up logic here.
                             if (_formKey.currentState!.validate()) {
                               setState(() {
