@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/main.dart';
+import 'package:callup247/src/authentication/pages/user_login.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,18 +47,75 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // use case update user information locally (pfp change)
+  // use case update user information online and locally (location change)
+  Future<void> _updateUserLocation() async {
+    final country = countryValue as String;
+    final state = stateValue as String;
+    final city = cityValue;
+    final displaypicture =
+        supabase.storage.from('avatars').getPublicUrl(fullname);
+    final user = supabase.auth.currentUser;
+    final details = {
+      'id': user!.id,
+      'updated_at': DateTime.now().toIso8601String(),
+      'full_name': fullname,
+      'country': country,
+      'state': state,
+      'city': city,
+      'avatar_url': displaypicture
+    };
 
-  // Future<void> _updateProfileLocallyPfpChange() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final userProfileJson = prefs.getString('userprofile');
-  //   if (userProfileJson != null) {
-  //     final userProfileMap = json.decode(userProfileJson);
-  //     userProfileMap['displaypicture'] =
-  //         supabase.storage.from('avatars').getPublicUrl(fullname);
-  //     newPfp = userProfileMap['displaypicture'];
-  //   } else {}
-  // }
+    try {
+      await supabase.from('profiles').upsert(details);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Location Updated Successfully :)',
+            style:
+                responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+          ),
+          backgroundColor: Colors.green,
+        ));
+      }
+    } on PostgrestException catch (error) {
+      print(error.message + 'update profile');
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } finally {}
+
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+
+      userProfileMap['country'] = country;
+      userProfileMap['state'] = state;
+      userProfileMap['city'] = city;
+
+      // Convert the updated user data back to a JSON string
+      final updatedUserProfileJson = json.encode(userProfileMap);
+
+      // Save the updated user data back to shared preferences
+      await prefs.setString('userprofile', updatedUserProfileJson);
+    } else {}
+  }
 
   // 05 - use case check valid image
 
@@ -130,6 +189,39 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
+  // use case sign out
+
+  Future<void> _signOut() async {
+    try {
+      await supabase.auth.signOut();
+      if (mounted) {
+        // navigate
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => const SignIn()));
+      }
+    } on PostgrestException catch (error) {
+      print(error.message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
   // init
   @override
   void initState() {
@@ -156,6 +248,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   String pfp = '';
   File? _image;
   bool pfpChange = false;
+  String? countryValue = "";
+  String? stateValue = "";
+  String? cityValue = "";
 
   // services list
   List<String> servicesList = [
@@ -557,6 +652,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     )
                                   :
                                   // Wrap your CircleAvatar with a FutureBuilder
+                                  // todo: cache the image
                                   FutureBuilder<ImageProvider>(
                                       future: _pfpImageProvider(pfp),
                                       builder: (context, snapshot) {
@@ -701,9 +797,83 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                             ],
                                           );
                                         });
-                                  } else if (value == 'theme') {
-                                    // Navigate to the theme screen
-                                  } // Add more cases for other menu items
+                                  } else if (value == 'editLocation') {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Set your new Location'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CSCPicker(
+                                                  flagState: CountryFlag
+                                                      .SHOW_IN_DROP_DOWN_ONLY,
+                                                  dropdownDecoration:
+                                                      BoxDecoration(
+                                                          color:
+                                                              const Color(
+                                                                  0xFF13CAF1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6)),
+                                                  disabledDropdownDecoration:
+                                                      BoxDecoration(
+                                                          color: const Color(
+                                                              0xFF039fdc),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6)),
+                                                  selectedItemStyle:
+                                                      responsiveTextStyle(
+                                                          context,
+                                                          14,
+                                                          Colors.black,
+                                                          null),
+                                                  onCountryChanged: (value) {
+                                                    // Handle the selected country value here.
+                                                    setState(() {
+                                                      // Store the selected country value in a variable.
+                                                      countryValue = value;
+                                                    });
+                                                  },
+                                                  onStateChanged: (value) {
+                                                    // Handle the selected state value here.
+                                                    setState(() {
+                                                      // Store the selected state value in a variable.
+                                                      stateValue = value;
+                                                    });
+                                                  },
+                                                  onCityChanged: (value) {
+                                                    // Handle the selected city value here.
+                                                    setState(() {
+                                                      // Store the selected city value in a variable.
+                                                      cityValue = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    _updateUserLocation();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Confirm')),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'))
+                                            ],
+                                          );
+                                        });
+                                  } else if (value == 'signOut') {
+                                    _signOut();
+                                  }
+                                  // Add more cases for other menu items
                                 },
                               ),
                             ],

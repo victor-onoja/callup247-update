@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:callup247/main.dart';
+import 'package:callup247/src/authentication/pages/forgot_password.dart';
 import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +10,19 @@ import '../../responsive_text_styles.dart';
 import 'package:pinput/pinput.dart';
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  final bool isPasswordReset;
+  const VerificationScreen({super.key, required this.isPasswordReset});
 
   @override
-  State<VerificationScreen> createState() => _VerificationScreenState();
+  State<VerificationScreen> createState() =>
+      _VerificationScreenState(isPasswordReset);
 }
 
 class _VerificationScreenState extends State<VerificationScreen>
     with SingleTickerProviderStateMixin {
+  bool isPasswordReset;
+
+  _VerificationScreenState(this.isPasswordReset);
   // use case verify user
 
   Future<void> _verifyUser(BuildContext context) async {
@@ -41,11 +47,19 @@ class _VerificationScreenState extends State<VerificationScreen>
         setState(() {
           loading = false;
         });
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (BuildContext context) => const CustomerHomePage(),
-          ),
-        );
+        if (isPasswordReset) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const ForgotPasswordScreen(),
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const CustomerHomePage(),
+            ),
+          );
+        }
       }
     } on PostgrestException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -261,7 +275,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                           ),
                           label: Text('Resend OTP',
                               style: linkTappedResendOTP
-                                  ? TextStyle(color: Colors.black45)
+                                  ? const TextStyle(color: Colors.black45)
                                   : null),
                         ),
                       ],

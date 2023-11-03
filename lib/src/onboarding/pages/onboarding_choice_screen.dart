@@ -1,4 +1,5 @@
 import 'package:callup247/src/authentication/pages/customer_signup.dart';
+import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/onboarding/widgets/onboarding_choice_gradient_container.dart';
 import 'package:callup247/src/home/pages/guest_home_page.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
@@ -40,7 +41,13 @@ class OnboardingChoiceScreen extends StatelessWidget {
                         color: Colors.black54,
                       ),
                       label: const Text('Already have an account? Login here'),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const SignIn()));
+                      },
                     ),
                   ],
                 ),

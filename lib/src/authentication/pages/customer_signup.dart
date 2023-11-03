@@ -112,12 +112,12 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
       if (mounted) {
-        print('success');
+        // print('success');
       }
     } on PostgrestException catch (error) {
-      print(error.message);
+      // print(error.message);
     } catch (error) {
-      print(error);
+      // print(error);
     } finally {
       if (mounted) {}
     }
@@ -147,7 +147,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        print('update profile successful');
+        // print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
@@ -158,7 +158,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         ));
       }
     } on PostgrestException catch (error) {
-      print(error.message + 'update profile');
+      // print(error.message + 'update profile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -171,7 +171,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
     } catch (error) {
-      print(error);
+      // print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -250,6 +250,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   final _confirmpasswordController = TextEditingController();
   var loading = false;
   final _formKey = GlobalKey<FormState>();
+  bool isPasswordReset = false;
 
 // 07 - dispose
 
@@ -529,7 +530,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
                           onPressed: () async {
-                            print('test for network');
+                            // print('test for network');
                             // Check network connectivity
                             bool isConnected =
                                 await checkInternetConnectivity();
@@ -592,10 +593,12 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                 // Delay and navigate
                                 await Future.delayed(
                                     const Duration(seconds: 2));
-                                Navigator.of(context).push(
+                                Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        const VerificationScreen(),
+                                        VerificationScreen(
+                                      isPasswordReset: isPasswordReset,
+                                    ),
                                   ),
                                 );
                               } catch (error) {

@@ -1,19 +1,19 @@
 import 'package:callup247/main.dart';
-import 'package:flutter/foundation.dart';
+import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../../responsive_text_styles.dart';
-import 'user_verification.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
+    with SingleTickerProviderStateMixin {
   // 05 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
@@ -25,19 +25,17 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     }
   }
 
-  // use case sign in auth 1
+  // use case change user's password
 
-  Future<void> _signInUser() async {
-    final emailaddress = _emailaddressController.text.trim();
-    final password = _passwordController.text.trim();
+  Future<void> _changePassword() async {
+    final newpassword = _passwordController.text.trim();
 
     try {
-      await supabase.auth
-          .signInWithPassword(email: emailaddress, password: password);
+      await supabase.auth.updateUser(UserAttributes(password: newpassword));
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            'Welcome back :)',
+            'Password Changed Successfully :)',
             style:
                 responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
           ),
@@ -46,31 +44,25 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         setState(() {
           loading = false;
         });
-        isPasswordReset = false;
-        _signInUserOTP();
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (BuildContext context) => VerificationScreen(
-              isPasswordReset: isPasswordReset,
-            ),
-          ),
+          MaterialPageRoute(builder: (BuildContext context) => const SignIn()),
         );
       }
     } on PostgrestException catch (error) {
       // print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'Server Error, Please try again in a bit :)',
+          'Server Error, Please try again in a bit :(',
           style:
               responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
         ),
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      // print('catch $error.m');
+      // print('catch $error');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'Invalid Login Credentials :(',
+          'Unexpected Error, Please try again in a bit :(',
           style:
               responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
         ),
@@ -82,29 +74,6 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
           loading = false;
         });
       }
-    }
-  }
-
-  // 0? - use case signin user auth 2
-
-  Future<void> _signInUserOTP() async {
-    final emailaddress = _emailaddressController.text.trim();
-
-    try {
-      await supabase.auth.signInWithOtp(
-        email: emailaddress,
-        emailRedirectTo:
-            kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
-      );
-      if (mounted) {
-        // print('success');
-      }
-    } on PostgrestException catch (error) {
-      // print(error.message);
-    } catch (error) {
-      // print(error);
-    } finally {
-      if (mounted) {}
     }
   }
 
@@ -128,44 +97,45 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   }
 
   // variables
+
   late AnimationController _acontroller;
   final _formKey = GlobalKey<FormState>();
-  final _emailaddressController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
+  bool isPasswordConfirmVisible = false;
   bool isPasswordVisible = false;
   var loading = false;
-  bool isPasswordReset = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF13CAF1),
-          title: Text(
-            'Login',
-            style:
-                responsiveTextStyle(context, 20, Colors.black, FontWeight.bold),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF13CAF1),
+        title: Text(
+          'Reset Password',
+          style:
+              responsiveTextStyle(context, 20, Colors.black, FontWeight.bold),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Color(0xFF039fdc),
-                  Color(0xFF13CAF1),
-                ],
-              ),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Form(
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
@@ -177,36 +147,6 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                    // email address
-
-                    TextFormField(
-                      controller: _emailaddressController,
-                      cursorColor: Colors.white,
-                      keyboardType: TextInputType.emailAddress,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
-                      decoration: InputDecoration(
-                          labelText: 'Email Address',
-                          labelStyle: responsiveTextStyle(
-                              context, 14, Colors.black87, null),
-                          focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black87))),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your email address';
-                        }
-                        // Email address regex pattern for basic validation
-                        const emailPattern =
-                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                        final regExp = RegExp(emailPattern);
-                        if (!regExp.hasMatch(value)) {
-                          return 'Please enter a valid email address';
-                        }
-                        // You can add email validation logic here.
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                     // Password
 
                     TextFormField(
@@ -215,7 +155,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                       style:
                           responsiveTextStyle(context, 16, Colors.white, null),
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'New Password',
                         labelStyle: responsiveTextStyle(
                             context, 14, Colors.black, null),
                         focusedBorder: const UnderlineInputBorder(
@@ -241,9 +181,61 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         }
                         // Password strength validation criteria
                         const lengthCriteria = 8; // Minimum length requirement
-
+                        // final uppercaseCriteria = RegExp(r'[A-Z]');
+                        // final lowercaseCriteria = RegExp(r'[a-z]');
+                        // final digitCriteria = RegExp(r'[0-9]');
+                        // final specialCharCriteria =
+                        //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
                         if (value.length < lengthCriteria) {
                           return 'Password must be at least $lengthCriteria characters long';
+                        }
+                        // if (!uppercaseCriteria.hasMatch(value) ||
+                        //     !lowercaseCriteria.hasMatch(value) ||
+                        //     !digitCriteria.hasMatch(value) ||
+                        //     !specialCharCriteria.hasMatch(value)) {
+                        //   return 'Password must include uppercase, lowercase, digit, and special characters';
+                        // }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+
+                    // Confirm Password
+
+                    TextFormField(
+                      controller: _confirmpasswordController,
+                      cursorColor: Colors.white,
+                      style:
+                          responsiveTextStyle(context, 16, Colors.white, null),
+                      decoration: InputDecoration(
+                        labelText: 'Confirm New Password',
+                        labelStyle: responsiveTextStyle(
+                            context, 14, Colors.black, null),
+                        focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black87)),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPasswordConfirmVisible =
+                                  !isPasswordConfirmVisible;
+                            });
+                          },
+                          child: Icon(
+                            isPasswordConfirmVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                      obscureText: !isPasswordConfirmVisible,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please re-type your password';
+                        }
+                        // todo: confiirm password validation logic
+                        if (value != _passwordController.text) {
+                          return 'passwords must match';
                         }
 
                         return null;
@@ -251,7 +243,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
-                    // log in button
+                    // action button
 
                     loading
                         ? const CircularProgressIndicator()
@@ -279,65 +271,21 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                 setState(() {
                                   loading = true;
                                 });
-                                _signInUser();
+                                _changePassword();
                               }
                             },
                             child: Text(
-                              'Sign In',
+                              'Confirm',
                               style: responsiveTextStyle(
                                   context, 14, Colors.black, FontWeight.bold),
                             ),
                           ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-
-                    // forgot password
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton.icon(
-                            onPressed: () {
-                              if (_emailaddressController.text.trim() == '' ||
-                                  _emailaddressController.text.trim().length <
-                                      8) {
-                                // Show a snackbar for no user email
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(
-                                    'Please type in your email address.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return;
-                              }
-                              isPasswordReset = true;
-                              _signInUserOTP();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      VerificationScreen(
-                                    isPasswordReset: isPasswordReset,
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.password,
-                              color: Colors.black54,
-                            ),
-                            label: const Text(
-                              'Forgot Password ?',
-                              style: TextStyle(color: Colors.black45),
-                            )),
-                      ],
-                    )
                   ],
-                ),
-              ),
-            ),
+                )),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
