@@ -1,4 +1,5 @@
 import 'package:callup247/src/authentication/pages/customer_signup.dart';
+import 'package:callup247/src/authentication/pages/serviceprovider_signup.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/onboarding/widgets/onboarding_choice_gradient_container.dart';
 import 'package:callup247/src/home/pages/guest_home_page.dart';
@@ -79,7 +80,16 @@ class OnboardingChoiceScreen extends StatelessWidget {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const ServiceProviderSignUpScreen(),
+                        ),
+                      );
+                    });
+                  },
                   splashColor: Colors.greenAccent,
                   radius: 50,
                   child: const GradientContainer(

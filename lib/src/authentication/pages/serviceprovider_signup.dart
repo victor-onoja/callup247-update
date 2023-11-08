@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_verification.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
@@ -12,14 +11,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 
-class CustomerSignUpScreen extends StatefulWidget {
-  const CustomerSignUpScreen({super.key});
+class ServiceProviderSignUpScreen extends StatefulWidget {
+  const ServiceProviderSignUpScreen({super.key});
 
   @override
-  State<CustomerSignUpScreen> createState() => _CustomerSignUpScreenState();
+  State<ServiceProviderSignUpScreen> createState() =>
+      _ServiceProviderSignUpScreenState();
 }
 
-class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
+class _ServiceProviderSignUpScreenState
+    extends State<ServiceProviderSignUpScreen> {
   // 01 - use case pick image
 
   Future<void> _pickImage() async {
@@ -142,7 +143,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       'state': state,
       'city': city,
       'avatar_url': displaypicture,
-      'service_provider': 'FALSE'
+      'service_provider': 'TRUE'
     };
     // print('update profile start');
     try {
@@ -214,7 +215,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       'state': state,
       'city': city,
       'displaypicture': displaypicture,
-      'service_provider': 'FALSE'
+      'service_provider': 'TRUE'
     };
 
     // Encode the map to JSON and save it as a single string

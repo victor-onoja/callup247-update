@@ -27,7 +27,7 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
     super.initState();
 
     // Start the timer to automatically move to the next page after 5 seconds
-    _timer = Timer(const Duration(seconds: 4), () {
+    _timer = Timer(const Duration(seconds: 5), () {
       _moveToNextPage();
     });
 
@@ -45,12 +45,13 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
     super.dispose();
   }
 
-// use case: ???
+// use case: move to next page
+// todo: when on page 2 move to next page should be fired again
   void _moveToNextPage() {
     if (_currentPage < 2) {
       // Check if it's not the last page
       _pageController.animateToPage(
-        _currentPage + 1,
+        _currentPage + 2,
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );

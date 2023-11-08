@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/forgot_password.dart';
 import 'package:callup247/src/home/pages/customer_home.dart';
+import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,11 +55,20 @@ class _VerificationScreenState extends State<VerificationScreen>
             ),
           );
         } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (BuildContext context) => const CustomerHomePage(),
-            ),
-          );
+          if (serviceprovider == 'TRUE') {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    const ServiceProviderProfileCreation(),
+              ),
+            );
+          } else {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) => const CustomerHomePage(),
+              ),
+            );
+          }
         }
       }
     } on PostgrestException catch (e) {
@@ -114,6 +124,7 @@ class _VerificationScreenState extends State<VerificationScreen>
   }
 
   // init
+
   @override
   void initState() {
     super.initState();
@@ -121,6 +132,7 @@ class _VerificationScreenState extends State<VerificationScreen>
   }
 
   // use case initialize data
+
   Future<void> _initializeData() async {
     _acontroller = AnimationController(
       vsync: this,
@@ -133,8 +145,10 @@ class _VerificationScreenState extends State<VerificationScreen>
       final userProfileMap = json.decode(userProfileJson);
       // To access specific fields like full name and email address:
       final userEmailAddress = userProfileMap['email'];
+      final serviceProvider = userProfileMap['service_provider'];
       setState(() {
         emailaddress = userEmailAddress;
+        serviceprovider = serviceProvider;
       });
       // You can now use `emailaddress` as needed.
     } else {
@@ -157,6 +171,7 @@ class _VerificationScreenState extends State<VerificationScreen>
   bool loading = false;
   String token = '';
   String emailaddress = '';
+  String serviceprovider = '';
 
   @override
   Widget build(BuildContext context) {

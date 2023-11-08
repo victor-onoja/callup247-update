@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:callup247/main.dart';
 import 'package:callup247/src/home/pages/customer_home.dart';
+import 'package:callup247/src/home/pages/serviceprovider_homepage.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'onboarding/pages/onboarding_animation_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,7 +25,6 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
     // Initialize the animation controller
     _animationController = AnimationController(
       vsync: this,
@@ -69,6 +72,22 @@ class SplashScreenState extends State<SplashScreen>
   // use case splash navigation
 
   Future<void> _redirect() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+      // To access specific fields like full name and email address:
+
+      final serviceProvider = userProfileMap['service_provider'];
+      setState(() {
+        serviceprovider = serviceProvider;
+      });
+      // You can now use `emailaddress` as needed.
+    } else {
+      // Handle the case where no user profile data is found in SharedPreferences.
+      // For example, show a snackbar.
+      print('no data found');
+    }
     bool isConnected = await checkInternetConnectivity();
     if (!isConnected) {
       // Show a snackbar for no network
@@ -90,11 +109,18 @@ class SplashScreenState extends State<SplashScreen>
 
     final session = supabase.auth.currentSession;
     if (session != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => const CustomerHomePage(),
-        ),
-      );
+      // navigate to customer or service provider homepage
+      if (serviceprovider == 'FALSE') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) => const CustomerHomePage(),
+          ),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                const ServiceProviderHomePage()));
+      }
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -103,6 +129,10 @@ class SplashScreenState extends State<SplashScreen>
       );
     }
   }
+
+// variables
+
+  String serviceprovider = '';
 
   @override
   Widget build(BuildContext context) {
