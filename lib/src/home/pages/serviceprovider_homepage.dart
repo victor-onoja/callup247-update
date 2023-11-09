@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:callup247/src/profile/pages/edit_servicepovider_profile_page.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
@@ -712,6 +713,12 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                     PopupMenuItem(
                                       textStyle: responsiveTextStyle(context,
                                           16, Colors.black, FontWeight.bold),
+                                      value: 'customerCare',
+                                      child: const Text('Customer Care'),
+                                    ),
+                                    PopupMenuItem(
+                                      textStyle: responsiveTextStyle(context,
+                                          16, Colors.black, FontWeight.bold),
                                       value: 'termsAndConditions',
                                       child: const Text('Terms and Conditions'),
                                     ),
@@ -879,6 +886,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             const ServiceProviderProfile()));
+                                  } else if (value == 'editProfile') {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const EditServiceProviderProfile()));
                                   }
                                   // Add more cases for other menu items
                                 },

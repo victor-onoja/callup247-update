@@ -373,6 +373,33 @@ class _ServiceProviderProfileCreationState
   ];
   // end of list of services
 
+  // become a service provider
+  Future<void> _becomeAServiceProvider() async {
+    try {
+      await supabase.from('profiles').update(
+          {'service_provider': 'TRUE'}).match({'service_provider': 'FALSE'});
+      if (mounted) {}
+    } on PostgrestException catch (error) {
+      print(error.message);
+    } catch (error) {
+      print(error);
+    } finally {
+      if (mounted) {}
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+
+      userProfileMap['service_provider'] = 'TRUE';
+
+      final updatedUserProfileJson = json.encode(userProfileMap);
+
+      await prefs.setString('userprofile', updatedUserProfileJson);
+    } else {}
+  }
+
   // 01 - use case pick image1
 
   Future<void> _pickImage1() async {
@@ -1349,6 +1376,7 @@ class _ServiceProviderProfileCreationState
                                 await _uploadImage5();
                               }
 
+                              await _becomeAServiceProvider();
                               await _createServiceProviderProfile();
                               await _saveServiceProviderProfilelocally();
 

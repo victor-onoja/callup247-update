@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
+import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -872,6 +873,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                         });
                                   } else if (value == 'signOut') {
                                     _signOut();
+                                  } else if (value ==
+                                      'becomeAServiceProvider') {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const ServiceProviderProfileCreation()),
+                                    );
                                   }
                                   // Add more cases for other menu items
                                 },
