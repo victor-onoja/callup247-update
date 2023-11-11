@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.callup247">
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -21,6 +21,7 @@
             <data android:scheme="mailto" />
         </intent>
     </queries>
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="callup247"
         android:name="${applicationName}"
