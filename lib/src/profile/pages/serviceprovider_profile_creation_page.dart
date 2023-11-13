@@ -817,6 +817,10 @@ class _ServiceProviderProfileCreationState
                   'What Service will you be providing ?',
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
+                Text(
+                  'hint: this can\'t be changed later, only through customer care :)',
+                  style: responsiveTextStyle(context, 12, Colors.black45, null),
+                ),
 
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
 
@@ -877,6 +881,7 @@ class _ServiceProviderProfileCreationState
                     ),
                   ],
                 ),
+
                 Visibility(
                   visible: isTyping, // Content is visible when typing
                   child: Container(
@@ -921,7 +926,7 @@ class _ServiceProviderProfileCreationState
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
                 Text(
-                  'you can add up to five images that showcase your work',
+                  'hint: you can add up to five images that showcase your work :)',
                   style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -1075,7 +1080,7 @@ class _ServiceProviderProfileCreationState
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
 
                 Text(
                     'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
@@ -1084,12 +1089,11 @@ class _ServiceProviderProfileCreationState
 
                 // add social links
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                 Text(
                   'Add Your Social links :',
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Text(
                     'hint: click on the app icons for easy navigation to share your proile :)',
                     style:
@@ -1230,6 +1234,10 @@ class _ServiceProviderProfileCreationState
                 Text(
                   'Add Your Details :',
                   style: responsiveTextStyle(context, 20, Colors.black, null),
+                ),
+                Text(
+                  'hint: you can be as expressive as you like :)',
+                  style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Row(

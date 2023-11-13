@@ -673,9 +673,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Name :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(fullname, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(fullname, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(
@@ -683,9 +685,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Experience :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(experience, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(experience, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(
