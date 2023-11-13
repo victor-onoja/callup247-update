@@ -80,7 +80,6 @@ class _VerificationScreenState extends State<VerificationScreen>
         ),
         backgroundColor: Colors.red,
       ));
-      // print(e.message);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(

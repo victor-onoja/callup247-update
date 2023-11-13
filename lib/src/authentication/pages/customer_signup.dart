@@ -37,20 +37,14 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   Future<void> _uploadImage() async {
     final filename = _fullnameController.text.trim();
     try {
-      // print('upload image start');
       await supabase.storage.from('avatars').upload(
             filename,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      // print('postgres error: ${error.message}');
-    } catch (error) {
-      // print(error);
-    }
+    } catch (error) {}
   }
 
   // 03 - use case create user
@@ -59,14 +53,11 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     final emailaddress = _emailaddressController.text.trim();
     final password = _passwordController.text.trim();
     try {
-      // print('create user start');
       setState(() {
         loading = true;
       });
       await supabase.auth.signUp(password: password, email: emailaddress);
-      if (mounted) {
-        // print('create user success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -92,9 +83,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         backgroundColor: Colors.red,
       ));
     } finally {
-      if (mounted) {
-        // print('finished');
-      }
+      if (mounted) {}
     }
   }
 
@@ -109,13 +98,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {
-        // print('success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      // print(error.message);
     } catch (error) {
-      // print(error);
     } finally {
       if (mounted) {}
     }
@@ -142,11 +127,10 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       'avatar_url': displaypicture,
       'service_provider': 'FALSE'
     };
-    // print('update profile start');
+
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        // print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
@@ -157,7 +141,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         ));
       }
     } on PostgrestException catch (error) {
-      // print(error.message + 'update profile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -170,7 +153,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
     } catch (error) {
-      // print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -184,7 +166,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       });
     } finally {
       if (mounted) {
-        // print('update profile finished');
         setState(() {
           loading = false;
         });

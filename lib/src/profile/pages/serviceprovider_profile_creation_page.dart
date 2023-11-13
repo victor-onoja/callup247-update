@@ -523,15 +523,12 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _uploadImage1() async {
     try {
-      // print('upload image start');
       await supabase.storage.from('media1').upload(
             fullname,
             _image1!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
     } catch (error) {}
   }
@@ -540,15 +537,12 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _uploadImage2() async {
     try {
-      // print('upload image start');
       await supabase.storage.from('media2').upload(
             fullname,
             _image2!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
     } catch (error) {}
   }
@@ -557,15 +551,12 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _uploadImage3() async {
     try {
-      // print('upload image start');
       await supabase.storage.from('media3').upload(
             fullname,
             _image3!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
     } catch (error) {}
   }
@@ -574,15 +565,12 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _uploadImage4() async {
     try {
-      // print('upload image start');
       await supabase.storage.from('media4').upload(
             fullname,
             _image4!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
     } catch (error) {}
   }
@@ -591,15 +579,12 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _uploadImage5() async {
     try {
-      // print('upload image start');
       await supabase.storage.from('media5').upload(
             fullname,
             _image5!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
     } catch (error) {}
   }

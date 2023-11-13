@@ -38,20 +38,14 @@ class _ServiceProviderSignUpScreenState
   Future<void> _uploadImage() async {
     final filename = _fullnameController.text.trim();
     try {
-      // print('upload image start');
       await supabase.storage.from('avatars').upload(
             filename,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
-      if (mounted) {
-        // print('img uploaded');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      // print('postgres error: ${error.message}');
-    } catch (error) {
-      // print(error);
-    }
+    } catch (error) {}
   }
 
   // 03 - use case create user
@@ -60,14 +54,11 @@ class _ServiceProviderSignUpScreenState
     final emailaddress = _emailaddressController.text.trim();
     final password = _passwordController.text.trim();
     try {
-      // print('create user start');
       setState(() {
         loading = true;
       });
       await supabase.auth.signUp(password: password, email: emailaddress);
-      if (mounted) {
-        // print('create user success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
