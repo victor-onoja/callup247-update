@@ -237,9 +237,12 @@ class _GuestProfilePageState extends State<GuestProfilePage> {
                           Text('Languages Spoken:', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(' English', // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(' English',
+                                // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(

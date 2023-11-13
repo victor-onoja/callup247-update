@@ -69,7 +69,6 @@ class _ServiceProviderSignUpScreenState
         // print('create user success');
       }
     } on PostgrestException catch (error) {
-      print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -82,7 +81,6 @@ class _ServiceProviderSignUpScreenState
         loading = false;
       });
     } catch (error) {
-      print(error);
       setState(() {
         loading = false;
       });
@@ -95,9 +93,7 @@ class _ServiceProviderSignUpScreenState
         backgroundColor: Colors.red,
       ));
     } finally {
-      if (mounted) {
-        // print('finished');
-      }
+      if (mounted) {}
     }
   }
 
@@ -112,13 +108,9 @@ class _ServiceProviderSignUpScreenState
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {
-        // print('success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      // print(error.message);
     } catch (error) {
-      // print(error);
     } finally {
       if (mounted) {}
     }
@@ -145,11 +137,10 @@ class _ServiceProviderSignUpScreenState
       'avatar_url': displaypicture,
       'service_provider': 'TRUE'
     };
-    // print('update profile start');
+
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        // print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
@@ -160,7 +151,6 @@ class _ServiceProviderSignUpScreenState
         ));
       }
     } on PostgrestException catch (error) {
-      // print(error.message + 'update profile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -173,7 +163,6 @@ class _ServiceProviderSignUpScreenState
         loading = false;
       });
     } catch (error) {
-      // print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -187,7 +176,6 @@ class _ServiceProviderSignUpScreenState
       });
     } finally {
       if (mounted) {
-        // print('update profile finished');
         setState(() {
           loading = false;
         });
@@ -533,7 +521,6 @@ class _ServiceProviderSignUpScreenState
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
                           onPressed: () async {
-                            // print('test for network');
                             // Check network connectivity
                             bool isConnected =
                                 await _checkInternetConnectivity();
@@ -580,6 +567,7 @@ class _ServiceProviderSignUpScreenState
 
                                 // Update profile locally and remotely
                                 await _saveProfileLocally();
+
                                 await _updateProfile(context);
                                 await _signInUser();
 
@@ -595,7 +583,7 @@ class _ServiceProviderSignUpScreenState
 
                                 // Delay and navigate
                                 await Future.delayed(
-                                    const Duration(seconds: 2));
+                                    const Duration(seconds: 1));
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>

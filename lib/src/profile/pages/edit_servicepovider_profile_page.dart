@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../main.dart';
 import '../../responsive_text_styles.dart';
 
@@ -113,14 +115,8 @@ class _EditServiceProviderProfileState
       // Image URL is valid, return the NetworkImage
       return NetworkImage(img);
     } else {
-      // if (img == pfp) {
-      //   // Image URL is not valid, return a placeholder image using AssetImage
-      //   return const AssetImage('assets/guest_dp.png');
-      // } else {
-      //   return null;
-      // }
+      return null;
     }
-    return null;
   }
 
   // use case display media
@@ -147,7 +143,9 @@ class _EditServiceProviderProfileState
             );
           }
         } else {
-          return const CircularProgressIndicator();
+          return const SpinKitPulse(
+            color: Colors.white,
+          );
         }
       },
     );
@@ -161,7 +159,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image1 = File(pickedFile.path);
-        // print(_image1);
       });
     }
   }
@@ -174,7 +171,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image2 = File(pickedFile.path);
-        // print(_image2);
       });
     }
   }
@@ -187,7 +183,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image3 = File(pickedFile.path);
-        // print(_image3);
       });
     }
   }
@@ -200,7 +195,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image4 = File(pickedFile.path);
-        // print(_image4);
       });
     }
   }
@@ -213,7 +207,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image5 = File(pickedFile.path);
-        // print(_image5);
       });
     }
   }
@@ -235,38 +228,26 @@ class _EditServiceProviderProfileState
     bool isImage1Valid = await _checkImageValidity(media1);
     if (isImage1Valid) {
       try {
-        // print('upload image start');
         await supabase.storage.from('media1').update(
               fullname,
               _image1!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 1: ${error.message}');
-      } catch (error) {
-        print('media1 ${error}');
-      }
+      } catch (error) {}
     } else {
       try {
-        // print('upload image start');
         await supabase.storage.from('media1').upload(
               fullname,
               _image1!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: false),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 1: ${error.message}');
-      } catch (error) {
-        print('media1 ${error}');
-      }
+      } catch (error) {}
     }
   }
 
@@ -283,31 +264,20 @@ class _EditServiceProviderProfileState
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 2: ${error.message}');
-      } catch (error) {
-        print('media2 ${error}');
-      }
+      } catch (error) {}
     } else {
       try {
-        // print('upload image start');
         await supabase.storage.from('media2').upload(
               fullname,
               _image2!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: false),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 2: ${error.message}');
-      } catch (error) {
-        print('media2 ${error}');
-      }
+      } catch (error) {}
     }
   }
 
@@ -317,38 +287,26 @@ class _EditServiceProviderProfileState
     bool isImage3Valid = await _checkImageValidity(media3);
     if (isImage3Valid) {
       try {
-        // print('upload image start');
         await supabase.storage.from('media3').update(
               fullname,
               _image3!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 3: ${error.message}');
-      } catch (error) {
-        print('media3 ${error}');
-      }
+      } catch (error) {}
     } else {
       try {
-        // print('upload image start');
         await supabase.storage.from('media3').upload(
               fullname,
               _image3!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: false),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 3: ${error.message}');
-      } catch (error) {
-        print('media3 ${error}');
-      }
+      } catch (error) {}
     }
   }
 
@@ -358,38 +316,26 @@ class _EditServiceProviderProfileState
     bool isImage4Valid = await _checkImageValidity(media4);
     if (isImage4Valid) {
       try {
-        // print('upload image start');
         await supabase.storage.from('media4').update(
               fullname,
               _image4!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 4: ${error.message}');
-      } catch (error) {
-        print('media4 ${error}');
-      }
+      } catch (error) {}
     } else {
       try {
-        // print('upload image start');
         await supabase.storage.from('media4').upload(
               fullname,
               _image4!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: false),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 4: ${error.message}');
-      } catch (error) {
-        print('media4 ${error}');
-      }
+      } catch (error) {}
     }
   }
 
@@ -399,38 +345,26 @@ class _EditServiceProviderProfileState
     bool isImage5Valid = await _checkImageValidity(media5);
     if (isImage5Valid) {
       try {
-        // print('upload image start');
         await supabase.storage.from('media5').update(
               fullname,
               _image5!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: true),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 5: ${error.message}');
-      } catch (error) {
-        print('media5 ${error}');
-      }
+      } catch (error) {}
     } else {
       try {
-        // print('upload image start');
         await supabase.storage.from('media5').upload(
               fullname,
               _image5!,
               fileOptions:
                   const FileOptions(cacheControl: '3600', upsert: false),
             );
-        if (mounted) {
-          // print('img uploaded');
-        }
+        if (mounted) {}
       } on PostgrestException catch (error) {
-        print('postgres error media 5: ${error.message}');
-      } catch (error) {
-        print('media5 ${error}');
-      }
+      } catch (error) {}
     }
   }
 
@@ -467,7 +401,6 @@ class _EditServiceProviderProfileState
     try {
       await supabase.from('serviceproviders_profile').upsert(details);
       if (mounted) {
-        // print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Profile Updated Successfully!!',
@@ -478,7 +411,6 @@ class _EditServiceProviderProfileState
         ));
       }
     } on PostgrestException catch (error) {
-      print(error.message + 'update serviceproviderprofile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -491,7 +423,6 @@ class _EditServiceProviderProfileState
         loading = false;
       });
     } catch (error) {
-      print('serviceproviderprofile ${error}');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -505,7 +436,6 @@ class _EditServiceProviderProfileState
       });
     } finally {
       if (mounted) {
-        print('update profile finished');
         setState(() {
           loading = false;
         });
@@ -630,6 +560,13 @@ class _EditServiceProviderProfileState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                    'hint: if you wish to change the service you\'re providing, reach out to customer care on your homepage :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null)),
+
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+
                 // edit media
 
                 Text(
@@ -752,14 +689,26 @@ class _EditServiceProviderProfileState
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
+                Text(
+                    'hint: click on the app icons for easy navigation to share your proile :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null)),
                 Column(
                   children: [
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/ig-icon.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url =
+                                Uri.parse('https://www.instagram.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/ig-icon.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -779,9 +728,17 @@ class _EditServiceProviderProfileState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/x-icon.webp',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url = Uri.parse('https://twitter.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/x-icon.webp',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -801,9 +758,18 @@ class _EditServiceProviderProfileState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/facebook.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url = Uri.parse(
+                                'https://web.facebook.com/?_rdc=1&_rdr');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/facebook.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -823,9 +789,18 @@ class _EditServiceProviderProfileState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/web-icon.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url =
+                                Uri.parse('https://www.google.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/web-icon.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),

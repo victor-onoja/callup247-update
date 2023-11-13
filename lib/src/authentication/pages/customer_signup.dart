@@ -68,7 +68,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         // print('create user success');
       }
     } on PostgrestException catch (error) {
-      print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -81,7 +80,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
     } catch (error) {
-      print(error);
       setState(() {
         loading = false;
       });
@@ -532,7 +530,6 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
                           onPressed: () async {
-                            // print('test for network');
                             // Check network connectivity
                             bool isConnected =
                                 await _checkInternetConnectivity();

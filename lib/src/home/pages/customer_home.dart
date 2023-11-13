@@ -4,6 +4,7 @@ import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:csc_picker/csc_picker.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,7 +45,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // error in signup, please go back to signup ==> snackbar
-      print('no data found');
     }
   }
 
@@ -79,8 +79,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         ));
       }
     } on PostgrestException catch (error) {
-      print(error.message + 'update profile');
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -90,7 +88,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -161,16 +158,12 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   Future<void> _uploadImage() async {
     final filename = fullname;
     try {
-      // print('upload image start');
-      // print(filename);
-      // print(_image);
       await supabase.storage.from('avatars').update(
             filename,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
           );
       if (mounted) {
-        // print('img uploaded');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Profile picture updated successfully :)',
@@ -184,10 +177,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         });
       }
     } on PostgrestException catch (error) {
-      // print('postgres error: ${error.message}');
-    } catch (error) {
-      // print(error);
-    }
+    } catch (error) {}
   }
 
   // use case sign out
@@ -201,7 +191,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
             builder: (BuildContext context) => const SignIn()));
       }
     } on PostgrestException catch (error) {
-      print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -211,7 +200,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -660,7 +648,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                         if (snapshot.connectionState ==
                                             ConnectionState.done) {
                                           // If the future is complete, you can use the ImageProvider
-                                          // print('object');
 
                                           return CircleAvatar(
                                             backgroundImage: snapshot.data,
@@ -668,7 +655,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                           );
                                         } else {
                                           // While the future is loading, you can show a placeholder or loading indicator
-                                          return const CircularProgressIndicator(); // or any other placeholder widget
+
+                                          return const SpinKitRotatingCircle(
+                                            color: Colors.white,
+                                          );
                                         }
                                       },
                                     ),

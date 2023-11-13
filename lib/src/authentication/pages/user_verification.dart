@@ -44,7 +44,7 @@ class _VerificationScreenState extends State<VerificationScreen>
           backgroundColor: Colors.green,
         ));
         // Delay and navigate
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
         setState(() {
           loading = false;
         });
@@ -82,7 +82,6 @@ class _VerificationScreenState extends State<VerificationScreen>
       ));
       // print(e.message);
     } catch (error) {
-      print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'your token is either invalid or expired. Please check again or resend otp :(',
@@ -111,13 +110,9 @@ class _VerificationScreenState extends State<VerificationScreen>
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {
-        print('resend success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      print(error.message);
     } catch (error) {
-      print(error);
     } finally {
       if (mounted) {}
     }
@@ -154,7 +149,6 @@ class _VerificationScreenState extends State<VerificationScreen>
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // For example, show a snackbar.
-      print('no data found');
     }
   }
 

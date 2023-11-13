@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../responsive_text_styles.dart';
@@ -94,16 +95,17 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
     // Check if the image URL is valid
     bool isImageValid = await _checkImageValidity(img);
 
-    if (isImageValid) {
+    if (isImageValid && img == pfp) {
       // Image URL is valid, return the NetworkImage
       return NetworkImage(img);
+    } else if (isImageValid && img != pfp) {
+      return NetworkImage(img);
+    } else if (!isImageValid && img == pfp) {
+      return const AssetImage('assets/guest_dp.png');
+    } else if (!isImageValid && img != pfp) {
+      return null;
     } else {
-      if (img == pfp) {
-        // Image URL is not valid, return a placeholder image using AssetImage
-        return const AssetImage('assets/guest_dp.png');
-      } else {
-        return null;
-      }
+      return null;
     }
   }
 
@@ -128,7 +130,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
             return Container();
           }
         } else {
-          return const CircularProgressIndicator();
+          return const SpinKitPulse(
+            color: Colors.white,
+          );
         }
       },
     );
@@ -248,7 +252,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                         return Container();
                                       }
                                     } else {
-                                      return const CircularProgressIndicator();
+                                      return const SpinKitPulse(
+                                        color: Colors.white,
+                                      );
                                     }
                                   })
                               // end of service provider pfp
@@ -687,9 +693,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Home Service :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(homeservice, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(homeservice, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(
@@ -697,9 +705,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Availability :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(availability, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(availability, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(
@@ -707,9 +717,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Languages Spoken :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(languagesspoken, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(languagesspoken, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(
@@ -717,9 +729,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                           Text('Special Offers :- ', // Label
                               style: responsiveTextStyle(
                                   context, 16, Colors.black, FontWeight.bold)),
-                          Text(specialoffers, // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
+                          Flexible(
+                            child: Text(specialoffers, // Information
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.white, FontWeight.bold)),
+                          ),
                         ],
                       ),
                       Row(

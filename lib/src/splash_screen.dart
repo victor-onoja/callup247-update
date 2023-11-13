@@ -86,7 +86,6 @@ class SplashScreenState extends State<SplashScreen>
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // For example, show a snackbar.
-      print('no data found');
     }
     bool isConnected = await checkInternetConnectivity();
     if (!isConnected) {

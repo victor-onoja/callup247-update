@@ -4,6 +4,7 @@ import 'package:callup247/src/profile/pages/edit_servicepovider_profile_page.dar
 import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -47,7 +48,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // error in signup, please go back to signup ==> snackbar
-      print('no data found');
     }
   }
 
@@ -204,7 +204,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
             builder: (BuildContext context) => const SignIn()));
       }
     } on PostgrestException catch (error) {
-      print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -214,7 +213,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -663,7 +661,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                         if (snapshot.connectionState ==
                                             ConnectionState.done) {
                                           // If the future is complete, you can use the ImageProvider
-                                          // print('object');
 
                                           return CircleAvatar(
                                             backgroundImage: snapshot.data,
@@ -671,7 +668,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                           );
                                         } else {
                                           // While the future is loading, you can show a placeholder or loading indicator
-                                          return const CircularProgressIndicator(); // or any other placeholder widget
+                                          return const SpinKitPulse(
+                                            color: Colors.white,
+                                            // size: 25,
+                                          );
                                         }
                                       },
                                     ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../main.dart';
 import 'package:http/http.dart' as http;
 
@@ -380,9 +381,7 @@ class _ServiceProviderProfileCreationState
           {'service_provider': 'TRUE'}).match({'service_provider': 'FALSE'});
       if (mounted) {}
     } on PostgrestException catch (error) {
-      print(error.message);
     } catch (error) {
-      print(error);
     } finally {
       if (mounted) {}
     }
@@ -408,7 +407,6 @@ class _ServiceProviderProfileCreationState
     if (pickedFile != null) {
       setState(() {
         _image1 = File(pickedFile.path);
-        print(_image1);
       });
     }
   }
@@ -421,7 +419,6 @@ class _ServiceProviderProfileCreationState
     if (pickedFile != null) {
       setState(() {
         _image2 = File(pickedFile.path);
-        print(_image2);
       });
     }
   }
@@ -434,7 +431,6 @@ class _ServiceProviderProfileCreationState
     if (pickedFile != null) {
       setState(() {
         _image3 = File(pickedFile.path);
-        print(_image3);
       });
     }
   }
@@ -447,7 +443,6 @@ class _ServiceProviderProfileCreationState
     if (pickedFile != null) {
       setState(() {
         _image4 = File(pickedFile.path);
-        print(_image4);
       });
     }
   }
@@ -460,7 +455,6 @@ class _ServiceProviderProfileCreationState
     if (pickedFile != null) {
       setState(() {
         _image5 = File(pickedFile.path);
-        print(_image5);
       });
     }
   }
@@ -539,10 +533,7 @@ class _ServiceProviderProfileCreationState
         // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error media 1: ${error.message}');
-    } catch (error) {
-      print('media1 ${error}');
-    }
+    } catch (error) {}
   }
 
   // 02 - use case upload image
@@ -559,10 +550,7 @@ class _ServiceProviderProfileCreationState
         // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error media 2: ${error.message}');
-    } catch (error) {
-      print('media2 ${error}');
-    }
+    } catch (error) {}
   }
 
   // 02 - use case upload image
@@ -579,10 +567,7 @@ class _ServiceProviderProfileCreationState
         // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error media 3: ${error.message}');
-    } catch (error) {
-      print('media3 ${error}');
-    }
+    } catch (error) {}
   }
 
   // 02 - use case upload image
@@ -599,10 +584,7 @@ class _ServiceProviderProfileCreationState
         // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error media 4: ${error.message}');
-    } catch (error) {
-      print('media4 ${error}');
-    }
+    } catch (error) {}
   }
 
   // 02 - use case upload image
@@ -619,10 +601,7 @@ class _ServiceProviderProfileCreationState
         // print('img uploaded');
       }
     } on PostgrestException catch (error) {
-      print('postgres error media 5: ${error.message}');
-    } catch (error) {
-      print('media5 ${error}');
-    }
+    } catch (error) {}
   }
 
   // init
@@ -652,7 +631,6 @@ class _ServiceProviderProfileCreationState
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // For example, show a snackbar.
-      print('no data found');
     }
 
     if (serviceProvider != null) {
@@ -710,7 +688,6 @@ class _ServiceProviderProfileCreationState
     try {
       await supabase.from('serviceproviders_profile').insert(details);
       if (mounted) {
-        // print('update profile successful');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Happy Service Providing!!',
@@ -721,7 +698,6 @@ class _ServiceProviderProfileCreationState
         ));
       }
     } on PostgrestException catch (error) {
-      // print(error.message + 'update serviceproviderprofile');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -734,7 +710,6 @@ class _ServiceProviderProfileCreationState
         loading = false;
       });
     } catch (error) {
-      // print('serviceproviderprofile ${error}');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -748,7 +723,6 @@ class _ServiceProviderProfileCreationState
       });
     } finally {
       if (mounted) {
-        // print('update profile finished');
         setState(() {
           loading = false;
         });
@@ -879,7 +853,7 @@ class _ServiceProviderProfileCreationState
                                 Icons.cancel,
                                 color: Colors.black54,
                               )),
-                          hintText: 'Search...',
+                          hintText: 'Start typing to search...',
                         ),
                         onChanged: (value) {
                           setState(() {
@@ -931,7 +905,6 @@ class _ServiceProviderProfileCreationState
                               // Update the filtered services here as well
                               filteredServices = [];
                             });
-                            // print(_serviceProvidedController.text);
                           },
                         );
                       },
@@ -963,7 +936,6 @@ class _ServiceProviderProfileCreationState
                         width: 250,
                         child: GestureDetector(
                           onTap: () {
-                            // print('Its going');
                             _pickImage1();
                           },
                           child: Column(
@@ -993,7 +965,6 @@ class _ServiceProviderProfileCreationState
                         width: 250,
                         child: GestureDetector(
                           onTap: () {
-                            // print('Its going');
                             _pickImage2();
                           },
                           child: Column(
@@ -1023,7 +994,6 @@ class _ServiceProviderProfileCreationState
                         width: 250,
                         child: GestureDetector(
                           onTap: () {
-                            // print('Its going');
                             _pickImage3();
                           },
                           child: Column(
@@ -1053,7 +1023,6 @@ class _ServiceProviderProfileCreationState
                         width: 250,
                         child: GestureDetector(
                           onTap: () {
-                            // print('Its going');
                             _pickImage4();
                           },
                           child: Column(
@@ -1083,7 +1052,6 @@ class _ServiceProviderProfileCreationState
                         width: 250,
                         child: GestureDetector(
                           onTap: () {
-                            // print('Its going');
                             _pickImage5();
                           },
                           child: Column(
@@ -1107,6 +1075,12 @@ class _ServiceProviderProfileCreationState
                     ],
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+
+                Text(
+                    'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null)),
 
                 // add social links
 
@@ -1116,13 +1090,27 @@ class _ServiceProviderProfileCreationState
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                Text(
+                    'hint: click on the app icons for easy navigation to share your proile :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Column(
                   children: [
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/ig-icon.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url =
+                                Uri.parse('https://www.instagram.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/ig-icon.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -1142,9 +1130,17 @@ class _ServiceProviderProfileCreationState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/x-icon.webp',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url = Uri.parse('https://twitter.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/x-icon.webp',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -1164,9 +1160,18 @@ class _ServiceProviderProfileCreationState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/facebook.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url = Uri.parse(
+                                'https://web.facebook.com/?_rdc=1&_rdr');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/facebook.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
@@ -1186,9 +1191,18 @@ class _ServiceProviderProfileCreationState
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/web-icon.png',
-                          width: 25,
+                        GestureDetector(
+                          onTap: () async {
+                            final Uri url =
+                                Uri.parse('https://www.google.com/');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {}
+                          },
+                          child: Image.asset(
+                            'assets/web-icon.png',
+                            width: 25,
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.02),
