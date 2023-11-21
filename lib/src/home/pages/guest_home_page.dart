@@ -396,6 +396,7 @@ class _GuestHomePageState extends State<GuestHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -561,7 +562,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.7,
                       child: ListView.builder(
                         itemCount: filteredServices.length,
                         itemBuilder: (context, index) {
@@ -616,7 +617,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                               name: 'John Doe',
                               bio:
                                   'Experienced plumber with 5+ years of experience in fixing pipes.',
-                              image: 'assets/plumber.jpg',
+                              image: Image.asset('assets/barber.jpg'),
                               onPressedButton1: () {
                                 // Implement the action for Button 1 here.
                                 Navigator.of(context).push(
@@ -638,7 +639,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                               name: 'Senior Centy',
                               bio:
                                   'Experienced barber with 5+ years of experience in cutting hair.',
-                              image: 'assets/barber.jpg',
+                              image: Image.asset('assets/barber.jpg'),
                               onPressedButton1: () {
                                 // Implement the action for Button 1 here.
                                 Navigator.of(context).push(
@@ -679,7 +680,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                                 name: 'John Doe',
                                 bio:
                                     'Experienced plumber with 5+ years of experience in fixing pipes.',
-                                image: 'assets/plumber.jpg',
+                                image: Image.asset('assets/barber.jpg'),
                                 onPressedButton1: () {
                                   // Implement the action for Button 1 here.
                                   Navigator.of(context).push(
@@ -713,7 +714,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                                 name: 'Senior Centy',
                                 bio:
                                     'Experienced barber with 5+ years of experience in cutting hair.',
-                                image: 'assets/barber.jpg',
+                                image: Image.asset('assets/barber.jpg'),
                                 onPressedButton1: () {
                                   // Implement the action for Button 1 here.
                                   Navigator.of(context).push(

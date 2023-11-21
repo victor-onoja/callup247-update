@@ -121,6 +121,7 @@ class SplashScreenState extends State<SplashScreen>
                 const ServiceProviderHomePage()));
       }
     } else {
+      // todo: navigate to login if onboarding animation has been displayed previously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => const OnboardingAnimationScreen(),

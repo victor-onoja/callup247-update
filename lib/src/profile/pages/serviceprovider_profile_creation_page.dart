@@ -871,34 +871,43 @@ class _ServiceProviderProfileCreationState
                   visible: isTyping, // Content is visible when typing
                   child: Container(
                     color: Colors.white,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: ListView.builder(
-                      itemCount: filteredServices.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(
-                            filteredServices[index],
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, FontWeight.bold),
-                          ),
-                          onTap: () {
-                            // Handle user selection here.
-                            FocusScope.of(context).unfocus();
-                            setState(() {
-                              isSearching = true;
-                              // When tile is tapped, set isTyping to false
-                              isTyping = false;
-                              searchchoice = filteredServices[index];
-                              _serviceProvidedController.text =
-                                  filteredServices[index];
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: filteredServices.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Sorry, we don't have this service currently. Please pick a registered service.",
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, FontWeight.bold),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: filteredServices.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  filteredServices[index],
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                onTap: () {
+                                  // Handle user selection here.
+                                  FocusScope.of(context).unfocus();
+                                  setState(() {
+                                    isSearching = true;
+                                    // When tile is tapped, set isTyping to false
+                                    isTyping = false;
+                                    searchchoice = filteredServices[index];
+                                    _serviceProvidedController.text =
+                                        filteredServices[index];
 
-                              // Update the filtered services here as well
-                              filteredServices = [];
-                            });
-                          },
-                        );
-                      },
-                    ),
+                                    // Update the filtered services here as well
+                                    filteredServices = [];
+                                  });
+                                },
+                              );
+                            },
+                          ),
                   ),
                 ),
 
@@ -1346,6 +1355,22 @@ class _ServiceProviderProfileCreationState
                             setState(() {
                               loading = true;
                             });
+                            // prevent unregistered services
+                            if (isTyping) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'Please pick a registered service :(',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              setState(() {
+                                loading = false;
+                              });
+                              return;
+                            }
                             // Check network connectivity
                             bool isConnected =
                                 await _checkInternetConnectivity();

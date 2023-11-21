@@ -50,7 +50,7 @@ class _ServiceProviderSignUpScreenState
 
   // 03 - use case create user
 
-  Future<void> _createUser(BuildContext context) async {
+  Future<void> _createUser() async {
     final emailaddress = _emailaddressController.text.trim();
     final password = _passwordController.text.trim();
     try {
@@ -109,7 +109,7 @@ class _ServiceProviderSignUpScreenState
 
   // 04 - use case update profiles table
 
-  Future<void> _updateProfile(BuildContext context) async {
+  Future<void> _updateProfile() async {
     final fullname = _fullnameController.text.trim();
     final country = countryValue as String;
     final state = stateValue as String;
@@ -549,7 +549,7 @@ class _ServiceProviderSignUpScreenState
 
                               try {
                                 // Run _createUser and wait for it to finish
-                                await _createUser(context);
+                                await _createUser();
 
                                 // Only run _uploadImage if _createUser has finished successfully
                                 if (_image != null) {
@@ -559,7 +559,7 @@ class _ServiceProviderSignUpScreenState
                                 // Update profile locally and remotely
                                 await _saveProfileLocally();
 
-                                await _updateProfile(context);
+                                await _updateProfile();
                                 await _signInUser();
 
                                 ScaffoldMessenger.of(context)

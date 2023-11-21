@@ -40,9 +40,11 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       // To access specific fields like full name and email address:
       final userFullName = userProfileMap['fullname'];
       final userPfp = userProfileMap['displaypicture'];
+      final userCity = userProfileMap['city'];
       setState(() {
         fullname = userFullName;
         pfp = userPfp;
+        city = userCity;
       });
       // You can now use fullName and emailAddress as needed.
     } else {
@@ -82,8 +84,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         ));
       }
     } on PostgrestException catch (error) {
-      // print(error.message + 'update profile');
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -93,7 +93,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      // print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -164,16 +163,12 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   Future<void> _uploadImage() async {
     final filename = fullname;
     try {
-      // print('upload image start');
-      // print(filename);
-      // print(_image);
       await supabase.storage.from('avatars').update(
             filename,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
           );
       if (mounted) {
-        // print('img uploaded');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'Profile picture updated successfully :)',
@@ -187,10 +182,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         });
       }
     } on PostgrestException catch (error) {
-      // print('postgres error: ${error.message}');
-    } catch (error) {
-      // print(error);
-    }
+    } catch (error) {}
   }
 
   // use case sign out
@@ -243,11 +235,14 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   final searchFocusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
   List<String> filteredServices = []; // Initialize it as an empty list
+  List<dynamic> app_filteredServiceProviders =
+      []; // Initialize it as an empty list
   String searchchoice = '';
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
   String fullname = '';
   String pfp = '';
+  String city = '';
   File? _image;
   bool pfpChange = false;
   String? countryValue = "";
@@ -607,6 +602,57 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     'Zoologist',
   ];
   // end of list of services
+
+  //?? use case: get ids of users within searchers city
+  Future<List<dynamic>> _queryProfilesTable(String city) async {
+    try {
+      final response =
+          await supabase.from('profiles').select('id').eq('city', city);
+      // Extracting 'id' values from the response
+      List<dynamic> profileIds = (response).map((row) => row['id']).toList();
+      return profileIds;
+    } on PostgrestException catch (error) {
+    } catch (error) {}
+
+    return [];
+  }
+
+// use case ??: get service provider profiles within searchers city
+  Future<List<dynamic>> _queryServiceProvidersTable(
+      List<dynamic> profileIds) async {
+    try {
+      final response = await supabase
+          .from('serviceproviders_profile')
+          .select()
+          .in_('id', profileIds); // Use 'in_' to filter by multiple IDs
+
+      return response;
+    } on PostgrestException catch (error) {
+      return [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  // use case query profiles table
+  Future<dynamic> getProfileData(String profileId) async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', profileId)
+          .single(); // Assume there's only one profile with a given ID
+
+      return response;
+    } on PostgrestException catch (error) {
+      print('Postgrest exception querying profiles table: $error');
+      return null;
+    } catch (error) {
+      print('Error querying profiles table: $error');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -890,7 +936,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             const EditServiceProviderProfile()));
-                                  }
+                                  } else if (value == 'customerCare') {}
                                   // Add more cases for other menu items
                                 },
                               ),
@@ -969,33 +1015,59 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: ListView.builder(
-                        itemCount: filteredServices.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              filteredServices[index],
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                            ),
-                            onTap: () {
-                              // Handle user selection here.
-                              FocusScope.of(context).unfocus();
-                              setState(() {
-                                isSearching = true;
-                                // When tile is tapped, set isTyping to false
-                                isTyping = false;
-                                searchchoice = filteredServices[index];
-                                _controller.text = filteredServices[index];
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: filteredServices.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                "Sorry, we don't have this service currently. Please pick a registered service.",
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.black, FontWeight.bold),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: filteredServices.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    filteredServices[index],
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  onTap: () async {
+                                    // Handle user selection here.
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      isSearching = true;
+                                      // When tile is tapped, set isTyping to false
+                                      isTyping = false;
+                                      searchchoice = filteredServices[index];
+                                      _controller.text =
+                                          filteredServices[index];
 
-                                // Update the filtered services here as well
-                                filteredServices = [];
-                              });
-                            },
-                          );
-                        },
-                      ),
+                                      // Update the filtered services here as well
+                                      filteredServices = [];
+                                    });
+                                    List<dynamic> profileIds =
+                                        await _queryProfilesTable(city);
+                                    List<dynamic> serviceProviders =
+                                        await _queryServiceProvidersTable(
+                                            profileIds);
+                                    List<dynamic> filteredServiceProviders =
+                                        serviceProviders
+                                            .where((provider) =>
+                                                provider['service_provided'] ==
+                                                searchchoice)
+                                            .toList();
+
+                                    setState(() {
+                                      app_filteredServiceProviders =
+                                          filteredServiceProviders;
+                                    });
+                                  },
+                                );
+                              },
+                            ),
                     ),
                   ),
                   // saved searches
@@ -1082,6 +1154,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                           isSearching, // Content is visible when typing searching
                       child: Positioned(
                         child: Container(
+                          height: MediaQuery.of(context).size.height * 0.7,
                           color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1097,70 +1170,105 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.0125),
-                              ServiceProviderCard(
-                                saved: false,
-                                name: 'John Doe',
-                                bio:
-                                    'Experienced plumber with 5+ years of experience in fixing pipes.',
-                                image: 'assets/plumber.jpg',
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    true, // Set whether the service provider is online or offline.
-                              ),
-                              SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.0125),
-                              ServiceProviderCard(
-                                saved: false,
-                                name: 'Senior Centy',
-                                bio:
-                                    'Experienced barber with 5+ years of experience in cutting hair.',
-                                image: 'assets/barber.jpg',
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    false, // Set whether the service provider is online or offline.
+                              Expanded(
+                                child: FutureBuilder(
+                                  future: Future.wait(
+                                      app_filteredServiceProviders.map(
+                                          (serviceProviderData) =>
+                                              getProfileData(
+                                                  serviceProviderData['id']))),
+                                  builder: (context,
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SpinKitPulse(
+                                        color: Colors.white,
+                                      ); // or any loading indicator
+                                    } else if (snapshot.hasError) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset('assets/logo_t.png'),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15),
+                                          Text(
+                                            'Error loading data. Please try again.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.red,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      List<dynamic>? additionalProfileDataList =
+                                          snapshot.data;
+
+                                      return ListView.builder(
+                                        itemCount:
+                                            app_filteredServiceProviders.length,
+                                        itemBuilder: (context, index) {
+                                          dynamic serviceProviderData =
+                                              app_filteredServiceProviders[
+                                                  index];
+                                          dynamic additionalProfileData =
+                                              additionalProfileDataList![index];
+
+                                          return Column(
+                                            children: [
+                                              ServiceProviderCard(
+                                                saved: false,
+                                                name: additionalProfileData[
+                                                    'full_name'], // Replace with actual name from additionalProfileData
+                                                bio: serviceProviderData['bio'],
+                                                image: Image.network(
+                                                  serviceProviderData[
+                                                      'media_url1'],
+                                                ),
+                                                // view profile
+                                                onPressedButton1: () {
+                                                  // Implement the action for Button 1 here.
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          const GuestProfilePage(),
+                                                    ),
+                                                  );
+                                                },
+                                                // add to saved
+                                                onPressedButton2: () {
+                                                  // Implement the action for Button 2 here.
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  setState(() {
+                                                    isSearching = false;
+                                                    isTyping = false;
+                                                    _controller.clear();
+                                                    filteredServices = [];
+                                                  });
+                                                },
+                                                isOnline:
+                                                    true, // Set whether the service provider is online or offline.
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.0125,
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
                             ],
                           ),

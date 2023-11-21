@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
+import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -37,9 +38,11 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       // To access specific fields like full name and email address:
       final userFullName = userProfileMap['fullname'];
       final userPfp = userProfileMap['displaypicture'];
+      final userCity = userProfileMap['city'];
       setState(() {
         fullname = userFullName;
         pfp = userPfp;
+        city = userCity;
       });
       // You can now use fullName and emailAddress as needed.
     } else {
@@ -235,12 +238,14 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   bool isSearching = false; // Initially the user is not searching
   String fullname = '';
   String pfp = '';
+  String city = '';
   File? _image;
   bool pfpChange = false;
   String? countryValue = "";
   String? stateValue = "";
   String? cityValue = "";
 
+  // todo: save services list on user's phone
   // services list
   List<String> servicesList = [
     'Accountant',
@@ -594,6 +599,27 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     'Zoologist',
   ];
   // end of list of services
+
+  // search feature
+
+  Future<List<String>> _queryProfilesTable(String city) async {
+    try {
+      final response =
+          await supabase.from('profiles').select('id').eq('city', city);
+      // Extracting 'id' values from the response
+      List<String> profileIds =
+          (response.data as List).map((row) => row['id'] as String).toList();
+
+      return profileIds;
+    } on PostgrestException catch (error) {
+      print('postgrest exception query profies table $error');
+    } catch (error) {
+      print('error $error');
+    }
+
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -870,7 +896,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                           builder: (BuildContext context) =>
                                               const ServiceProviderProfileCreation()),
                                     );
-                                  }
+                                  } else if (value == 'customerCare') {}
                                   // Add more cases for other menu items
                                 },
                               ),
@@ -945,37 +971,48 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                       ),
                     ],
                   ),
+                  // todo: add ux for when the filtered list is empty, add your service
                   Visibility(
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: ListView.builder(
-                        itemCount: filteredServices.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              filteredServices[index],
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                            ),
-                            onTap: () {
-                              // Handle user selection here.
-                              FocusScope.of(context).unfocus();
-                              setState(() {
-                                isSearching = true;
-                                // When tile is tapped, set isTyping to false
-                                isTyping = false;
-                                searchchoice = filteredServices[index];
-                                _controller.text = filteredServices[index];
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: filteredServices.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                "Sorry, we don't have this service currently. Please pick a registered service.",
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.black, FontWeight.bold),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: filteredServices.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    filteredServices[index],
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  onTap: () {
+                                    // Handle user selection here.
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      isSearching = true;
+                                      // When tile is tapped, set isTyping to false
+                                      isTyping = false;
+                                      searchchoice = filteredServices[index];
+                                      _controller.text =
+                                          filteredServices[index];
 
-                                // Update the filtered services here as well
-                                filteredServices = [];
-                              });
-                            },
-                          );
-                        },
-                      ),
+                                      // Update the filtered services here as well
+                                      filteredServices = [];
+                                    });
+                                  },
+                                );
+                              },
+                            ),
                     ),
                   ),
                   // saved searches
@@ -1070,6 +1107,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                   height: MediaQuery.of(context).size.height *
                                       0.05),
                               Text(
+                                // todo: provide support for other pronouns
                                 '${searchchoice}s',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
@@ -1077,71 +1115,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.0125),
-                              ServiceProviderCard(
-                                saved: false,
-                                name: 'John Doe',
-                                bio:
-                                    'Experienced plumber with 5+ years of experience in fixing pipes.',
-                                image: 'assets/plumber.jpg',
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    true, // Set whether the service provider is online or offline.
-                              ),
-                              SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.0125),
-                              ServiceProviderCard(
-                                saved: false,
-                                name: 'Senior Centy',
-                                bio:
-                                    'Experienced barber with 5+ years of experience in cutting hair.',
-                                image: 'assets/barber.jpg',
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    false, // Set whether the service provider is online or offline.
-                              ),
                             ],
                           ),
                         ),

@@ -5,7 +5,7 @@ import '../../responsive_text_styles.dart';
 class ServiceProviderCard extends StatelessWidget {
   final String name;
   final String bio;
-  final String image;
+  final Image image;
   final Function() onPressedButton1;
   final Function()? onPressedButton2;
   final bool isOnline;
@@ -57,16 +57,12 @@ class ServiceProviderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 2),
-            Center(
-              child: Image.asset(
-                image,
-              ),
-            ),
+            Center(child: image),
             const SizedBox(height: 2),
             Text(bio,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: responsiveTextStyle(context, 14, Colors.white, null)),
+                style: responsiveTextStyle(context, 16, Colors.white, null)),
             const SizedBox(height: 2),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
