@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../main.dart';
 import '../../authentication/pages/user_login.dart';
 import '../../profile/pages/guest_profile_page.dart';
+import '../../profile/pages/view_profilepage.dart';
 import '../../responsive_text_styles.dart';
 import 'package:http/http.dart' as http;
 
@@ -612,7 +613,25 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       List<dynamic> profileIds = (response).map((row) => row['id']).toList();
       return profileIds;
     } on PostgrestException catch (error) {
-    } catch (error) {}
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
 
     return [];
   }
@@ -628,8 +647,25 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
       return response;
     } on PostgrestException catch (error) {
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
       return [];
     } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
       return [];
     }
   }
@@ -645,10 +681,25 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
       return response;
     } on PostgrestException catch (error) {
-      print('Postgrest exception querying profiles table: $error');
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
       return null;
     } catch (error) {
-      print('Error querying profiles table: $error');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
       return null;
     }
   }
@@ -1106,46 +1157,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                               ],
                             )
                             // saved searches
-                            // ServiceProviderCard(
-                            //   saved: true,
-                            //   name: 'John Doe',
-                            //   bio:
-                            //       'Experienced plumber with 5+ years of experience in fixing pipes.',
-                            //   image: 'assets/plumber.jpg',
-                            //   onPressedButton1: () {
-                            //     // Implement the action for Button 1 here.
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             const GuestProfilePage(),
-                            //       ),
-                            //     );
-                            //   },
 
-                            //   isOnline:
-                            //       true, // Set whether the service provider is online or offline.
-                            // ),
-                            // SizedBox(
-                            //     height: MediaQuery.of(context).size.height *
-                            //         0.0125),
-                            // ServiceProviderCard(
-                            //   saved: true,
-                            //   name: 'Senior Centy',
-                            //   bio:
-                            //       'Experienced barber with 5+ years of experience in cutting hair.',
-                            //   image: 'assets/barber.jpg',
-                            //   onPressedButton1: () {
-                            //     // Implement the action for Button 1 here.
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             const GuestProfilePage(),
-                            //       ),
-                            //     );
-                            //   },
-                            //   isOnline:
-                            //       false, // Set whether the service provider is online or offline.
-                            // ),
                             // end of saved search
                           ],
                         )),
@@ -1154,7 +1166,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                           isSearching, // Content is visible when typing searching
                       child: Positioned(
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.95,
                           color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1163,7 +1175,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                   height: MediaQuery.of(context).size.height *
                                       0.05),
                               Text(
-                                '${searchchoice}s',
+                                '$searchchoice(s)',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
                               ),
@@ -1189,7 +1201,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Image.asset('assets/logo_t.png'),
+                                          Image.asset(
+                                            'assets/logo_t.png',
+                                            height: 75,
+                                          ),
                                           SizedBox(
                                               height: MediaQuery.of(context)
                                                       .size
@@ -1209,6 +1224,41 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                       List<dynamic>? additionalProfileDataList =
                                           snapshot.data;
 
+                                      if (app_filteredServiceProviders
+                                          .isEmpty) {
+                                        // Display a message when there are no service providers
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Sorry, We don\'t have any service providers offering this service in your city.',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.025,
+                                            ),
+                                            Text(
+                                              'Share this link to invite them:',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            // Add your shareable link widget here
+                                            // For example, you can use a TextFormField to display and copy the link
+                                          ],
+                                        );
+                                      }
+
                                       return ListView.builder(
                                         itemCount:
                                             app_filteredServiceProviders.length,
@@ -1224,11 +1274,43 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                               ServiceProviderCard(
                                                 saved: false,
                                                 name: additionalProfileData[
-                                                    'full_name'], // Replace with actual name from additionalProfileData
+                                                    'full_name'],
                                                 bio: serviceProviderData['bio'],
                                                 image: Image.network(
                                                   serviceProviderData[
                                                       'media_url1'],
+                                                  errorBuilder: (BuildContext
+                                                          context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                    return Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          'assets/logo_t.png',
+                                                          height: 75,
+                                                        ),
+                                                        SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.015),
+                                                        Text(
+                                                          'Error loading Image. Please try again.',
+                                                          style:
+                                                              responsiveTextStyle(
+                                                                  context,
+                                                                  16,
+                                                                  Colors.red,
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
                                                 ),
                                                 // view profile
                                                 onPressedButton1: () {
@@ -1237,7 +1319,59 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                     MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          const GuestProfilePage(),
+                                                          ViewProfilePage(
+                                                        availability:
+                                                            serviceProviderData[
+                                                                'availability'],
+                                                        experience:
+                                                            serviceProviderData[
+                                                                'experience'],
+                                                        fbLink:
+                                                            serviceProviderData[
+                                                                'fb_url'],
+                                                        fullname:
+                                                            additionalProfileData[
+                                                                'full_name'],
+                                                        homeservice:
+                                                            serviceProviderData[
+                                                                'home_service'],
+                                                        igLink:
+                                                            serviceProviderData[
+                                                                'ig_url'],
+                                                        languagesspoken:
+                                                            serviceProviderData[
+                                                                'languages_spoken'],
+                                                        mailLink:
+                                                            serviceProviderData[
+                                                                'gmail_link'],
+                                                        media1:
+                                                            serviceProviderData[
+                                                                'media_url1'],
+                                                        media2:
+                                                            serviceProviderData[
+                                                                'media_url2'],
+                                                        media3:
+                                                            serviceProviderData[
+                                                                'media_url3'],
+                                                        media4:
+                                                            serviceProviderData[
+                                                                'media_url4'],
+                                                        media5:
+                                                            serviceProviderData[
+                                                                'media_url5'],
+                                                        pfp:
+                                                            additionalProfileData[
+                                                                'avatar_url'],
+                                                        specialoffers:
+                                                            serviceProviderData[
+                                                                'special_offers'],
+                                                        webLink:
+                                                            serviceProviderData[
+                                                                'web_link'],
+                                                        xLink:
+                                                            serviceProviderData[
+                                                                'x_url'],
+                                                      ),
                                                     ),
                                                   );
                                                 },

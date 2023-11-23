@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
-import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -11,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../profile/pages/guest_profile_page.dart';
 import '../../responsive_text_styles.dart';
-import '../widgets/service_provider_card.dart';
 
 class CustomerHomePage extends StatefulWidget {
   const CustomerHomePage({super.key});
@@ -602,23 +599,23 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
   // search feature
 
-  Future<List<String>> _queryProfilesTable(String city) async {
-    try {
-      final response =
-          await supabase.from('profiles').select('id').eq('city', city);
-      // Extracting 'id' values from the response
-      List<String> profileIds =
-          (response.data as List).map((row) => row['id'] as String).toList();
+  // Future<List<String>> _queryProfilesTable(String city) async {
+  //   try {
+  //     final response =
+  //         await supabase.from('profiles').select('id').eq('city', city);
+  //     // Extracting 'id' values from the response
+  //     List<String> profileIds =
+  //         (response.data as List).map((row) => row['id'] as String).toList();
 
-      return profileIds;
-    } on PostgrestException catch (error) {
-      print('postgrest exception query profies table $error');
-    } catch (error) {
-      print('error $error');
-    }
+  //     return profileIds;
+  //   } on PostgrestException catch (error) {
+  //     print('postgrest exception query profies table $error');
+  //   } catch (error) {
+  //     print('error $error');
+  //   }
 
-    return [];
-  }
+  //   return [];
+  // }
 
   @override
   Widget build(BuildContext context) {
