@@ -628,8 +628,9 @@ class _GuestHomePageState extends State<GuestHomePage>
                                 );
                               },
 
-                              isOnline:
-                                  true, // Set whether the service provider is online or offline.
+                              isOnline: true,
+                              onPressedButton2:
+                                  () {}, // Set whether the service provider is online or offline.
                             ),
                             SizedBox(
                                 height: MediaQuery.of(context).size.height *
@@ -649,8 +650,9 @@ class _GuestHomePageState extends State<GuestHomePage>
                                   ),
                                 );
                               },
-                              isOnline:
-                                  false, // Set whether the service provider is online or offline.
+                              isOnline: false,
+                              onPressedButton2:
+                                  () {}, // Set whether the service provider is online or offline.
                             ),
                             // end of saved search
                           ],

@@ -7,7 +7,7 @@ class ServiceProviderCard extends StatelessWidget {
   final String bio;
   final Image image;
   final Function() onPressedButton1;
-  final Function()? onPressedButton2;
+  final Function() onPressedButton2;
   final bool isOnline;
   final bool saved;
 
@@ -17,7 +17,7 @@ class ServiceProviderCard extends StatelessWidget {
     required this.bio,
     required this.image,
     required this.onPressedButton1,
-    this.onPressedButton2,
+    required this.onPressedButton2,
     required this.isOnline,
     required this.saved,
   });
@@ -45,6 +45,55 @@ class ServiceProviderCard extends StatelessWidget {
                 Text(name,
                     style:
                         responsiveTextStyle(context, 18, Colors.white, null)),
+                // saved
+                //     ? Row(
+                //         children: [
+                //           Row(
+                //             children: [
+                //               Icon(
+                //                 Icons.circle,
+                //                 color: isOnline ? Colors.green : Colors.black,
+                //                 size: 12,
+                //               ),
+                //             ],
+                //           ),
+                //           const SizedBox(
+                //             width: 5,
+                //           ),
+                //           GestureDetector(
+                //             onTap: () {
+                //               showDialog(
+                //                 context: context,
+                //                 builder: (BuildContext context) {
+                //                   return AlertDialog(
+                //                     title: const Text('Confirm Action'),
+                //                     content: const Text(
+                //                         'Are you sure you want to remove this service provider from your saved searches?'),
+                //                     actions: <Widget>[
+                //                       TextButton(
+                //                         onPressed: () {
+                //                           Navigator.of(context)
+                //                               .pop(); // Close the dialog
+                //                         },
+                //                         child: const Text('Cancel'),
+                //                       ),
+                //                       TextButton(
+                //                         onPressed: delete,
+                //                         child: const Text('Proceed'),
+                //                       ),
+                //                     ],
+                //                   );
+                //                 },
+                //               );
+                //             },
+                //             child: const Icon(
+                //               Icons.remove_circle,
+                //               color: Colors.redAccent,
+                //             ),
+                //           ),
+                //         ],
+                //       )
+                //     :
                 Row(
                   children: [
                     Icon(
@@ -74,55 +123,11 @@ class ServiceProviderCard extends StatelessWidget {
                   child: const Text('View Profile'),
                 ),
                 saved
-                    ? PopupMenuButton(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: const Color(0xFF039fdc),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: const Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text('Contact',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                        ),
-                        itemBuilder: (BuildContext context) {
-                          return [
-                            PopupMenuItem(
-                              textStyle: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                              value: 'videoCall',
-                              child: const Text(
-                                'Video Call',
-                              ),
-                            ),
-                            PopupMenuItem(
-                              textStyle: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                              value: 'voiceCall',
-                              child: const Text(
-                                'Voice Call',
-                              ),
-                            ),
-                            PopupMenuItem(
-                              textStyle: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                              value: 'chat',
-                              child: const Text('Chat'),
-                            ),
-                          ];
-                        },
-                        onSelected: (value) {
-                          // Handle the selected menu item (navigate to the corresponding screen)
-                          if (value == 'videoCall') {
-                            // Navigate to the edit profile screen
-                          } else if (value == 'voiceCall') {
-                            // Navigate to the theme screen
-                          } else if (value ==
-                              'chat') {} // Add more cases for other menu items
-                        },
-                      )
+                    ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF039fdc)),
+                        onPressed: onPressedButton2,
+                        child: const Text('Remove Saved'))
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF039fdc)),

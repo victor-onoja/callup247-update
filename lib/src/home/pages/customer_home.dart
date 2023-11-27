@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../profile/pages/view_profilepage.dart';
 import '../../responsive_text_styles.dart';
+import '../widgets/service_provider_card.dart';
 
 class CustomerHomePage extends StatefulWidget {
   const CustomerHomePage({super.key});
@@ -30,29 +32,37 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     )..repeat(); // This will make the animation loop
     final prefs = await SharedPreferences.getInstance();
     final userProfileJson = prefs.getString('userprofile');
+    final userSavedSearches = prefs.getStringList('savedSearches');
     if (userProfileJson != null) {
       final userProfileMap = json.decode(userProfileJson);
       // To access specific fields like full name and email address:
       final userFullName = userProfileMap['fullname'];
       final userPfp = userProfileMap['displaypicture'];
       final userCity = userProfileMap['city'];
+      final userState = userProfileMap['state'];
       setState(() {
         fullname = userFullName;
         pfp = userPfp;
         city = userCity;
+        state = userState;
       });
       // You can now use fullName and emailAddress as needed.
     } else {
       // Handle the case where no user profile data is found in SharedPreferences.
       // error in signup, please go back to signup ==> snackbar
     }
+    if (userSavedSearches != null) {
+      setState(() {
+        savedSearches = userSavedSearches;
+      });
+    } else {}
   }
 
   // use case update user information online and locally (location change)
   Future<void> _updateUserLocation() async {
-    final country = countryValue as String;
-    final state = stateValue as String;
-    final city = cityValue;
+    final newcountry = countryValue as String;
+    final newstate = stateValue as String;
+    final newcity = cityValue;
     final displaypicture =
         supabase.storage.from('avatars').getPublicUrl(fullname);
     final user = supabase.auth.currentUser;
@@ -60,9 +70,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       'id': user!.id,
       'updated_at': DateTime.now().toIso8601String(),
       'full_name': fullname,
-      'country': country,
-      'state': state,
-      'city': city,
+      'country': newcountry,
+      'state': newstate,
+      'city': newcity,
       'avatar_url': displaypicture
     };
 
@@ -103,15 +113,20 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     if (userProfileJson != null) {
       final userProfileMap = json.decode(userProfileJson);
 
-      userProfileMap['country'] = country;
-      userProfileMap['state'] = state;
-      userProfileMap['city'] = city;
+      userProfileMap['country'] = newcountry;
+      userProfileMap['state'] = newstate;
+      userProfileMap['city'] = newcity;
 
       // Convert the updated user data back to a JSON string
       final updatedUserProfileJson = json.encode(userProfileMap);
 
       // Save the updated user data back to shared preferences
       await prefs.setString('userprofile', updatedUserProfileJson);
+
+      setState(() {
+        city = newcity;
+        state = newstate;
+      });
     } else {}
   }
 
@@ -211,6 +226,153 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
+  // use case create saved search
+  Future<void> _createSavedSearch(userid, serviceproviderid) async {
+    try {
+      // Get existing saved searches from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<dynamic>? savedSearchesCreation =
+          prefs.getStringList('savedSearches') ?? <dynamic>[];
+      // Check if the serviceproviderid is not already in the list
+      if (!savedSearchesCreation.contains(serviceproviderid)) {
+        // Add the new serviceproviderid to the list
+        savedSearchesCreation.add(serviceproviderid);
+
+        // Save the updated list back to SharedPreferences
+        prefs.setStringList('savedSearches',
+            savedSearchesCreation.map((e) => e.toString()).toList());
+
+        setState(() {
+          savedSearches = savedSearchesCreation;
+        });
+
+        // Insert the saved search into the database
+        await supabase
+            .from('savedsearches')
+            .insert({'userid': userid, 'serviceproviderid': serviceproviderid});
+
+        // Show a success message to the user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'ServiceProvider has been added to your saved search successfully',
+              style: responsiveTextStyle(
+                  context, 16, Colors.black, FontWeight.bold),
+            ),
+            backgroundColor: Colors.green,
+          ));
+        }
+      } else {
+        // Show a message indicating that the service provider is already in saved searches
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'ServiceProvider is already in your saved searches',
+              style: responsiveTextStyle(
+                  context, 16, Colors.black, FontWeight.bold),
+            ),
+            backgroundColor: Colors.orange,
+          ));
+        }
+      }
+    } on PostgrestException catch (error) {
+      // print('$error createsavedsearch postgres');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :(',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      // print('$error catch');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  // use case delete saved search
+  Future<void> _deleteSavedSearch(userid, serviceproviderid) async {
+    try {
+      // Get existing saved searches from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<dynamic>? savedSearchesDeletion =
+          prefs.getStringList('savedSearches') ?? <dynamic>[];
+
+      // Check if the serviceproviderid is in the list
+      if (savedSearchesDeletion.contains(serviceproviderid)) {
+        // Remove the serviceproviderid from the list
+        savedSearchesDeletion.remove(serviceproviderid);
+
+        // Save the updated list back to SharedPreferences
+        prefs.setStringList('savedSearches',
+            savedSearchesDeletion.map((e) => e.toString()).toList());
+
+        setState(() {
+          savedSearches = savedSearchesDeletion;
+        });
+
+        // Delete the saved search from the database
+        await supabase
+            .from('savedsearches')
+            .delete()
+            .eq('userid', userid)
+            .eq('serviceproviderid', serviceproviderid);
+
+        // Show a success message to the user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'ServiceProvider has been removed from your saved searches successfully',
+              style: responsiveTextStyle(
+                  context, 16, Colors.black, FontWeight.bold),
+            ),
+            backgroundColor: Colors.green,
+          ));
+        }
+      } else {
+        // Show a message indicating that the service provider is not in saved searches
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'ServiceProvider is not in your saved searches. Please contact customer care',
+              style: responsiveTextStyle(
+                  context, 16, Colors.black, FontWeight.bold),
+            ),
+            backgroundColor: Colors.orange,
+          ));
+        }
+      }
+    } on PostgrestException catch (error) {
+      // Handle Supabase exception
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :(',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      // Handle other potential errors
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
   // init
   @override
   void initState() {
@@ -230,12 +392,16 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   final searchFocusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
   List<String> filteredServices = []; // Initialize it as an empty list
+  List<dynamic> appFilteredServiceProviders =
+      []; // Initialize it as an empty list
+  List<dynamic> savedSearches = [];
   String searchchoice = '';
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
   String fullname = '';
   String pfp = '';
-  String city = '';
+  String? city = '';
+  String state = '';
   File? _image;
   bool pfpChange = false;
   String? countryValue = "";
@@ -599,23 +765,226 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
   // search feature
 
-  // Future<List<String>> _queryProfilesTable(String city) async {
-  //   try {
-  //     final response =
-  //         await supabase.from('profiles').select('id').eq('city', city);
-  //     // Extracting 'id' values from the response
-  //     List<String> profileIds =
-  //         (response.data as List).map((row) => row['id'] as String).toList();
+  //?? use case: get ids of users within searchers city
+  Future<List<dynamic>> _queryProfilesTable(
+      {String? city, String? state}) async {
+    try {
+      // Check if city or state is provided, and build the query accordingly
+      final query = city != null
+          ? supabase.from('profiles').select('id').eq('city', city)
+          : state != null
+              ? supabase.from('profiles').select('id').eq('state', state)
+              : null;
 
-  //     return profileIds;
-  //   } on PostgrestException catch (error) {
-  //     print('postgrest exception query profies table $error');
-  //   } catch (error) {
-  //     print('error $error');
-  //   }
+      if (query != null) {
+        final response = await query;
+        List<dynamic> profileIds = (response).map((row) => row['id']).toList();
+        return profileIds;
+      }
+    } on PostgrestException catch (error) {
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
 
-  //   return [];
-  // }
+    return [];
+  }
+
+// use case ??: get service provider profiles within searchers city
+  Future<List<dynamic>> _queryServiceProvidersTable(
+      List<dynamic> profileIds) async {
+    try {
+      final response = await supabase
+          .from('serviceproviders_profile')
+          .select()
+          .in_('id', profileIds); // Use 'in_' to filter by multiple IDs
+
+      return response;
+    } on PostgrestException catch (error) {
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      return [];
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      return [];
+    }
+  }
+
+  // use case query profiles table
+  Future<dynamic> _getProfileData(String profileId) async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', profileId)
+          .single(); // Assume there's only one profile with a given ID
+
+      return response;
+    } on PostgrestException catch (error) {
+      final tError = error.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error: $tError, Please try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      return null;
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please check your network settings & try again',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+      return null;
+    }
+  }
+
+  Widget buildSavedSearchItem(
+      dynamic savedSearchProviderData, dynamic additionalProfileData) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: ServiceProviderCard(
+        name: additionalProfileData['full_name'],
+        bio: savedSearchProviderData['bio'],
+        image: Image.network(
+          savedSearchProviderData['media_url1'],
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace? stackTrace) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/logo_t.png',
+                  height: 75,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.015,
+                ),
+                Text(
+                  'Error loading Image. Please try again.',
+                  style: responsiveTextStyle(
+                      context, 16, Colors.red, FontWeight.bold),
+                ),
+              ],
+            );
+          },
+        ),
+        // Other properties and callbacks
+        // view profile
+        onPressedButton1: () {
+          // Implement the action for Button 1 here.
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => ViewProfilePage(
+                availability: savedSearchProviderData['availability'],
+                experience: savedSearchProviderData['experience'],
+                fbLink: savedSearchProviderData['fb_url'],
+                fullname: additionalProfileData['full_name'],
+                homeservice: savedSearchProviderData['home_service'],
+                igLink: savedSearchProviderData['ig_url'],
+                languagesspoken: savedSearchProviderData['languages_spoken'],
+                mailLink: savedSearchProviderData['gmail_link'],
+                media1: savedSearchProviderData['media_url1'],
+                media2: savedSearchProviderData['media_url2'],
+                media3: savedSearchProviderData['media_url3'],
+                media4: savedSearchProviderData['media_url4'],
+                media5: savedSearchProviderData['media_url5'],
+                pfp: additionalProfileData['avatar_url'],
+                specialoffers: savedSearchProviderData['special_offers'],
+                webLink: savedSearchProviderData['web_link'],
+                xLink: savedSearchProviderData['x_url'],
+              ),
+            ),
+          );
+        },
+        isOnline: true,
+        saved: true,
+        onPressedButton2: () {
+          final userid = supabase.auth.currentUser!.id;
+          final serviceproviderid = additionalProfileData['id'];
+          _deleteSavedSearch(userid, serviceproviderid);
+        },
+      ),
+    );
+  }
+
+  Widget buildSavedSearchList(List<dynamic> savedSearchProviders) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.6,
+      child: ListView.builder(
+        itemCount: savedSearchProviders.length,
+        itemBuilder: (context, index) {
+          dynamic savedSearchProviderData = savedSearchProviders[index];
+          return FutureBuilder(
+            future: _getProfileData(savedSearchProviderData['id']),
+            builder: (context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SpinKitPulse(
+                  color: Colors.white,
+                ); // or any loading indicator
+              } else if (snapshot.hasError) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/logo_t.png',
+                      height: 75,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    Text(
+                      'Error loading saved searches. Please try again.',
+                      style: responsiveTextStyle(
+                          context, 16, Colors.red, FontWeight.bold),
+                    ),
+                  ],
+                );
+              } else {
+                dynamic additionalProfileData = snapshot.data;
+                return buildSavedSearchItem(
+                    savedSearchProviderData, additionalProfileData);
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -992,7 +1361,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     style: responsiveTextStyle(context, 16,
                                         Colors.black, FontWeight.bold),
                                   ),
-                                  onTap: () {
+                                  onTap: () async {
                                     // Handle user selection here.
                                     FocusScope.of(context).unfocus();
                                     setState(() {
@@ -1005,6 +1374,30 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
                                       // Update the filtered services here as well
                                       filteredServices = [];
+                                    });
+                                    List<dynamic> profileIds;
+
+                                    if (city != null) {
+                                      profileIds =
+                                          await _queryProfilesTable(city: city);
+                                    } else {
+                                      profileIds = await _queryProfilesTable(
+                                          state: state);
+                                    }
+
+                                    List<dynamic> serviceProviders =
+                                        await _queryServiceProvidersTable(
+                                            profileIds);
+                                    List<dynamic> filteredServiceProviders =
+                                        serviceProviders
+                                            .where((provider) =>
+                                                provider['service_provided'] ==
+                                                searchchoice)
+                                            .toList();
+
+                                    setState(() {
+                                      appFilteredServiceProviders =
+                                          filteredServiceProviders;
                                     });
                                   },
                                 );
@@ -1032,62 +1425,79 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                             SizedBox(
                                 height: MediaQuery.of(context).size.height *
                                     0.0125),
-                            Image.asset('assets/search.png'),
-                            SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    0.0125),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'No saved search yet?\nStart searching now',
-                                  style: responsiveTextStyle(
-                                      context, 16, Colors.black, null),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            )
-                            // saved searches
-                            // ServiceProviderCard(
-                            //   saved: true,
-                            //   name: 'John Doe',
-                            //   bio:
-                            //       'Experienced plumber with 5+ years of experience in fixing pipes.',
-                            //   image: 'assets/plumber.jpg',
-                            //   onPressedButton1: () {
-                            //     // Implement the action for Button 1 here.
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             const GuestProfilePage(),
-                            //       ),
-                            //     );
-                            //   },
+                            FutureBuilder(
+                              future:
+                                  _queryServiceProvidersTable(savedSearches),
+                              builder: (context,
+                                  AsyncSnapshot<List<dynamic>> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const SpinKitPulse(
+                                    color: Colors.white,
+                                  ); // or any loading indicator
+                                } else if (snapshot.hasError) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/logo_t.png',
+                                        height: 75,
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.15,
+                                      ),
+                                      Text(
+                                        'Error loading saved searches. Please try again.',
+                                        style: responsiveTextStyle(context, 16,
+                                            Colors.red, FontWeight.bold),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  List<dynamic>? savedSearchProviders =
+                                      snapshot.data;
 
-                            //   isOnline:
-                            //       true, // Set whether the service provider is online or offline.
-                            // ),
-                            // SizedBox(
-                            //     height: MediaQuery.of(context).size.height *
-                            //         0.0125),
-                            // ServiceProviderCard(
-                            //   saved: true,
-                            //   name: 'Senior Centy',
-                            //   bio:
-                            //       'Experienced barber with 5+ years of experience in cutting hair.',
-                            //   image: 'assets/barber.jpg',
-                            //   onPressedButton1: () {
-                            //     // Implement the action for Button 1 here.
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             const GuestProfilePage(),
-                            //       ),
-                            //     );
-                            //   },
-                            //   isOnline:
-                            //       false, // Set whether the service provider is online or offline.
-                            // ),
+                                  // // Check if the future is complete and savedSearchProviders is still empty
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      savedSearchProviders!.isEmpty) {
+                                    // Display a message when there are no saved searches
+                                    return Column(
+                                      children: [
+                                        Image.asset('assets/search.png'),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.0125,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'No saved searches yet?\nStart searching now',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  null),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  }
+
+                                  return buildSavedSearchList(
+                                      savedSearchProviders!);
+                                }
+                              },
+                            )
+
                             // end of saved search
                           ],
                         )),
@@ -1096,6 +1506,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                           isSearching, // Content is visible when typing searching
                       child: Positioned(
                         child: Container(
+                          height: MediaQuery.of(context).size.height * 0.95,
                           color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1105,13 +1516,246 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                       0.05),
                               Text(
                                 // todo: provide support for other pronouns
-                                '${searchchoice}s',
+                                '$searchchoice(s)',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
                               ),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.0125),
+                              Expanded(
+                                child: FutureBuilder(
+                                  future: Future.wait(
+                                      appFilteredServiceProviders.map(
+                                          (serviceProviderData) =>
+                                              _getProfileData(
+                                                  serviceProviderData['id']))),
+                                  builder: (context,
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SpinKitPulse(
+                                        color: Colors.white,
+                                      ); // or any loading indicator
+                                    } else if (snapshot.hasError) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/logo_t.png',
+                                            height: 75,
+                                          ),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15),
+                                          Text(
+                                            'Error loading data. Please try again.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.red,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      List<dynamic>? additionalProfileDataList =
+                                          snapshot.data;
+
+                                      // Check if the future is complete and app_filteredServiceProviders is still empty
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          appFilteredServiceProviders.isEmpty) {
+                                        // Display a message when there are no service providers
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Sorry, We don\'t have any service providers offering this service in your city.',
+                                              style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.025,
+                                            ),
+                                            Text(
+                                              'Share this link to invite them:',
+                                              style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                            // Add your shareable link widget here
+                                            // For example, you can use a TextFormField to display and copy the link
+                                          ],
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        itemCount:
+                                            appFilteredServiceProviders.length,
+                                        itemBuilder: (context, index) {
+                                          dynamic serviceProviderData =
+                                              appFilteredServiceProviders[
+                                                  index];
+                                          dynamic additionalProfileData =
+                                              additionalProfileDataList![index];
+
+                                          return Column(
+                                            children: [
+                                              ServiceProviderCard(
+                                                saved: false,
+                                                name: additionalProfileData[
+                                                    'full_name'],
+                                                bio: serviceProviderData['bio'],
+                                                image: Image.network(
+                                                  serviceProviderData[
+                                                      'media_url1'],
+                                                  errorBuilder: (BuildContext
+                                                          context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                    return Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          'assets/logo_t.png',
+                                                          height: 75,
+                                                        ),
+                                                        SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.015),
+                                                        Text(
+                                                          'Error loading Image. Please try again.',
+                                                          style:
+                                                              responsiveTextStyle(
+                                                                  context,
+                                                                  16,
+                                                                  Colors.red,
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                                // view profile
+                                                onPressedButton1: () {
+                                                  // Implement the action for Button 1 here.
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ViewProfilePage(
+                                                        availability:
+                                                            serviceProviderData[
+                                                                'availability'],
+                                                        experience:
+                                                            serviceProviderData[
+                                                                'experience'],
+                                                        fbLink:
+                                                            serviceProviderData[
+                                                                'fb_url'],
+                                                        fullname:
+                                                            additionalProfileData[
+                                                                'full_name'],
+                                                        homeservice:
+                                                            serviceProviderData[
+                                                                'home_service'],
+                                                        igLink:
+                                                            serviceProviderData[
+                                                                'ig_url'],
+                                                        languagesspoken:
+                                                            serviceProviderData[
+                                                                'languages_spoken'],
+                                                        mailLink:
+                                                            serviceProviderData[
+                                                                'gmail_link'],
+                                                        media1:
+                                                            serviceProviderData[
+                                                                'media_url1'],
+                                                        media2:
+                                                            serviceProviderData[
+                                                                'media_url2'],
+                                                        media3:
+                                                            serviceProviderData[
+                                                                'media_url3'],
+                                                        media4:
+                                                            serviceProviderData[
+                                                                'media_url4'],
+                                                        media5:
+                                                            serviceProviderData[
+                                                                'media_url5'],
+                                                        pfp:
+                                                            additionalProfileData[
+                                                                'avatar_url'],
+                                                        specialoffers:
+                                                            serviceProviderData[
+                                                                'special_offers'],
+                                                        webLink:
+                                                            serviceProviderData[
+                                                                'web_link'],
+                                                        xLink:
+                                                            serviceProviderData[
+                                                                'x_url'],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                // add to saved
+                                                onPressedButton2: () {
+                                                  // Implement the action for Button 2 here.
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  setState(() {
+                                                    isSearching = false;
+                                                    isTyping = false;
+                                                    _controller.clear();
+                                                    filteredServices = [];
+                                                  });
+                                                  final userid = supabase
+                                                      .auth.currentUser!.id;
+                                                  final serviceproviderid =
+                                                      additionalProfileData[
+                                                          'id'];
+                                                  _createSavedSearch(userid,
+                                                      serviceproviderid);
+                                                },
+                                                isOnline:
+                                                    true, // Set whether the service provider is online or offline.
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.0125,
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
