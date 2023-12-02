@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_verification.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
-import 'package:csc_picker/csc_picker.dart';
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -45,7 +45,10 @@ class _ServiceProviderSignUpScreenState
           );
       if (mounted) {}
     } on PostgrestException catch (error) {
-    } catch (error) {}
+      //
+    } catch (error) {
+      //
+    }
   }
 
   // 03 - use case create user
@@ -88,7 +91,7 @@ class _ServiceProviderSignUpScreenState
     }
   }
 
-  // 0? - use case signin user
+  // 04 - use case signin user
 
   Future<void> _signInUser() async {
     final emailaddress = _emailaddressController.text.trim();
@@ -101,19 +104,21 @@ class _ServiceProviderSignUpScreenState
       );
       if (mounted) {}
     } on PostgrestException catch (error) {
+      //
     } catch (error) {
+      //
     } finally {
       if (mounted) {}
     }
   }
 
-  // 04 - use case update profiles table
+  // 05 - use case update profiles table
 
   Future<void> _updateProfile() async {
     final fullname = _fullnameController.text.trim();
-    final country = countryValue as String;
-    final state = stateValue as String;
-    final city = cityValue;
+    final country = _countryValue.text;
+    final state = _stateValue.text;
+    final city = _cityValue.text;
     final displaypicture = supabase.storage
         .from('avatars')
         .getPublicUrl(_fullnameController.text.trim());
@@ -174,14 +179,14 @@ class _ServiceProviderSignUpScreenState
     }
   }
 
-  // 05 - use case save user information locally
+  // 06 - use case save user information locally
 
   Future<void> _saveProfileLocally() async {
     final fullname = _fullnameController.text.trim();
     final emailaddress = _emailaddressController.text.trim();
-    final country = countryValue as String;
-    final state = stateValue as String;
-    final city = cityValue;
+    final country = _countryValue.text;
+    final state = _stateValue.text;
+    final city = _cityValue.text;
     final displaypicture = supabase.storage
         .from('avatars')
         .getPublicUrl(_fullnameController.text.trim());
@@ -207,7 +212,7 @@ class _ServiceProviderSignUpScreenState
     await prefs.setString('userprofile', jsonString);
   }
 
-  // 05 - use case check network
+  // 07 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -218,13 +223,13 @@ class _ServiceProviderSignUpScreenState
     }
   }
 
-  // 06 - variables
+  // 08 - variables
 
   bool isPasswordVisible = false;
   bool isPasswordConfirmVisible = false;
-  String? countryValue = "";
-  String? stateValue = "";
-  String? cityValue = "";
+  final _countryValue = TextEditingController();
+  final _stateValue = TextEditingController();
+  final _cityValue = TextEditingController();
   File? _image;
   final _fullnameController = TextEditingController();
   final _emailaddressController = TextEditingController();
@@ -234,7 +239,7 @@ class _ServiceProviderSignUpScreenState
   final _formKey = GlobalKey<FormState>();
   bool isPasswordReset = false;
 
-// 07 - dispose
+// 09 - dispose
 
   @override
   void dispose() {
@@ -244,7 +249,7 @@ class _ServiceProviderSignUpScreenState
     super.dispose();
   }
 
-  // 08 - build method
+  // 10 - build method
 
   @override
   Widget build(BuildContext context) {
@@ -334,38 +339,10 @@ class _ServiceProviderSignUpScreenState
 
                   // Country Picker
 
-                  CSCPicker(
-                    flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
-                    dropdownDecoration: BoxDecoration(
-                        color: const Color(0xFF13CAF1),
-                        borderRadius: BorderRadius.circular(6)),
-                    disabledDropdownDecoration: BoxDecoration(
-                        color: const Color(0xFF039fdc),
-                        borderRadius: BorderRadius.circular(6)),
-                    selectedItemStyle:
-                        responsiveTextStyle(context, 14, Colors.black, null),
-                    onCountryChanged: (value) {
-                      // Handle the selected country value here.
-                      setState(() {
-                        // Store the selected country value in a variable.
-                        countryValue = value;
-                      });
-                    },
-                    onStateChanged: (value) {
-                      // Handle the selected state value here.
-                      setState(() {
-                        // Store the selected state value in a variable.
-                        stateValue = value;
-                      });
-                    },
-                    onCityChanged: (value) {
-                      // Handle the selected city value here.
-                      setState(() {
-                        // Store the selected city value in a variable.
-                        cityValue = value;
-                      });
-                    },
-                  ),
+                  CountryStateCityPicker(
+                      country: _countryValue,
+                      state: _stateValue,
+                      city: _cityValue),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,

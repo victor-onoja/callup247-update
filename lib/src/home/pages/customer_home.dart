@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
-import 'package:csc_picker/csc_picker.dart';
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class CustomerHomePage extends StatefulWidget {
 
 class _CustomerHomePageState extends State<CustomerHomePage>
     with SingleTickerProviderStateMixin {
-  // use case initialize data
+  // 01 - use case initialize data
 
   Future<void> _initializeData() async {
     _acontroller = AnimationController(
@@ -58,11 +58,12 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     } else {}
   }
 
-  // use case update user information online and locally (location change)
+  // 02 - use case update user information online and locally (location change)
+
   Future<void> _updateUserLocation() async {
-    final newcountry = countryValue as String;
-    final newstate = stateValue as String;
-    final newcity = cityValue;
+    final newcountry = _countryValue.text;
+    final newstate = _stateValue.text;
+    final newcity = _cityValue.text;
     final displaypicture =
         supabase.storage.from('avatars').getPublicUrl(fullname);
     final user = supabase.auth.currentUser;
@@ -130,7 +131,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     } else {}
   }
 
-  // 05 - use case check valid image
+  // 03 - use case check valid image
 
   Future<bool> checkPfpValidity() async {
     try {
@@ -141,7 +142,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // use case display userpfp
+  // 04 - use case display userpfp
 
   Future<ImageProvider> _pfpImageProvider(String imageUrl) async {
     // Check if the image URL is valid
@@ -156,7 +157,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // 01 - use case pick image
+  // 05 - use case pick image
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -168,7 +169,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // 02 - use case upload image
+  // 06 - use case upload image
 
   Future<void> _uploadImage() async {
     final filename = fullname;
@@ -192,10 +193,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         });
       }
     } on PostgrestException catch (error) {
-    } catch (error) {}
+      //
+    } catch (error) {
+      //
+    }
   }
 
-  // use case sign out
+  // 07 - use case sign out
 
   Future<void> _signOut() async {
     try {
@@ -226,7 +230,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // use case create saved search
+  // 08 - use case create saved search
+
   Future<void> _createSavedSearch(userid, serviceproviderid) async {
     try {
       // Get existing saved searches from SharedPreferences
@@ -276,7 +281,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         }
       }
     } on PostgrestException catch (error) {
-      // print('$error createsavedsearch postgres');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :(',
@@ -286,7 +290,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      // print('$error catch');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please check your network settings & try again',
@@ -298,7 +301,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // use case delete saved search
+  // 09 - use case delete saved search
+
   Future<void> _deleteSavedSearch(userid, serviceproviderid) async {
     try {
       // Get existing saved searches from SharedPreferences
@@ -374,6 +378,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   }
 
   // init
+
   @override
   void initState() {
     super.initState();
@@ -381,6 +386,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   }
 
   // dispose
+
   @override
   void dispose() {
     _acontroller.dispose();
@@ -388,6 +394,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   }
 
   // variables
+
   late AnimationController _acontroller;
   final searchFocusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
@@ -404,12 +411,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   String state = '';
   File? _image;
   bool pfpChange = false;
-  String? countryValue = "";
-  String? stateValue = "";
-  String? cityValue = "";
+  final _countryValue = TextEditingController();
+  final _stateValue = TextEditingController();
+  final _cityValue = TextEditingController();
 
   // todo: save services list on user's phone
   // services list
+
   List<String> servicesList = [
     'Accountant',
     'Accounts Clerk',
@@ -763,14 +771,15 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   ];
   // end of list of services
 
-  // search feature
+  // 09 - use case search feature
 
-  //?? use case: get ids of users within searchers city
+  // 09A - use case get ids of users within searchers city
+
   Future<List<dynamic>> _queryProfilesTable(
       {String? city, String? state}) async {
     try {
       // Check if city or state is provided, and build the query accordingly
-      final query = city != null
+      final query = city != null || city == ''
           ? supabase.from('profiles').select('id').eq('city', city)
           : state != null
               ? supabase.from('profiles').select('id').eq('state', state)
@@ -805,7 +814,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     return [];
   }
 
-// use case ??: get service provider profiles within searchers city
+// 09B - use case get service provider profiles within searchers city
+
   Future<List<dynamic>> _queryServiceProvidersTable(
       List<dynamic> profileIds) async {
     try {
@@ -839,7 +849,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  // use case query profiles table
+  // 09C - use case query profiles table
+
   Future<dynamic> _getProfileData(String profileId) async {
     try {
       final response = await supabase
@@ -873,7 +884,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
-  Widget buildSavedSearchItem(
+  // build saved search serviceprovider card
+
+  Widget _buildSavedSearchItem(
       dynamic savedSearchProviderData, dynamic additionalProfileData) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -903,10 +916,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
             );
           },
         ),
-        // Other properties and callbacks
         // view profile
         onPressedButton1: () {
-          // Implement the action for Button 1 here.
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) => ViewProfilePage(
@@ -942,7 +953,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     );
   }
 
-  Widget buildSavedSearchList(List<dynamic> savedSearchProviders) {
+  // build saved search list from backend
+
+  Widget _buildSavedSearchList(List<dynamic> savedSearchProviders) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.6,
       child: ListView.builder(
@@ -976,7 +989,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                 );
               } else {
                 dynamic additionalProfileData = snapshot.data;
-                return buildSavedSearchItem(
+                return _buildSavedSearchItem(
                     savedSearchProviderData, additionalProfileData);
               }
             },
@@ -985,6 +998,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       ),
     );
   }
+
+// build method
 
   @override
   Widget build(BuildContext context) {
@@ -1190,52 +1205,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                             content: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                CSCPicker(
-                                                  flagState: CountryFlag
-                                                      .SHOW_IN_DROP_DOWN_ONLY,
-                                                  dropdownDecoration:
-                                                      BoxDecoration(
-                                                          color:
-                                                              const Color(
-                                                                  0xFF13CAF1),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(6)),
-                                                  disabledDropdownDecoration:
-                                                      BoxDecoration(
-                                                          color: const Color(
-                                                              0xFF039fdc),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(6)),
-                                                  selectedItemStyle:
-                                                      responsiveTextStyle(
-                                                          context,
-                                                          14,
-                                                          Colors.black,
-                                                          null),
-                                                  onCountryChanged: (value) {
-                                                    // Handle the selected country value here.
-                                                    setState(() {
-                                                      // Store the selected country value in a variable.
-                                                      countryValue = value;
-                                                    });
-                                                  },
-                                                  onStateChanged: (value) {
-                                                    // Handle the selected state value here.
-                                                    setState(() {
-                                                      // Store the selected state value in a variable.
-                                                      stateValue = value;
-                                                    });
-                                                  },
-                                                  onCityChanged: (value) {
-                                                    // Handle the selected city value here.
-                                                    setState(() {
-                                                      // Store the selected city value in a variable.
-                                                      cityValue = value;
-                                                    });
-                                                  },
-                                                ),
+                                                CountryStateCityPicker(
+                                                    country: _countryValue,
+                                                    state: _stateValue,
+                                                    city: _cityValue),
                                               ],
                                             ),
                                             actions: [
@@ -1337,7 +1310,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                       ),
                     ],
                   ),
-                  // todo: add ux for when the filtered list is empty, add your service
                   Visibility(
                     visible: isTyping, // Content is visible when typing
                     child: Container(
@@ -1377,7 +1349,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     });
                                     List<dynamic> profileIds;
 
-                                    if (city != null) {
+                                    if (city != null || city == '') {
                                       profileIds =
                                           await _queryProfilesTable(city: city);
                                     } else {
@@ -1492,7 +1464,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     );
                                   }
 
-                                  return buildSavedSearchList(
+                                  return _buildSavedSearchList(
                                       savedSearchProviders!);
                                 }
                               },
@@ -1598,6 +1570,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                 FontWeight.bold,
                                               ),
                                             ),
+                                            // todo:
                                             // Add your shareable link widget here
                                             // For example, you can use a TextFormField to display and copy the link
                                           ],
@@ -1659,7 +1632,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                 ),
                                                 // view profile
                                                 onPressedButton1: () {
-                                                  // Implement the action for Button 1 here.
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                       builder: (BuildContext
@@ -1722,7 +1694,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                 },
                                                 // add to saved
                                                 onPressedButton2: () {
-                                                  // Implement the action for Button 2 here.
                                                   FocusScope.of(context)
                                                       .unfocus();
                                                   setState(() {
