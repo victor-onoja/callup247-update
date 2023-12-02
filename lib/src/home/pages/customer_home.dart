@@ -779,7 +779,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       {String? city, String? state}) async {
     try {
       // Check if city or state is provided, and build the query accordingly
-      final query = city != null
+      final query = city != null || city == ''
           ? supabase.from('profiles').select('id').eq('city', city)
           : state != null
               ? supabase.from('profiles').select('id').eq('state', state)
@@ -1349,7 +1349,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     });
                                     List<dynamic> profileIds;
 
-                                    if (city != null) {
+                                    if (city != null || city == '') {
                                       profileIds =
                                           await _queryProfilesTable(city: city);
                                     } else {

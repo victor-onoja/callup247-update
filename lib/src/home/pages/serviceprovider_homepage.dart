@@ -779,7 +779,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       {String? city, String? state}) async {
     try {
       // Check if city or state is provided, and build the query accordingly
-      final query = city != null
+      final query = city != null || city == ''
           ? supabase.from('profiles').select('id').eq('city', city)
           : state != null
               ? supabase.from('profiles').select('id').eq('state', state)
@@ -1241,7 +1241,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                     });
                                     List<dynamic> profileIds;
 
-                                    if (city != null) {
+                                    if (city != null || city == '') {
                                       profileIds =
                                           await _queryProfilesTable(city: city);
                                     } else {
@@ -1574,7 +1574,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                               ),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
-                                      0.0125),
+                                      0.025),
                               Expanded(
                                 child: FutureBuilder(
                                   future: Future.wait(

@@ -1,4 +1,3 @@
-import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/splash_screen.dart';
