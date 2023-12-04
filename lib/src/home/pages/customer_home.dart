@@ -939,7 +939,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
   Widget _buildSavedSearchList(List<dynamic> savedSearchProviders) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.sizeOf(context).height * 0.6,
       child: ListView.builder(
         itemCount: savedSearchProviders.length,
         itemBuilder: (context, index) {
@@ -962,7 +962,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                       height: 75,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.15,
+                      height: MediaQuery.sizeOf(context).height * 0.15,
                     ),
                     Text(
                       'Error loading saved searches. Please try again.',
@@ -990,7 +990,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -1238,7 +1238,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
                   Row(
                     children: [
                       Expanded(
@@ -1300,7 +1300,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.sizeOf(context).height * 0.7,
                       child: filteredServices.isEmpty
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -1374,15 +1374,15 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                           children: [
                             SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15),
+                                    MediaQuery.sizeOf(context).height * 0.15),
                             Text(
                               'Saved Searches',
                               style: responsiveTextStyle(
                                   context, 20, null, FontWeight.bold),
                             ),
                             SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    0.0125),
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.0125),
                             FutureBuilder(
                               future:
                                   _queryServiceProvidersTable(savedSearches),
@@ -1405,7 +1405,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                       ),
                                       SizedBox(
                                         height:
-                                            MediaQuery.of(context).size.height *
+                                            MediaQuery.sizeOf(context).height *
                                                 0.15,
                                       ),
                                       Text(
@@ -1428,8 +1428,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                       children: [
                                         Image.asset('assets/search.png'),
                                         SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
+                                          height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.0125,
                                         ),
@@ -1466,14 +1465,14 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                           isSearching, // Content is visible when typing searching
                       child: Positioned(
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.95,
+                          height: MediaQuery.sizeOf(context).height * 0.95,
                           color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.05),
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.05),
                               Text(
                                 // todo: provide support for other pronouns
                                 '$searchchoice(s)',
@@ -1481,7 +1480,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                     context, 20, null, FontWeight.bold),
                               ),
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
+                                  height: MediaQuery.sizeOf(context).height *
                                       0.0125),
                               Expanded(
                                 child: FutureBuilder(
@@ -1509,8 +1508,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                             height: 75,
                                           ),
                                           SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
+                                              height: MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.15),
                                           Text(
@@ -1546,8 +1544,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                               ),
                                             ),
                                             SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
+                                              height: MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.025,
                                             ),
@@ -1664,10 +1661,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                     'media_url1'],
                                               ),
                                               SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.0125,
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.0125,
                                               )
                                             ],
                                           );

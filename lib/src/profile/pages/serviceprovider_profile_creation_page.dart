@@ -732,7 +732,7 @@ class _ServiceProviderProfileCreationState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -743,7 +743,7 @@ class _ServiceProviderProfileCreationState
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
 
                 // add service
 
@@ -756,7 +756,7 @@ class _ServiceProviderProfileCreationState
                   style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
 
                 Row(
                   children: [
@@ -820,7 +820,7 @@ class _ServiceProviderProfileCreationState
                   visible: isTyping, // Content is visible when typing
                   child: Container(
                     color: Colors.white,
-                    height: MediaQuery.of(context).size.height * 0.7,
+                    height: MediaQuery.sizeOf(context).height * 0.7,
                     child: filteredServices.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -860,7 +860,7 @@ class _ServiceProviderProfileCreationState
                   ),
                 ),
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
                 // add media
 
@@ -872,7 +872,7 @@ class _ServiceProviderProfileCreationState
                   'hint: you can add up to three images that showcase your work :)',
                   style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -904,8 +904,7 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                       ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.025),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
                       // image 2
                       Container(
                         color: Colors.black45,
@@ -933,8 +932,7 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                       ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.025),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
                       // image 3
                       Container(
                         color: Colors.black45,
@@ -965,7 +963,7 @@ class _ServiceProviderProfileCreationState
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
 
                 Text(
                     'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
@@ -974,7 +972,7 @@ class _ServiceProviderProfileCreationState
 
                 // add social links
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
                 Text(
                   'Add Your Social links :',
                   style: responsiveTextStyle(context, 20, Colors.black, null),
@@ -983,7 +981,7 @@ class _ServiceProviderProfileCreationState
                     'hint: click on the app icons for easy navigation to share your proile :)',
                     style:
                         responsiveTextStyle(context, 12, Colors.black45, null)),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                 Column(
                   children: [
                     Row(
@@ -1002,12 +1000,12 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Text('Instagram :',
                             style: responsiveTextStyle(
                                 context, 16, Colors.black, null)),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Flexible(
                           child: TextField(
                             controller: _instagramController,
@@ -1032,12 +1030,12 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Text('X :',
                             style: responsiveTextStyle(
                                 context, 16, Colors.black, null)),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Flexible(
                           child: TextField(
                             controller: _xController,
@@ -1063,12 +1061,12 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Text('Facebook :',
                             style: responsiveTextStyle(
                                 context, 16, Colors.black, null)),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Flexible(
                           child: TextField(
                             controller: _facebookController,
@@ -1094,12 +1092,12 @@ class _ServiceProviderProfileCreationState
                           ),
                         ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Text('Website :',
                             style: responsiveTextStyle(
                                 context, 16, Colors.black, null)),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
+                            width: MediaQuery.sizeOf(context).width * 0.02),
                         Flexible(
                           child: TextField(
                             controller: _websiteController,
@@ -1112,7 +1110,7 @@ class _ServiceProviderProfileCreationState
                   ],
                 ),
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
                 // add details
 
@@ -1124,13 +1122,13 @@ class _ServiceProviderProfileCreationState
                   'hint: you can be as expressive as you like :)',
                   style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                 Row(
                   children: [
                     Text('Bio :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _bioController,
@@ -1149,7 +1147,7 @@ class _ServiceProviderProfileCreationState
                     Text('Experience :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _experienceController,
@@ -1167,7 +1165,7 @@ class _ServiceProviderProfileCreationState
                     Text('Availability :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _availabilityController,
@@ -1185,7 +1183,7 @@ class _ServiceProviderProfileCreationState
                     Text('Special Offers :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _specialOffersController,
@@ -1203,7 +1201,7 @@ class _ServiceProviderProfileCreationState
                     Text('Home Service :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _homeServiceController,
@@ -1221,7 +1219,7 @@ class _ServiceProviderProfileCreationState
                     Text('Languages Spoken :',
                         style: responsiveTextStyle(
                             context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                     Flexible(
                       child: TextField(
                         controller: _languagesSpokenController,
@@ -1234,7 +1232,7 @@ class _ServiceProviderProfileCreationState
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
                 // submit button
 
@@ -1323,8 +1321,8 @@ class _ServiceProviderProfileCreationState
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF13CAF1),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.width * 0.5,
-                                MediaQuery.of(context).size.height *
+                                MediaQuery.sizeOf(context).width * 0.5,
+                                MediaQuery.sizeOf(context).height *
                                     0.06), // Set the button's width and height
                           ),
                           child: Text(

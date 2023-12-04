@@ -126,14 +126,14 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
           width: 220,
           height: 220,
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(description,
               textAlign: TextAlign.center,
               style: responsiveTextStyle(context, 28.0, null, FontWeight.bold)),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+        SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: circles,

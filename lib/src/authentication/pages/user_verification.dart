@@ -182,7 +182,7 @@ class _VerificationScreenState extends State<VerificationScreen>
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.sizeOf(context).height,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomLeft,
@@ -197,8 +197,8 @@ class _VerificationScreenState extends State<VerificationScreen>
               padding: EdgeInsets.only(
                   left: 32,
                   right: 32,
-                  top: MediaQuery.of(context).size.height * 0.01,
-                  bottom: MediaQuery.of(context).size.height * 0.1),
+                  top: MediaQuery.sizeOf(context).height * 0.01,
+                  bottom: MediaQuery.sizeOf(context).height * 0.1),
               child: Center(
                 child: Column(
                   children: [
@@ -215,7 +215,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                         ),
                       ],
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -236,7 +236,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                         )
                       ],
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     Pinput(
                       length: 6,
                       onCompleted: (value) {
@@ -245,7 +245,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                         });
                       },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     loading
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
@@ -258,7 +258,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                                   context, 14, Colors.black, FontWeight.bold),
                             ),
                           ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

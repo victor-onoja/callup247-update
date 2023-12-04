@@ -270,7 +270,7 @@ class _ServiceProviderSignUpScreenState
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.sizeOf(context).height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomLeft,
@@ -338,7 +338,7 @@ class _ServiceProviderSignUpScreenState
                       return null;
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
 
                   // Country Picker
 
@@ -449,7 +449,7 @@ class _ServiceProviderSignUpScreenState
                       return null;
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
 
                   // display picture
 
@@ -480,7 +480,7 @@ class _ServiceProviderSignUpScreenState
                       ],
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
                   // todo: add terms and conditions document, agreement
 

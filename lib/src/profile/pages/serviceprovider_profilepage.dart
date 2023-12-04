@@ -180,7 +180,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                       left: 16.0,
                       right: 16,
                       bottom: 16,
-                      top: MediaQuery.of(context).size.height * 0.05),
+                      top: MediaQuery.sizeOf(context).height * 0.05),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -263,14 +263,14 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         ],
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.08),
+                          height: MediaQuery.sizeOf(context).height * 0.08),
                       Text(
                         'Media:',
                         style: responsiveTextStyle(
                             context, 20, null, FontWeight.bold),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01),
+                          height: MediaQuery.sizeOf(context).height * 0.01),
 
                       // service provider media territory
                       SingleChildScrollView(
@@ -280,11 +280,11 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                             _buildImageWidget(media1),
                             SizedBox(
                                 width:
-                                    MediaQuery.of(context).size.width * 0.025),
+                                    MediaQuery.sizeOf(context).width * 0.025),
                             _buildImageWidget(media2),
                             SizedBox(
                                 width:
-                                    MediaQuery.of(context).size.width * 0.025),
+                                    MediaQuery.sizeOf(context).width * 0.025),
                             _buildImageWidget(media3),
                           ],
                         ),
@@ -292,14 +292,14 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
 
                       // end of service provider media territory
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.08),
+                          height: MediaQuery.sizeOf(context).height * 0.08),
                       Text(
                         'Social Links:',
                         style: responsiveTextStyle(
                             context, 20, null, FontWeight.bold),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01),
+                          height: MediaQuery.sizeOf(context).height * 0.01),
 
                       // service provider social links
                       Row(
@@ -650,14 +650,14 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                       ),
                       // end of service provider social links
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.08),
+                          height: MediaQuery.sizeOf(context).height * 0.08),
                       Text(
                         'Details:',
                         style: responsiveTextStyle(
                             context, 20, null, FontWeight.bold),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01),
+                          height: MediaQuery.sizeOf(context).height * 0.01),
 
                       // service provider details
                       Row(

@@ -13,7 +13,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -28,7 +28,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: 32.0,
-                vertical: MediaQuery.of(context).size.height * 0.1),
+                vertical: MediaQuery.sizeOf(context).height * 0.1),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,12 +52,12 @@ class OnboardingChoiceScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 Text(
                   'Use this app as a:',
                   style: responsiveTextStyle(context, 28, null, null),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 InkWell(
                   onTap: () {
                     Future.delayed(const Duration(milliseconds: 300), () {
@@ -78,7 +78,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
                     title: 'Customer',
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 InkWell(
                   onTap: () {
                     Future.delayed(const Duration(milliseconds: 300), () {
@@ -98,7 +98,7 @@ class OnboardingChoiceScreen extends StatelessWidget {
                           'showcase your skills, connect with local customers, manage your availability, and grow your business',
                       imagePath: 'assets/service_provider.png'),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 InkWell(
                     splashColor: Colors.greenAccent,
                     radius: 50.0,

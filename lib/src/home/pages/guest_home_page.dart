@@ -396,7 +396,7 @@ class _GuestHomePageState extends State<GuestHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -500,7 +500,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
                   Row(
                     children: [
                       Expanded(
@@ -562,7 +562,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.sizeOf(context).height * 0.7,
                       child: ListView.builder(
                         itemCount: filteredServices.length,
                         itemBuilder: (context, index) {
@@ -602,15 +602,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                           children: [
                             SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15),
+                                    MediaQuery.sizeOf(context).height * 0.15),
                             Text(
                               'Saved Searches',
                               style: responsiveTextStyle(
                                   context, 20, null, FontWeight.bold),
                             ),
                             SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    0.0125),
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.0125),
                             // saved searches
                             ServiceProviderCard(
                               saved: true,
@@ -633,8 +633,8 @@ class _GuestHomePageState extends State<GuestHomePage>
                               img: '',
                             ),
                             SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    0.0125),
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.0125),
                             ServiceProviderCard(
                                 saved: true,
                                 name: 'Senior Centy',
@@ -667,15 +667,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.05),
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.05),
                               Text(
                                 '${searchchoice}s',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
                               ),
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
+                                  height: MediaQuery.sizeOf(context).height *
                                       0.0125),
                               ServiceProviderCard(
                                   saved: false,
@@ -710,7 +710,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                                   guest: true,
                                   img: ''),
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
+                                  height: MediaQuery.sizeOf(context).height *
                                       0.0125),
                               ServiceProviderCard(
                                   saved: false,

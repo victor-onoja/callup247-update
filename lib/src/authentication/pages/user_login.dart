@@ -154,7 +154,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.sizeOf(context).height,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomLeft,
@@ -178,7 +178,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         height: 75,
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     // email address
 
                     TextFormField(
@@ -208,7 +208,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         return null;
                       },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.08),
                     // Password
 
                     TextFormField(
@@ -251,7 +251,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         return null;
                       },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
                     // log in button
 
@@ -290,7 +290,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   context, 14, Colors.black, FontWeight.bold),
                             ),
                           ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
                     // forgot password
 

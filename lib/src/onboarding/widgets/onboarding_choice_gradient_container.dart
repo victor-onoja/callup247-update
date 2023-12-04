@@ -35,7 +35,7 @@ class GradientContainer extends StatelessWidget {
                 Text(title,
                     style: responsiveTextStyle(
                         context, 20, null, FontWeight.bold)),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 Text(text, style: responsiveTextStyle(context, 16, null, null)),
               ],
             ),

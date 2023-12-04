@@ -124,7 +124,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.sizeOf(context).height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomLeft,
@@ -148,7 +148,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         height: 75,
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                     // Password
 
                     TextFormField(
@@ -200,7 +200,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         return null;
                       },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.08),
 
                     // Confirm Password
 
@@ -243,7 +243,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         return null;
                       },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
                     // action button
 
@@ -282,7 +282,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                                   context, 14, Colors.black, FontWeight.bold),
                             ),
                           ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                   ],
                 )),
           ),

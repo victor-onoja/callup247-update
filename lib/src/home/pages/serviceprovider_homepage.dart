@@ -895,7 +895,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
@@ -1149,7 +1149,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                       ),
                     ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
                   Row(
                     children: [
                       Expanded(
@@ -1211,7 +1211,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                     visible: isTyping, // Content is visible when typing
                     child: Container(
                       color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.sizeOf(context).height * 0.7,
                       child: filteredServices.isEmpty
                           ? Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -1285,15 +1285,15 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                           children: [
                             SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15),
+                                    MediaQuery.sizeOf(context).height * 0.15),
                             Text(
                               'Saved Searches',
                               style: responsiveTextStyle(
                                   context, 20, null, FontWeight.bold),
                             ),
                             SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    0.0125),
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.0125),
                             FutureBuilder(
                               future:
                                   _queryServiceProvidersTable(savedSearches),
@@ -1316,7 +1316,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                       ),
                                       SizedBox(
                                         height:
-                                            MediaQuery.of(context).size.height *
+                                            MediaQuery.sizeOf(context).height *
                                                 0.15,
                                       ),
                                       Text(
@@ -1339,8 +1339,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                       children: [
                                         Image.asset('assets/search.png'),
                                         SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
+                                          height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.0125,
                                         ),
@@ -1366,7 +1365,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                   // Display the saved searches
                                   return SizedBox(
                                       height:
-                                          MediaQuery.of(context).size.height *
+                                          MediaQuery.sizeOf(context).height *
                                               0.6,
                                       child: ListView.builder(
                                           itemCount:
@@ -1405,11 +1404,11 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                           height: 75,
                                                         ),
                                                         SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.15,
+                                                          height:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .height *
+                                                                  0.15,
                                                         ),
                                                         Text(
                                                           'Error loading saved searches. Please try again.',
@@ -1509,11 +1508,11 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                           },
                                                         ),
                                                         SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.0125,
+                                                          height:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .height *
+                                                                  0.0125,
                                                         )
                                                       ],
                                                     );
@@ -1530,21 +1529,21 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                           isSearching, // Content is visible when typing searching
                       child: Positioned(
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.95,
+                          height: MediaQuery.sizeOf(context).height * 0.95,
                           color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.05),
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.05),
                               Text(
                                 '$searchchoice(s)',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
                               ),
                               SizedBox(
-                                  height: MediaQuery.of(context).size.height *
+                                  height: MediaQuery.sizeOf(context).height *
                                       0.025),
                               Expanded(
                                 child: FutureBuilder(
@@ -1572,8 +1571,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                             height: 75,
                                           ),
                                           SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
+                                              height: MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.15),
                                           Text(
@@ -1609,8 +1607,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                               ),
                                             ),
                                             SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
+                                              height: MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.025,
                                             ),
@@ -1727,10 +1724,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                     'media_url1'],
                                               ),
                                               SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.0125,
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.0125,
                                               )
                                             ],
                                           );
