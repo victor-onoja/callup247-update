@@ -246,6 +246,9 @@ class _ServiceProviderSignUpScreenState
     _emailaddressController.dispose();
     _fullnameController.dispose();
     _passwordController.dispose();
+    _countryValue.dispose();
+    _stateValue.dispose();
+    _cityValue.dispose();
     super.dispose();
   }
 

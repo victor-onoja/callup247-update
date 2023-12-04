@@ -244,6 +244,9 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     _emailaddressController.dispose();
     _fullnameController.dispose();
     _passwordController.dispose();
+    _cityValue.dispose();
+    _countryValue.dispose();
+    _stateValue.dispose();
     super.dispose();
   }
 

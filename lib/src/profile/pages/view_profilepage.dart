@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/profile_page_action_button.dart';
@@ -50,7 +52,19 @@ class ViewProfilePage extends StatefulWidget {
 }
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
-  // 05 - use case check valid image
+  // init
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  // - delete all cache on init
+  Future<void> _initialize() async {
+    await DefaultCacheManager().removeFile("viewprofile");
+  }
+  // 01 - use case check valid image
 
   Future<bool> _checkImageValidity(String img) async {
     try {
@@ -61,7 +75,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     }
   }
 
-  // use case display image
+  // 02 - use case display image
 
   Future<ImageProvider?> _imageProvider(String img) async {
     // Check if the image URL is valid
@@ -69,13 +83,15 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return NetworkImage(img);
+      return CachedNetworkImageProvider(img,
+          cacheManager: CacheManager(
+              Config("viewprofile", stalePeriod: const Duration(hours: 1))));
     } else {
       return null;
     }
   }
 
-  // use case display media
+  // 03 - use case display media
 
   FutureBuilder<ImageProvider<Object>?> _buildImageWidget(String imageUrl) {
     return FutureBuilder<ImageProvider<Object>?>(
@@ -105,7 +121,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   }
 
   // variable
+
   bool isOnline = true;
+
+  // build method
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,13 +258,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                 width:
                                     MediaQuery.of(context).size.width * 0.025),
                             _buildImageWidget(widget.media5),
-                            // Image.asset('assets/no_media.png'),
-                            // Text(
-                            //   'No media yet :(\nStart an online chat?',
-                            //   style: responsiveTextStyle(
-                            //       context, 16, Colors.black, null),
-                            //   textAlign: TextAlign.center,
-                            // )
                           ],
                         ),
                       ),

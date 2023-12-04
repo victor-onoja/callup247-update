@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -56,6 +58,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         savedSearches = userSavedSearches;
       });
     } else {}
+    await DefaultCacheManager().removeFile('homepfp');
+    await DefaultCacheManager().removeFile("serviceprovidercard");
   }
 
   // 02 - use case update user information online and locally (location change)
@@ -150,7 +154,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return NetworkImage(imageUrl);
+      return CachedNetworkImageProvider(imageUrl,
+          cacheManager: CacheManager(
+              Config("homepfp", stalePeriod: const Duration(hours: 1))));
     } else {
       // Image URL is not valid, return a placeholder image using AssetImage
       return const AssetImage('assets/guest_dp.png');
@@ -390,6 +396,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   @override
   void dispose() {
     _acontroller.dispose();
+    _controller.dispose();
+    _countryValue.dispose();
+    _cityValue.dispose();
+    _stateValue.dispose();
     super.dispose();
   }
 
@@ -893,29 +903,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       child: ServiceProviderCard(
         name: additionalProfileData['full_name'],
         bio: savedSearchProviderData['bio'],
-        image: Image.network(
-          savedSearchProviderData['media_url1'],
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace? stackTrace) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/logo_t.png',
-                  height: 75,
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.015,
-                ),
-                Text(
-                  'Error loading Image. Please try again.',
-                  style: responsiveTextStyle(
-                      context, 16, Colors.red, FontWeight.bold),
-                ),
-              ],
-            );
-          },
-        ),
+
         // view profile
         onPressedButton1: () {
           Navigator.of(context).push(
@@ -949,6 +937,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
           final serviceproviderid = additionalProfileData['id'];
           _deleteSavedSearch(userid, serviceproviderid);
         },
+        guest: false,
+        img: savedSearchProviderData['media_url1'],
       ),
     );
   }
@@ -997,6 +987,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         },
       ),
     );
+  }
+
+  // 10 - use case clear cache images
+
+  Future<void> _clearCacheImages() async {
+    await DefaultCacheManager().removeFile('homepfp');
+    await DefaultCacheManager().removeFile("serviceprovidercard");
   }
 
 // build method
@@ -1121,6 +1118,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                 onSelected: (value) {
                                   // Handle the selected menu item (navigate to the corresponding screen)
                                   if (value == 'changeDisplayPicture') {
+                                    _clearCacheImages();
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -1334,6 +1332,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                         Colors.black, FontWeight.bold),
                                   ),
                                   onTap: () async {
+                                    _clearCacheImages();
                                     // Handle user selection here.
                                     FocusScope.of(context).unfocus();
                                     setState(() {
@@ -1594,42 +1593,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                 name: additionalProfileData[
                                                     'full_name'],
                                                 bio: serviceProviderData['bio'],
-                                                image: Image.network(
-                                                  serviceProviderData[
-                                                      'media_url1'],
-                                                  errorBuilder: (BuildContext
-                                                          context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                    return Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/logo_t.png',
-                                                          height: 75,
-                                                        ),
-                                                        SizedBox(
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.015),
-                                                        Text(
-                                                          'Error loading Image. Please try again.',
-                                                          style:
-                                                              responsiveTextStyle(
-                                                                  context,
-                                                                  16,
-                                                                  Colors.red,
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
                                                 // view profile
                                                 onPressedButton1: () {
                                                   Navigator.of(context).push(
@@ -1710,8 +1673,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                   _createSavedSearch(userid,
                                                       serviceproviderid);
                                                 },
-                                                isOnline:
-                                                    true, // Set whether the service provider is online or offline.
+                                                isOnline: true,
+                                                guest: false,
+                                                img: serviceProviderData[
+                                                    'media_url1'],
                                               ),
                                               SizedBox(
                                                 height: MediaQuery.of(context)

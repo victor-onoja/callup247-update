@@ -617,7 +617,7 @@ class _GuestHomePageState extends State<GuestHomePage>
                               name: 'John Doe',
                               bio:
                                   'Experienced plumber with 5+ years of experience in fixing pipes.',
-                              image: Image.asset('assets/barber.jpg'),
+                              image: const AssetImage('assets/plumber.jpg'),
                               onPressedButton1: () {
                                 // Implement the action for Button 1 here.
                                 Navigator.of(context).push(
@@ -627,33 +627,33 @@ class _GuestHomePageState extends State<GuestHomePage>
                                   ),
                                 );
                               },
-
                               isOnline: true,
-                              onPressedButton2:
-                                  () {}, // Set whether the service provider is online or offline.
+                              onPressedButton2: () {},
+                              guest: true,
+                              img: '',
                             ),
                             SizedBox(
                                 height: MediaQuery.of(context).size.height *
                                     0.0125),
                             ServiceProviderCard(
-                              saved: true,
-                              name: 'Senior Centy',
-                              bio:
-                                  'Experienced barber with 5+ years of experience in cutting hair.',
-                              image: Image.asset('assets/barber.jpg'),
-                              onPressedButton1: () {
-                                // Implement the action for Button 1 here.
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const GuestProfilePage(),
-                                  ),
-                                );
-                              },
-                              isOnline: false,
-                              onPressedButton2:
-                                  () {}, // Set whether the service provider is online or offline.
-                            ),
+                                saved: true,
+                                name: 'Senior Centy',
+                                bio:
+                                    'Experienced barber with 5+ years of experience in cutting hair.',
+                                image: const AssetImage('assets/barber.jpg'),
+                                onPressedButton1: () {
+                                  // Implement the action for Button 1 here.
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const GuestProfilePage(),
+                                    ),
+                                  );
+                                },
+                                isOnline: false,
+                                onPressedButton2: () {},
+                                guest: true,
+                                img: ''),
                             // end of saved search
                           ],
                         )),
@@ -678,70 +678,72 @@ class _GuestHomePageState extends State<GuestHomePage>
                                   height: MediaQuery.of(context).size.height *
                                       0.0125),
                               ServiceProviderCard(
-                                saved: false,
-                                name: 'John Doe',
-                                bio:
-                                    'Experienced plumber with 5+ years of experience in fixing pipes.',
-                                image: Image.asset('assets/barber.jpg'),
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    true, // Set whether the service provider is online or offline.
-                              ),
+                                  saved: false,
+                                  name: 'John Doe',
+                                  bio:
+                                      'Experienced plumber with 5+ years of experience in fixing pipes.',
+                                  image: const AssetImage('assets/barber.jpg'),
+                                  onPressedButton1: () {
+                                    // Implement the action for Button 1 here.
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const GuestProfilePage(),
+                                      ),
+                                    );
+                                  },
+                                  onPressedButton2: () {
+                                    // Implement the action for Button 2 here.
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      isSearching = false;
+                                      // When suffix icon is tapped, set isTyping to false
+                                      isTyping = false;
+                                      // You can also clear the text field if needed
+                                      _controller.clear();
+                                      // Update the filtered services here as well
+                                      filteredServices = [];
+                                    });
+                                  },
+                                  isOnline:
+                                      true, // Set whether the service provider is online or offline.
+                                  guest: true,
+                                  img: ''),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.0125),
                               ServiceProviderCard(
-                                saved: false,
-                                name: 'Senior Centy',
-                                bio:
-                                    'Experienced barber with 5+ years of experience in cutting hair.',
-                                image: Image.asset('assets/barber.jpg'),
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                onPressedButton2: () {
-                                  // Implement the action for Button 2 here.
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                isOnline:
-                                    false, // Set whether the service provider is online or offline.
-                              ),
+                                  saved: false,
+                                  name: 'Senior Centy',
+                                  bio:
+                                      'Experienced barber with 5+ years of experience in cutting hair.',
+                                  image: const AssetImage('assets/barber.jpg'),
+                                  onPressedButton1: () {
+                                    // Implement the action for Button 1 here.
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const GuestProfilePage(),
+                                      ),
+                                    );
+                                  },
+                                  onPressedButton2: () {
+                                    // Implement the action for Button 2 here.
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      isSearching = false;
+                                      // When suffix icon is tapped, set isTyping to false
+                                      isTyping = false;
+                                      // You can also clear the text field if needed
+                                      _controller.clear();
+                                      // Update the filtered services here as well
+                                      filteredServices = [];
+                                    });
+                                  },
+                                  isOnline:
+                                      false, // Set whether the service provider is online or offline.
+                                  guest: true,
+                                  img: ''),
                             ],
                           ),
                         ),

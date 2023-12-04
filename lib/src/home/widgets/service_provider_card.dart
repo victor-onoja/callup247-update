@@ -1,26 +1,31 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../../responsive_text_styles.dart';
 
 class ServiceProviderCard extends StatelessWidget {
   final String name;
   final String bio;
-  final Image image;
+  final ImageProvider? image;
+  final String img;
   final Function() onPressedButton1;
   final Function() onPressedButton2;
   final bool isOnline;
   final bool saved;
+  final bool guest;
 
-  const ServiceProviderCard({
-    super.key,
-    required this.name,
-    required this.bio,
-    required this.image,
-    required this.onPressedButton1,
-    required this.onPressedButton2,
-    required this.isOnline,
-    required this.saved,
-  });
+  const ServiceProviderCard(
+      {super.key,
+      required this.name,
+      required this.bio,
+      this.image,
+      required this.onPressedButton1,
+      required this.onPressedButton2,
+      required this.isOnline,
+      required this.saved,
+      required this.guest,
+      required this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -45,55 +50,6 @@ class ServiceProviderCard extends StatelessWidget {
                 Text(name,
                     style:
                         responsiveTextStyle(context, 18, Colors.white, null)),
-                // saved
-                //     ? Row(
-                //         children: [
-                //           Row(
-                //             children: [
-                //               Icon(
-                //                 Icons.circle,
-                //                 color: isOnline ? Colors.green : Colors.black,
-                //                 size: 12,
-                //               ),
-                //             ],
-                //           ),
-                //           const SizedBox(
-                //             width: 5,
-                //           ),
-                //           GestureDetector(
-                //             onTap: () {
-                //               showDialog(
-                //                 context: context,
-                //                 builder: (BuildContext context) {
-                //                   return AlertDialog(
-                //                     title: const Text('Confirm Action'),
-                //                     content: const Text(
-                //                         'Are you sure you want to remove this service provider from your saved searches?'),
-                //                     actions: <Widget>[
-                //                       TextButton(
-                //                         onPressed: () {
-                //                           Navigator.of(context)
-                //                               .pop(); // Close the dialog
-                //                         },
-                //                         child: const Text('Cancel'),
-                //                       ),
-                //                       TextButton(
-                //                         onPressed: delete,
-                //                         child: const Text('Proceed'),
-                //                       ),
-                //                     ],
-                //                   );
-                //                 },
-                //               );
-                //             },
-                //             child: const Icon(
-                //               Icons.remove_circle,
-                //               color: Colors.redAccent,
-                //             ),
-                //           ),
-                //         ],
-                //       )
-                //     :
                 Row(
                   children: [
                     Icon(
@@ -106,7 +62,36 @@ class ServiceProviderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 2),
-            Center(child: image),
+            Center(
+                child: guest
+                    ? Image(
+                        image: image!,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: img,
+                        cacheManager: CacheManager(Config("serviceprovidercard",
+                            stalePeriod: const Duration(hours: 1))),
+                        errorWidget: (context, url, error) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/logo_t.png',
+                                height: 75,
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.015,
+                              ),
+                              Text(
+                                'Error loading Image. Please try again.',
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.red, FontWeight.bold),
+                              ),
+                            ],
+                          );
+                        },
+                      )),
             const SizedBox(height: 2),
             Text(bio,
                 maxLines: 2,

@@ -124,6 +124,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _acontroller.dispose();
+    _emailaddressController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,9 +41,10 @@ class _EditServiceProviderProfileState
     });
   }
 
-  // use case initialize data
+  // 01 - use case initialize data
 
   Future<void> _initializeData() async {
+    await DefaultCacheManager().removeFile("editprofile");
     final prefs = await SharedPreferences.getInstance();
     final userProfileJson = prefs.getString('userprofile');
     final serviceProviderProfileJson =
@@ -94,7 +97,7 @@ class _EditServiceProviderProfileState
     } else {}
   }
 
-  // 05 - use case check valid image
+  // 02 - use case check valid image
 
   Future<bool> _checkImageValidity(String img) async {
     try {
@@ -105,7 +108,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // use case display image
+  // 03 -  use case display image
 
   Future<ImageProvider?> _imageProvider(String img) async {
     // Check if the image URL is valid
@@ -113,13 +116,15 @@ class _EditServiceProviderProfileState
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return NetworkImage(img);
+      return CachedNetworkImageProvider(img,
+          cacheManager: CacheManager(
+              Config("editprofile", stalePeriod: const Duration(hours: 1))));
     } else {
       return null;
     }
   }
 
-  // use case display media
+  // 04 - use case display media
 
   FutureBuilder<ImageProvider<Object>?> _buildImageWidget(String imageUrl) {
     return FutureBuilder<ImageProvider<Object>?>(
@@ -151,7 +156,7 @@ class _EditServiceProviderProfileState
     );
   }
 
-  // 01 - use case pick image1
+  // 06A - use case pick image1
 
   Future<void> _pickImage1() async {
     final ImagePicker picker = ImagePicker();
@@ -163,7 +168,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 01 - use case pick image1
+  // 06B - use case pick image2
 
   Future<void> _pickImage2() async {
     final ImagePicker picker = ImagePicker();
@@ -175,7 +180,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 01 - use case pick image1
+  // 06C - use case pick image3
 
   Future<void> _pickImage3() async {
     final ImagePicker picker = ImagePicker();
@@ -187,7 +192,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 01 - use case pick image1
+  // 06D - use case pick image4
 
   Future<void> _pickImage4() async {
     final ImagePicker picker = ImagePicker();
@@ -199,7 +204,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 01 - use case pick image1
+  // 06E - use case pick image5
 
   Future<void> _pickImage5() async {
     final ImagePicker picker = ImagePicker();
@@ -211,7 +216,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 05 - use case check network
+  // 07 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -222,7 +227,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 02 - use case upload image
+  // 08A - use case upload image1
 
   Future<void> _uploadImage1() async {
     bool isImage1Valid = await _checkImageValidity(media1);
@@ -236,7 +241,10 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     } else {
       try {
         await supabase.storage.from('media1').upload(
@@ -247,11 +255,14 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     }
   }
 
-  // 02 - use case upload image
+  // 08B - use case upload image2
 
   Future<void> _uploadImage2() async {
     bool isImage2Valid = await _checkImageValidity(media2);
@@ -266,7 +277,10 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     } else {
       try {
         await supabase.storage.from('media2').upload(
@@ -277,11 +291,14 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     }
   }
 
-  // 02 - use case upload image
+  // 08C - use case upload image3
 
   Future<void> _uploadImage3() async {
     bool isImage3Valid = await _checkImageValidity(media3);
@@ -295,7 +312,10 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     } else {
       try {
         await supabase.storage.from('media3').upload(
@@ -306,11 +326,14 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     }
   }
 
-  // 02 - use case upload image
+  // 08D - use case upload image4
 
   Future<void> _uploadImage4() async {
     bool isImage4Valid = await _checkImageValidity(media4);
@@ -324,7 +347,10 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     } else {
       try {
         await supabase.storage.from('media4').upload(
@@ -335,11 +361,14 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     }
   }
 
-  // 02 - use case upload image
+  // 08E - use case upload image5
 
   Future<void> _uploadImage5() async {
     bool isImage5Valid = await _checkImageValidity(media5);
@@ -353,7 +382,10 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     } else {
       try {
         await supabase.storage.from('media5').upload(
@@ -364,11 +396,14 @@ class _EditServiceProviderProfileState
             );
         if (mounted) {}
       } on PostgrestException catch (error) {
-      } catch (error) {}
+        //
+      } catch (error) {
+        //
+      }
     }
   }
 
-  // create service provider profile
+  // 09 - use case create service provider profile
 
   Future<void> _updateServiceProviderProfile() async {
     final ig = _instagramController.text.trim();
@@ -443,7 +478,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // create service provider profile
+  // 10 - use case create service provider profile
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final prefs = await SharedPreferences.getInstance();
@@ -528,6 +563,8 @@ class _EditServiceProviderProfileState
     _languagesSpokenController.dispose();
     super.dispose();
   }
+
+// build method
 
   @override
   Widget build(BuildContext context) {
