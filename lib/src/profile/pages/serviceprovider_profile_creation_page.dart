@@ -374,14 +374,16 @@ class _ServiceProviderProfileCreationState
   ];
   // end of list of services
 
-  // become a service provider
+  // 01 - use case become a service provider
   Future<void> _becomeAServiceProvider() async {
     try {
       await supabase.from('profiles').update(
           {'service_provider': 'TRUE'}).match({'service_provider': 'FALSE'});
       if (mounted) {}
     } on PostgrestException catch (error) {
+      //
     } catch (error) {
+      //
     } finally {
       if (mounted) {}
     }
@@ -399,7 +401,7 @@ class _ServiceProviderProfileCreationState
     } else {}
   }
 
-  // 01 - use case pick image1
+  // 02 - use case pick image1
 
   Future<void> _pickImage1() async {
     final ImagePicker picker = ImagePicker();
@@ -411,7 +413,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 01 - use case pick image1
+  // 02A - use case pick image2
 
   Future<void> _pickImage2() async {
     final ImagePicker picker = ImagePicker();
@@ -423,7 +425,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 01 - use case pick image1
+  // 02B - use case pick image3
 
   Future<void> _pickImage3() async {
     final ImagePicker picker = ImagePicker();
@@ -435,31 +437,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 01 - use case pick image1
-
-  Future<void> _pickImage4() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image4 = File(pickedFile.path);
-      });
-    }
-  }
-
-  // 01 - use case pick image1
-
-  Future<void> _pickImage5() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image5 = File(pickedFile.path);
-      });
-    }
-  }
-
-  // 05 - use case check network
+  // 03 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -480,8 +458,6 @@ class _ServiceProviderProfileCreationState
   File? _image1;
   File? _image2;
   File? _image3;
-  File? _image4;
-  File? _image5;
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
   final TextEditingController _instagramController = TextEditingController();
@@ -519,7 +495,7 @@ class _ServiceProviderProfileCreationState
     super.dispose();
   }
 
-  // 02 - use case upload image
+  // 04 - use case upload image1
 
   Future<void> _uploadImage1() async {
     try {
@@ -530,10 +506,13 @@ class _ServiceProviderProfileCreationState
           );
       if (mounted) {}
     } on PostgrestException catch (error) {
-    } catch (error) {}
+      //
+    } catch (error) {
+      //
+    }
   }
 
-  // 02 - use case upload image
+  // 04B - use case upload image2
 
   Future<void> _uploadImage2() async {
     try {
@@ -544,10 +523,13 @@ class _ServiceProviderProfileCreationState
           );
       if (mounted) {}
     } on PostgrestException catch (error) {
-    } catch (error) {}
+      //
+    } catch (error) {
+      //
+    }
   }
 
-  // 02 - use case upload image
+  // 04C - use case upload image3
 
   Future<void> _uploadImage3() async {
     try {
@@ -558,35 +540,10 @@ class _ServiceProviderProfileCreationState
           );
       if (mounted) {}
     } on PostgrestException catch (error) {
-    } catch (error) {}
-  }
-
-  // 02 - use case upload image
-
-  Future<void> _uploadImage4() async {
-    try {
-      await supabase.storage.from('media4').upload(
-            fullname,
-            _image4!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-    } catch (error) {}
-  }
-
-  // 02 - use case upload image
-
-  Future<void> _uploadImage5() async {
-    try {
-      await supabase.storage.from('media5').upload(
-            fullname,
-            _image5!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-    } catch (error) {}
+      //
+    } catch (error) {
+      //
+    }
   }
 
   // init
@@ -633,8 +590,6 @@ class _ServiceProviderProfileCreationState
     final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
     final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    final media4 = supabase.storage.from('media4').getPublicUrl(fullname);
-    final media5 = supabase.storage.from('media5').getPublicUrl(fullname);
     final ig = _instagramController.text.trim();
     final x = _xController.text.trim();
     final fb = _facebookController.text.trim();
@@ -655,8 +610,6 @@ class _ServiceProviderProfileCreationState
       'media_url1': media1,
       'media_url2': media2,
       'media_url3': media3,
-      'media_url4': media4,
-      'media_url5': media5,
       'ig_url': ig,
       'x_url': x,
       'fb_url': fb,
@@ -722,8 +675,6 @@ class _ServiceProviderProfileCreationState
     final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
     final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    final media4 = supabase.storage.from('media4').getPublicUrl(fullname);
-    final media5 = supabase.storage.from('media5').getPublicUrl(fullname);
     final ig = _instagramController.text.trim();
     final x = _xController.text.trim();
     final fb = _facebookController.text.trim();
@@ -741,8 +692,6 @@ class _ServiceProviderProfileCreationState
       'media_url1': media1,
       'media_url2': media2,
       'media_url3': media3,
-      'media_url4': media4,
-      'media_url5': media5,
       'ig_url': ig,
       'x_url': x,
       'fb_url': fb,
@@ -920,7 +869,7 @@ class _ServiceProviderProfileCreationState
                   style: responsiveTextStyle(context, 20, Colors.black, null),
                 ),
                 Text(
-                  'hint: you can add up to five images that showcase your work :)',
+                  'hint: you can add up to three images that showcase your work :)',
                   style: responsiveTextStyle(context, 12, Colors.black45, null),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -1000,64 +949,6 @@ class _ServiceProviderProfileCreationState
                               if (_image3 != null)
                                 Image.file(
                                   _image3!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                const Icon(
-                                  Icons.camera_alt,
-                                  size: 250,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.025),
-                      // image 4
-                      Container(
-                        color: Colors.black45,
-                        height: 250,
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage4();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image4 != null)
-                                Image.file(
-                                  _image4!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                const Icon(
-                                  Icons.camera_alt,
-                                  size: 250,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.025),
-                      // image 5
-                      Container(
-                        color: Colors.black45,
-                        height: 250,
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage5();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image5 != null)
-                                Image.file(
-                                  _image5!,
                                   height: 250,
                                   width: 250,
                                   fit: BoxFit.cover,
@@ -1391,6 +1282,7 @@ class _ServiceProviderProfileCreationState
                               return; // Exit the function if there's no network
                             }
 
+                            // todo: make this one request
                             try {
                               if (_image1 != null) {
                                 await _uploadImage1();
@@ -1400,12 +1292,6 @@ class _ServiceProviderProfileCreationState
                               }
                               if (_image3 != null) {
                                 await _uploadImage3();
-                              }
-                              if (_image4 != null) {
-                                await _uploadImage4();
-                              }
-                              if (_image5 != null) {
-                                await _uploadImage5();
                               }
 
                               await _becomeAServiceProvider();

@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +42,6 @@ class _EditServiceProviderProfileState
   // 01 - use case initialize data
 
   Future<void> _initializeData() async {
-    await DefaultCacheManager().removeFile("editprofile");
     final prefs = await SharedPreferences.getInstance();
     final userProfileJson = prefs.getString('userprofile');
     final serviceProviderProfileJson =
@@ -62,8 +59,6 @@ class _EditServiceProviderProfileState
       final userMedia1 = serviceProviderMap['media_url1'];
       final userMedia2 = serviceProviderMap['media_url2'];
       final userMedia3 = serviceProviderMap['media_url3'];
-      final userMedia4 = serviceProviderMap['media_url4'];
-      final userMedia5 = serviceProviderMap['media_url5'];
 
       final useriglink = serviceProviderMap['ig_url'];
       final userxlink = serviceProviderMap['x_url'];
@@ -81,8 +76,7 @@ class _EditServiceProviderProfileState
         media1 = userMedia1;
         media2 = userMedia2;
         media3 = userMedia3;
-        media4 = userMedia4;
-        media5 = userMedia5;
+
         iglink = useriglink;
         xlink = userxlink;
         fblink = userfblink;
@@ -116,9 +110,7 @@ class _EditServiceProviderProfileState
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return CachedNetworkImageProvider(img,
-          cacheManager: CacheManager(
-              Config("editprofile", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(img);
     } else {
       return null;
     }
@@ -148,8 +140,10 @@ class _EditServiceProviderProfileState
             );
           }
         } else {
-          return const SpinKitPulse(
-            color: Colors.white,
+          return const SpinKitPianoWave(
+            size: 30,
+            color: Color(0xFF13CAF1),
+            itemCount: 4,
           );
         }
       },
@@ -188,30 +182,6 @@ class _EditServiceProviderProfileState
     if (pickedFile != null) {
       setState(() {
         _image3 = File(pickedFile.path);
-      });
-    }
-  }
-
-  // 06D - use case pick image4
-
-  Future<void> _pickImage4() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image4 = File(pickedFile.path);
-      });
-    }
-  }
-
-  // 06E - use case pick image5
-
-  Future<void> _pickImage5() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image5 = File(pickedFile.path);
       });
     }
   }
@@ -333,76 +303,6 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 08D - use case upload image4
-
-  Future<void> _uploadImage4() async {
-    bool isImage4Valid = await _checkImageValidity(media4);
-    if (isImage4Valid) {
-      try {
-        await supabase.storage.from('media4').update(
-              fullname,
-              _image4!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: true),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    } else {
-      try {
-        await supabase.storage.from('media4').upload(
-              fullname,
-              _image4!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: false),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    }
-  }
-
-  // 08E - use case upload image5
-
-  Future<void> _uploadImage5() async {
-    bool isImage5Valid = await _checkImageValidity(media5);
-    if (isImage5Valid) {
-      try {
-        await supabase.storage.from('media5').update(
-              fullname,
-              _image5!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: true),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    } else {
-      try {
-        await supabase.storage.from('media5').upload(
-              fullname,
-              _image5!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: false),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    }
-  }
-
   // 09 - use case create service provider profile
 
   Future<void> _updateServiceProviderProfile() async {
@@ -510,13 +410,11 @@ class _EditServiceProviderProfileState
   String media1 = '';
   String media2 = '';
   String media3 = '';
-  String media4 = '';
-  String media5 = '';
+
   File? _image1;
   File? _image2;
   File? _image3;
-  File? _image4;
-  File? _image5;
+
   String iglink = '';
   String xlink = '';
   String fblink = '';
@@ -675,44 +573,6 @@ class _EditServiceProviderProfileState
                           )),
                       SizedBox(
                           width: MediaQuery.of(context).size.width * 0.025),
-                      // image 4
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage4();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image4 != null)
-                                Image.file(
-                                  _image4!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                _buildImageWidget(media4),
-                            ],
-                          )),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.025),
-                      // image 5
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage5();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image5 != null)
-                                Image.file(
-                                  _image5!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                _buildImageWidget(media5),
-                            ],
-                          ))
                     ],
                   ),
                 ),
@@ -1017,12 +877,6 @@ class _EditServiceProviderProfileState
                               }
                               if (_image3 != null) {
                                 await _uploadImage3();
-                              }
-                              if (_image4 != null) {
-                                await _uploadImage4();
-                              }
-                              if (_image5 != null) {
-                                await _uploadImage5();
                               }
 
                               await _updateServiceProviderProfile();

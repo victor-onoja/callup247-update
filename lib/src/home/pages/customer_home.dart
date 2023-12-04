@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -58,8 +56,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         savedSearches = userSavedSearches;
       });
     } else {}
-    await DefaultCacheManager().removeFile('homepfp');
-    await DefaultCacheManager().removeFile("serviceprovidercard");
   }
 
   // 02 - use case update user information online and locally (location change)
@@ -154,9 +150,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return CachedNetworkImageProvider(imageUrl,
-          cacheManager: CacheManager(
-              Config("homepfp", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(imageUrl);
     } else {
       // Image URL is not valid, return a placeholder image using AssetImage
       return const AssetImage('assets/guest_dp.png');
@@ -920,8 +914,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                 media1: savedSearchProviderData['media_url1'],
                 media2: savedSearchProviderData['media_url2'],
                 media3: savedSearchProviderData['media_url3'],
-                media4: savedSearchProviderData['media_url4'],
-                media5: savedSearchProviderData['media_url5'],
                 pfp: additionalProfileData['avatar_url'],
                 specialoffers: savedSearchProviderData['special_offers'],
                 webLink: savedSearchProviderData['web_link'],
@@ -956,8 +948,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
             future: _getProfileData(savedSearchProviderData['id']),
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SpinKitPulse(
-                  color: Colors.white,
+                return const SpinKitPianoWave(
+                  size: 30,
+                  color: Color(0xFF13CAF1),
+                  itemCount: 4,
                 ); // or any loading indicator
               } else if (snapshot.hasError) {
                 return Column(
@@ -987,13 +981,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         },
       ),
     );
-  }
-
-  // 10 - use case clear cache images
-
-  Future<void> _clearCacheImages() async {
-    await DefaultCacheManager().removeFile('homepfp');
-    await DefaultCacheManager().removeFile("serviceprovidercard");
   }
 
 // build method
@@ -1060,8 +1047,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                         } else {
                                           // While the future is loading, you can show a placeholder or loading indicator
 
-                                          return const SpinKitRotatingCircle(
-                                            color: Colors.white,
+                                          return const SpinKitPianoWave(
+                                            size: 30,
+                                            color: Color(0xFF13CAF1),
+                                            itemCount: 4,
                                           );
                                         }
                                       },
@@ -1118,7 +1107,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                 onSelected: (value) {
                                   // Handle the selected menu item (navigate to the corresponding screen)
                                   if (value == 'changeDisplayPicture') {
-                                    _clearCacheImages();
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -1332,7 +1320,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                         Colors.black, FontWeight.bold),
                                   ),
                                   onTap: () async {
-                                    _clearCacheImages();
                                     // Handle user selection here.
                                     FocusScope.of(context).unfocus();
                                     setState(() {
@@ -1403,8 +1390,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                   AsyncSnapshot<List<dynamic>> snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const SpinKitPulse(
-                                    color: Colors.white,
+                                  return const SpinKitPianoWave(
+                                    size: 30,
+                                    color: Color(0xFF13CAF1),
+                                    itemCount: 4,
                                   ); // or any loading indicator
                                 } else if (snapshot.hasError) {
                                   return Column(
@@ -1505,8 +1494,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                       AsyncSnapshot<List<dynamic>> snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return const SpinKitPulse(
-                                        color: Colors.white,
+                                      return const SpinKitPianoWave(
+                                        size: 30,
+                                        color: Color(0xFF13CAF1),
+                                        itemCount: 4,
                                       ); // or any loading indicator
                                     } else if (snapshot.hasError) {
                                       return Column(
@@ -1633,12 +1624,6 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                         media3:
                                                             serviceProviderData[
                                                                 'media_url3'],
-                                                        media4:
-                                                            serviceProviderData[
-                                                                'media_url4'],
-                                                        media5:
-                                                            serviceProviderData[
-                                                                'media_url5'],
                                                         pfp:
                                                             additionalProfileData[
                                                                 'avatar_url'],

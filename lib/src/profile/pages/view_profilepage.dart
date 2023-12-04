@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/profile_page_action_button.dart';
@@ -15,8 +13,6 @@ class ViewProfilePage extends StatefulWidget {
       required this.media1,
       required this.media2,
       required this.media3,
-      required this.media4,
-      required this.media5,
       required this.igLink,
       required this.xLink,
       required this.fbLink,
@@ -33,8 +29,6 @@ class ViewProfilePage extends StatefulWidget {
       media1,
       media2,
       media3,
-      media4,
-      media5,
       igLink,
       xLink,
       fbLink,
@@ -57,13 +51,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   @override
   void initState() {
     super.initState();
-    _initialize();
   }
 
-  // - delete all cache on init
-  Future<void> _initialize() async {
-    await DefaultCacheManager().removeFile("viewprofile");
-  }
   // 01 - use case check valid image
 
   Future<bool> _checkImageValidity(String img) async {
@@ -83,9 +72,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return CachedNetworkImageProvider(img,
-          cacheManager: CacheManager(
-              Config("viewprofile", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(img);
     } else {
       return null;
     }
@@ -112,8 +99,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             return Container();
           }
         } else {
-          return const SpinKitPulse(
-            color: Colors.white,
+          return const SpinKitPianoWave(
+            size: 30,
+            color: Color(0xFF13CAF1),
+            itemCount: 4,
           );
         }
       },
@@ -212,6 +201,36 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                       size: 50,
                                     );
                                   },
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    final totalBytes =
+                                        loadingProgress?.expectedTotalBytes;
+                                    final bytesLoaded =
+                                        loadingProgress?.cumulativeBytesLoaded;
+                                    if (totalBytes != null &&
+                                        bytesLoaded != null) {
+                                      return CircularProgressIndicator(
+                                        backgroundColor: Colors.white70,
+                                        value: bytesLoaded / totalBytes,
+                                        color: Colors.blue[900],
+                                        strokeWidth: 5.0,
+                                      );
+                                    } else {
+                                      return child;
+                                    }
+                                  },
+                                  frameBuilder: (context, child, frame,
+                                      wasSynchronouslyLoaded) {
+                                    if (wasSynchronouslyLoaded) {
+                                      return child;
+                                    }
+                                    return AnimatedOpacity(
+                                      opacity: frame == null ? 0 : 1,
+                                      duration: const Duration(seconds: 1),
+                                      curve: Curves.easeOut,
+                                      child: child,
+                                    );
+                                  },
 
                                   width:
                                       100, // Adjust the width to fit within the container
@@ -250,14 +269,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                 width:
                                     MediaQuery.of(context).size.width * 0.025),
                             _buildImageWidget(widget.media3),
-                            SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.025),
-                            _buildImageWidget(widget.media4),
-                            SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.025),
-                            _buildImageWidget(widget.media5),
                           ],
                         ),
                       ),

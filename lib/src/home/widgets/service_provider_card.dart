@@ -1,7 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-
 import '../../responsive_text_styles.dart';
 
 class ServiceProviderCard extends StatelessWidget {
@@ -67,11 +64,38 @@ class ServiceProviderCard extends StatelessWidget {
                     ? Image(
                         image: image!,
                       )
-                    : CachedNetworkImage(
-                        imageUrl: img,
-                        cacheManager: CacheManager(Config("serviceprovidercard",
-                            stalePeriod: const Duration(hours: 1))),
-                        errorWidget: (context, url, error) {
+                    : Image.network(
+                        img,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          final totalBytes =
+                              loadingProgress?.expectedTotalBytes;
+                          final bytesLoaded =
+                              loadingProgress?.cumulativeBytesLoaded;
+                          if (totalBytes != null && bytesLoaded != null) {
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.white70,
+                              value: bytesLoaded / totalBytes,
+                              color: Colors.blue[900],
+                              strokeWidth: 5.0,
+                            );
+                          } else {
+                            return child;
+                          }
+                        },
+                        frameBuilder:
+                            (context, child, frame, wasSynchronouslyLoaded) {
+                          if (wasSynchronouslyLoaded) {
+                            return child;
+                          }
+                          return AnimatedOpacity(
+                            opacity: frame == null ? 0 : 1,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeOut,
+                            child: child,
+                          );
+                        },
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -79,14 +103,16 @@ class ServiceProviderCard extends StatelessWidget {
                                 'assets/logo_t.png',
                                 height: 75,
                               ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.015,
+                              const SizedBox(
+                                height: 10, // Adjust the size as needed
                               ),
-                              Text(
+                              const Text(
                                 'Error loading Image. Please try again.',
-                                style: responsiveTextStyle(
-                                    context, 16, Colors.red, FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           );

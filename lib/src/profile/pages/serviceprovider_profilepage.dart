@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -44,8 +42,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
       final userMedia1 = serviceProviderMap['media_url1'];
       final userMedia2 = serviceProviderMap['media_url2'];
       final userMedia3 = serviceProviderMap['media_url3'];
-      final userMedia4 = serviceProviderMap['media_url4'];
-      final userMedia5 = serviceProviderMap['media_url5'];
 
       final useriglink = serviceProviderMap['ig_url'];
       final userxlink = serviceProviderMap['x_url'];
@@ -65,8 +61,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
         media1 = userMedia1;
         media2 = userMedia2;
         media3 = userMedia3;
-        media4 = userMedia4;
-        media5 = userMedia5;
         iglink = useriglink;
         xlink = userxlink;
         fblink = userfblink;
@@ -78,8 +72,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
         languagesspoken = userLanguagesSpoken;
       });
     } else {}
-    await DefaultCacheManager().removeFile('profile');
-    await DefaultCacheManager().removeFile('home');
   }
 
   // 02 - use case check valid image
@@ -101,13 +93,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
 
     if (isImageValid && img == pfp) {
       // Image URL is valid, return the NetworkImage
-      return CachedNetworkImageProvider(img,
-          cacheManager: CacheManager(
-              Config("profile", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(img);
     } else if (isImageValid && img != pfp) {
-      return CachedNetworkImageProvider(img,
-          cacheManager: CacheManager(
-              Config("home", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(img);
     } else if (!isImageValid && img == pfp) {
       return const AssetImage('assets/guest_dp.png');
     } else if (!isImageValid && img != pfp) {
@@ -138,8 +126,10 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
             return Container();
           }
         } else {
-          return const SpinKitPulse(
-            color: Colors.white,
+          return const SpinKitPianoWave(
+            size: 30,
+            color: Color(0xFF13CAF1),
+            itemCount: 4,
           );
         }
       },
@@ -153,8 +143,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String media1 = '';
   String media2 = '';
   String media3 = '';
-  String media4 = '';
-  String media5 = '';
   String iglink = '';
   String xlink = '';
   String fblink = '';
@@ -202,9 +190,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           IconButton(
-                            onPressed: () async {
-                              await DefaultCacheManager().removeFile('profile');
-                              await DefaultCacheManager().removeFile('home');
+                            onPressed: () {
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.arrow_back),
@@ -264,8 +250,10 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                         return Container();
                                       }
                                     } else {
-                                      return const SpinKitPulse(
-                                        color: Colors.white,
+                                      return const SpinKitPianoWave(
+                                        size: 30,
+                                        color: Color(0xFF13CAF1),
+                                        itemCount: 4,
                                       );
                                     }
                                   })
@@ -298,14 +286,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                 width:
                                     MediaQuery.of(context).size.width * 0.025),
                             _buildImageWidget(media3),
-                            SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.025),
-                            _buildImageWidget(media4),
-                            SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.025),
-                            _buildImageWidget(media5),
                           ],
                         ),
                       ),

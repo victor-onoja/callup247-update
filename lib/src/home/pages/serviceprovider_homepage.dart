@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:callup247/src/profile/pages/edit_servicepovider_profile_page.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,8 +59,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         savedSearches = userSavedSearches;
       });
     } else {}
-    await DefaultCacheManager().removeFile('sppfp');
-    await DefaultCacheManager().removeFile("serviceprovidercard");
   }
 
   // 02 - use case update user information online and locally (location change)
@@ -157,9 +153,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
     if (isImageValid) {
       // Image URL is valid, return the NetworkImage
-      return CachedNetworkImageProvider(imageUrl,
-          cacheManager: CacheManager(
-              Config("sppfp", stalePeriod: const Duration(hours: 1))));
+      return NetworkImage(imageUrl);
     } else {
       // Image URL is not valid, return a placeholder image using AssetImage
       return const AssetImage('assets/guest_dp.png');
@@ -894,13 +888,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 13 - use case clear cache images
-
-  Future<void> _clearCacheImages() async {
-    await DefaultCacheManager().removeFile('sppfp');
-    await DefaultCacheManager().removeFile("serviceprovidercard");
-  }
-
   // build method
 
   @override
@@ -964,9 +951,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                           );
                                         } else {
                                           // While the future is loading, you can show a placeholder or loading indicator
-                                          return const SpinKitPulse(
-                                            color: Colors.white,
-                                            // size: 25,
+                                          return const SpinKitPianoWave(
+                                            size: 30,
+                                            color: Color(0xFF13CAF1),
+                                            itemCount: 4,
                                           );
                                         }
                                       },
@@ -1029,7 +1017,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                 onSelected: (value) {
                                   // Handle the selected menu item (navigate to the corresponding screen)
                                   if (value == 'changeDisplayPicture') {
-                                    _clearCacheImages();
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -1138,12 +1125,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                   } else if (value == 'signOut') {
                                     _signOut();
                                   } else if (value == 'viewProfile') {
-                                    _clearCacheImages();
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             const ServiceProviderProfile()));
                                   } else if (value == 'editProfile') {
-                                    _clearCacheImages();
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             const EditServiceProviderProfile()));
@@ -1246,7 +1231,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                         Colors.black, FontWeight.bold),
                                   ),
                                   onTap: () async {
-                                    _clearCacheImages();
                                     // Handle user selection here.
                                     FocusScope.of(context).unfocus();
                                     setState(() {
@@ -1317,8 +1301,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                   AsyncSnapshot<List<dynamic>> snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const SpinKitPulse(
-                                    color: Colors.white,
+                                  return const SpinKitPianoWave(
+                                    size: 30,
+                                    color: Color(0xFF13CAF1),
+                                    itemCount: 4,
                                   ); // or any loading indicator
                                 } else if (snapshot.hasError) {
                                   return Column(
@@ -1402,8 +1388,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                   if (snapshot
                                                           .connectionState ==
                                                       ConnectionState.waiting) {
-                                                    return const SpinKitPulse(
-                                                      color: Colors.white,
+                                                    return const SpinKitPianoWave(
+                                                      size: 30,
+                                                      color: Color(0xFF13CAF1),
+                                                      itemCount: 4,
                                                     ); // or any loading indicator
                                                   } else if (snapshot
                                                       .hasError) {
@@ -1490,10 +1478,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                       'media_url2'],
                                                                   media3: savedSearchProviderData[
                                                                       'media_url3'],
-                                                                  media4: savedSearchProviderData[
-                                                                      'media_url4'],
-                                                                  media5: savedSearchProviderData[
-                                                                      'media_url5'],
                                                                   pfp: additionalProfileData[
                                                                       'avatar_url'],
                                                                   specialoffers:
@@ -1573,8 +1557,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                       AsyncSnapshot<List<dynamic>> snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return const SpinKitPulse(
-                                        color: Colors.white,
+                                      return const SpinKitPianoWave(
+                                        size: 30,
+                                        color: Color(0xFF13CAF1),
+                                        itemCount: 4,
                                       ); // or any loading indicator
                                     } else if (snapshot.hasError) {
                                       return Column(
@@ -1701,12 +1687,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                         media3:
                                                             serviceProviderData[
                                                                 'media_url3'],
-                                                        media4:
-                                                            serviceProviderData[
-                                                                'media_url4'],
-                                                        media5:
-                                                            serviceProviderData[
-                                                                'media_url5'],
                                                         pfp:
                                                             additionalProfileData[
                                                                 'avatar_url'],
