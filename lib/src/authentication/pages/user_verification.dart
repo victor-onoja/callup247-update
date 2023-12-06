@@ -49,6 +49,7 @@ class _VerificationScreenState extends State<VerificationScreen>
           loading = false;
         });
         if (isPasswordReset) {
+          if (!context.mounted) return;
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (BuildContext context) => const ForgotPasswordScreen(),
@@ -56,6 +57,7 @@ class _VerificationScreenState extends State<VerificationScreen>
           );
         } else {
           if (serviceprovider == 'TRUE') {
+            if (!context.mounted) return;
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) =>
@@ -63,6 +65,7 @@ class _VerificationScreenState extends State<VerificationScreen>
               ),
             );
           } else {
+            if (!context.mounted) return;
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => const CustomerHomePage(),
@@ -72,6 +75,7 @@ class _VerificationScreenState extends State<VerificationScreen>
         }
       }
     } on PostgrestException catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           e.message,
@@ -81,6 +85,7 @@ class _VerificationScreenState extends State<VerificationScreen>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'your token is either invalid or expired. Please check again or resend otp :(',

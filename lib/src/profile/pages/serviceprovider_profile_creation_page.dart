@@ -576,6 +576,7 @@ class _ServiceProviderProfileCreationState
     }
 
     if (serviceProvider != null) {
+      if (!context.mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (BuildContext context) => const ServiceProviderHomePage()),
@@ -636,6 +637,7 @@ class _ServiceProviderProfileCreationState
         ));
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -648,6 +650,7 @@ class _ServiceProviderProfileCreationState
         loading = false;
       });
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -1264,6 +1267,7 @@ class _ServiceProviderProfileCreationState
                             bool isConnected =
                                 await _checkInternetConnectivity();
                             if (!isConnected) {
+                              if (!context.mounted) return;
                               // Show a snackbar for no network
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
@@ -1297,12 +1301,14 @@ class _ServiceProviderProfileCreationState
                               await _saveServiceProviderProfilelocally();
 
                               await Future.delayed(const Duration(seconds: 2));
+                              if (!context.mounted) return;
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         const ServiceProviderHomePage()),
                               );
                             } catch (error) {
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content: Text(

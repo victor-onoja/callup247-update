@@ -346,6 +346,7 @@ class _EditServiceProviderProfileState
         ));
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -358,6 +359,7 @@ class _EditServiceProviderProfileState
         loading = false;
       });
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -849,6 +851,7 @@ class _EditServiceProviderProfileState
                             bool isConnected =
                                 await _checkInternetConnectivity();
                             if (!isConnected) {
+                              if (!context.mounted) return;
                               // Show a snackbar for no network
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
@@ -880,8 +883,10 @@ class _EditServiceProviderProfileState
                               await _saveServiceProviderProfilelocally();
 
                               await Future.delayed(const Duration(seconds: 2));
+                              if (!context.mounted) return;
                               Navigator.of(context).pop();
                             } catch (error) {
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content: Text(

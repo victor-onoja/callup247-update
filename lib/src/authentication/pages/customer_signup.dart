@@ -54,6 +54,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   Future<void> _createUser() async {
     final emailaddress = _emailaddressController.text.trim();
     final password = _passwordController.text.trim();
+    final messenger = ScaffoldMessenger.of(context);
+
     try {
       setState(() {
         loading = true;
@@ -61,7 +63,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       await supabase.auth.signUp(password: password, email: emailaddress);
       if (mounted) {}
     } on PostgrestException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
           style:
@@ -76,7 +79,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
           style:
@@ -113,6 +117,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   // 05 - use case update profiles table
 
   Future<void> _updateProfile() async {
+    final messenger = ScaffoldMessenger.of(context);
     final fullname = _fullnameController.text.trim();
     final country = _countryValue.text;
     final state = _stateValue.text;
@@ -135,7 +140,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
             style:
@@ -145,7 +150,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         ));
       }
     } on PostgrestException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
           style:
@@ -157,7 +163,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
           style:
@@ -490,13 +497,15 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
                           onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+
                             // Check network connectivity
                             bool isConnected =
                                 await _checkInternetConnectivity();
                             if (!isConnected) {
+                              if (!context.mounted) return;
                               // Show a snackbar for no network
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                              messenger.showSnackBar(SnackBar(
                                 content: Text(
                                   'No internet connection. Please check your network settings.',
                                   style: responsiveTextStyle(context, 16,
@@ -508,8 +517,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                             }
 
                             if (_image == null) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                              if (!context.mounted) return;
+                              messenger.showSnackBar(SnackBar(
                                 content: Text(
                                   'Please add a display picture :)',
                                   style: responsiveTextStyle(context, 16,
@@ -538,9 +547,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                 await _saveProfileLocally();
                                 await _updateProfile();
                                 await _signInUser();
-
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                if (!context.mounted) return;
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'Welcome to callup247!!',
                                     style: responsiveTextStyle(context, 16,
@@ -552,6 +560,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                 // Delay and navigate
                                 await Future.delayed(
                                     const Duration(seconds: 2));
+                                if (!context.mounted) return;
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
@@ -561,8 +570,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                   ),
                                 );
                               } catch (error) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                if (!context.mounted) return;
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'An error occurred. Please try again later.',
                                     style: responsiveTextStyle(context, 16,

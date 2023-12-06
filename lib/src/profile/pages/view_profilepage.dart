@@ -90,8 +90,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
               borderRadius: BorderRadius.circular(16),
               child: Image(
                 image: snapshot.data!,
-                width: 250,
-                height: 180,
+                width: 200,
+                height: 200,
                 fit: BoxFit.cover,
               ),
             );
@@ -297,6 +297,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -372,6 +373,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -446,6 +448,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -521,6 +524,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,

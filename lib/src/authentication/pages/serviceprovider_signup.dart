@@ -56,6 +56,7 @@ class _ServiceProviderSignUpScreenState
   Future<void> _createUser() async {
     final emailaddress = _emailaddressController.text.trim();
     final password = _passwordController.text.trim();
+    final messenger = ScaffoldMessenger.of(context);
     try {
       setState(() {
         loading = true;
@@ -63,7 +64,8 @@ class _ServiceProviderSignUpScreenState
       await supabase.auth.signUp(password: password, email: emailaddress);
       if (mounted) {}
     } on PostgrestException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
           style:
@@ -78,7 +80,8 @@ class _ServiceProviderSignUpScreenState
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
           style:
@@ -133,11 +136,11 @@ class _ServiceProviderSignUpScreenState
       'avatar_url': displaypicture,
       'service_provider': 'TRUE'
     };
-
+    final messenger = ScaffoldMessenger.of(context);
     try {
       await supabase.from('profiles').upsert(details);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(
             'Welcome to callup247!!',
             style:
@@ -147,7 +150,8 @@ class _ServiceProviderSignUpScreenState
         ));
       }
     } on PostgrestException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
           style:
@@ -159,7 +163,8 @@ class _ServiceProviderSignUpScreenState
         loading = false;
       });
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
           style:
@@ -492,13 +497,15 @@ class _ServiceProviderSignUpScreenState
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF039fdc)),
                           onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+
                             // Check network connectivity
                             bool isConnected =
                                 await _checkInternetConnectivity();
                             if (!isConnected) {
+                              if (!context.mounted) return;
                               // Show a snackbar for no network
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                              messenger.showSnackBar(SnackBar(
                                 content: Text(
                                   'No internet connection. Please check your network settings.',
                                   style: responsiveTextStyle(context, 16,
@@ -510,8 +517,8 @@ class _ServiceProviderSignUpScreenState
                             }
 
                             if (_image == null) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                              if (!context.mounted) return;
+                              messenger.showSnackBar(SnackBar(
                                 content: Text(
                                   'Please add a display picture :)',
                                   style: responsiveTextStyle(context, 16,
@@ -541,9 +548,8 @@ class _ServiceProviderSignUpScreenState
 
                                 await _updateProfile();
                                 await _signInUser();
-
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                if (!context.mounted) return;
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'Welcome to callup247!!',
                                     style: responsiveTextStyle(context, 16,
@@ -555,6 +561,7 @@ class _ServiceProviderSignUpScreenState
                                 // Delay and navigate
                                 await Future.delayed(
                                     const Duration(seconds: 1));
+                                if (!context.mounted) return;
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
@@ -564,8 +571,8 @@ class _ServiceProviderSignUpScreenState
                                   ),
                                 );
                               } catch (error) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                if (!context.mounted) return;
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'An error occurred. Please try again later.',
                                     style: responsiveTextStyle(context, 16,

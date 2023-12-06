@@ -93,6 +93,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         ));
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -102,6 +103,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -213,6 +215,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
             builder: (BuildContext context) => const SignIn()));
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -222,6 +225,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :)',
@@ -284,6 +288,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         }
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :(',
@@ -293,6 +298,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please check your network settings & try again',
@@ -358,6 +364,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         }
       }
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       // Handle Supabase exception
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -368,6 +375,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
+      if (!context.mounted) return;
       // Handle other potential errors
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -830,6 +838,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
       return response;
     } on PostgrestException catch (error) {
+      if (!context.mounted) return [];
       final tError = error.message;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -841,6 +850,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       ));
       return [];
     } catch (error) {
+      if (!context.mounted) return [];
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please check your network settings & try again',
@@ -865,6 +875,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
       return response;
     } on PostgrestException catch (error) {
+      if (!context.mounted) return;
       final tError = error.message;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -876,6 +887,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       ));
       return null;
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please check your network settings & try again',

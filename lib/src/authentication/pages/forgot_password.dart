@@ -29,11 +29,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
   Future<void> _changePassword() async {
     final newpassword = _passwordController.text.trim();
+    final messenger = ScaffoldMessenger.of(context);
 
     try {
       await supabase.auth.updateUser(UserAttributes(password: newpassword));
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(
             'Password Changed Successfully :)',
             style:
@@ -49,8 +50,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         );
       }
     } on PostgrestException catch (error) {
-      // print(error.message);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :(',
           style:
@@ -59,8 +60,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      // print('catch $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
         content: Text(
           'Unexpected Error, Please try again in a bit :(',
           style:
@@ -253,13 +254,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF039fdc)),
                             onPressed: () async {
+                              final messenger = ScaffoldMessenger.of(context);
                               // Check network connectivity
                               bool isConnected =
                                   await _checkInternetConnectivity();
                               if (!isConnected) {
+                                if (!context.mounted) return;
                                 // Show a snackbar for no network
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'No internet connection. Please check your network settings.',
                                     style: responsiveTextStyle(context, 16,

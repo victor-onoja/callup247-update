@@ -57,7 +57,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         );
       }
     } on PostgrestException catch (error) {
-      // print(error.message);
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Server Error, Please try again in a bit :)',
@@ -67,7 +67,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.red,
       ));
     } catch (error) {
-      // print('catch $error.m');
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Invalid Login Credentials :(',
@@ -265,6 +265,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               bool isConnected =
                                   await _checkInternetConnectivity();
                               if (!isConnected) {
+                                if (!context.mounted) return;
                                 // Show a snackbar for no network
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(

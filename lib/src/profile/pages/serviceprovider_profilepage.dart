@@ -315,6 +315,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -390,6 +391,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -464,6 +466,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,
@@ -539,6 +542,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url);
                                   } else {
+                                    if (!context.mounted) return;
                                     // If the URL can't be launched, show a dialog
                                     showDialog(
                                       context: context,

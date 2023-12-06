@@ -89,6 +89,7 @@ class SplashScreenState extends State<SplashScreen>
     }
     bool isConnected = await checkInternetConnectivity();
     if (!isConnected) {
+      if (!context.mounted) return;
       // Show a snackbar for no network
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 10),
