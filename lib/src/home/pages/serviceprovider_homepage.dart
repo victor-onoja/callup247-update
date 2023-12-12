@@ -58,7 +58,27 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       setState(() {
         savedSearches = userSavedSearches;
       });
-    } else {}
+    } else {
+      try {
+        final List<dynamic> response = await supabase
+            .from('savedsearches')
+            .select('serviceproviderid')
+            .eq('userid', supabase.auth.currentUser!.id);
+        if (mounted) {
+          final data =
+              response.map((e) => e['serviceproviderid'].toString()).toList();
+          setState(() {
+            savedSearches = data;
+          });
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setStringList('savedSearches', data);
+        }
+      } on PostgrestException catch (error) {
+        //
+      } catch (e) {
+        //
+      }
+    }
   }
 
   // 02 - use case update user information online and locally (location change)
@@ -1472,14 +1492,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                   fullname:
                                                                       additionalProfileData[
                                                                           'full_name'],
-                                                                  homeservice:
-                                                                      savedSearchProviderData[
-                                                                          'home_service'],
                                                                   igLink: savedSearchProviderData[
                                                                       'ig_url'],
-                                                                  languagesspoken:
-                                                                      savedSearchProviderData[
-                                                                          'languages_spoken'],
                                                                   mailLink:
                                                                       savedSearchProviderData[
                                                                           'gmail_link'],
@@ -1675,15 +1689,9 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                         fullname:
                                                             additionalProfileData[
                                                                 'full_name'],
-                                                        homeservice:
-                                                            serviceProviderData[
-                                                                'home_service'],
                                                         igLink:
                                                             serviceProviderData[
                                                                 'ig_url'],
-                                                        languagesspoken:
-                                                            serviceProviderData[
-                                                                'languages_spoken'],
                                                         mailLink:
                                                             serviceProviderData[
                                                                 'gmail_link'],

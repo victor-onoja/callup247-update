@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:callup247/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../../responsive_text_styles.dart';
@@ -14,7 +17,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
-  // 05 - use case check network
+  // 01 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -25,7 +28,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     }
   }
 
-  // use case sign in auth 1
+  // 02 - use case sign in auth 1
 
   Future<void> _signInUser() async {
     final emailaddress = _emailaddressController.text.trim();
@@ -47,11 +50,13 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
           loading = false;
         });
         isPasswordReset = false;
+        _signOut();
         _signInUserOTP();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (BuildContext context) => VerificationScreen(
               isPasswordReset: isPasswordReset,
+              userEmail: _emailaddressController.text.trim(),
             ),
           ),
         );
@@ -85,7 +90,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     }
   }
 
-  // 0? - use case signin user auth 2
+  // 03 - use case signin user auth 2
 
   Future<void> _signInUserOTP() async {
     final emailaddress = _emailaddressController.text.trim();
@@ -96,15 +101,41 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {
-        // print('success');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
-      // print(error.message);
+      //
     } catch (error) {
-      // print(error);
+      //
     } finally {
       if (mounted) {}
+    }
+  }
+
+  // 04 - use case sign out
+
+  Future<void> _signOut() async {
+    try {
+      await supabase.auth.signOut();
+    } on PostgrestException catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Server Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Unexpected Error, Please try again in a bit :)',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
@@ -117,6 +148,19 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 8), // Adjust the duration as needed
     )..repeat();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+      final email = userProfileMap['email'];
+      setState(() {
+        userEmail = email;
+      });
+    }
   }
 
   // dispose
@@ -130,6 +174,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   }
 
   // variables
+
   late AnimationController _acontroller;
   final _formKey = GlobalKey<FormState>();
   final _emailaddressController = TextEditingController();
@@ -137,6 +182,9 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   bool isPasswordVisible = false;
   var loading = false;
   bool isPasswordReset = false;
+  String userEmail = '';
+
+  // build method
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +326,21 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                 ));
                                 return; // Exit the function if there's no network
                               }
+                              if (userEmail != _emailaddressController.text &&
+                                  userEmail != '') {
+                                if (!context.mounted) return;
+                                // Show a snackbar for no network
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Warning: The profile associated with this device is $userEmail\nUninstall the app and reinstall it to use a different profile',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                                return; // Exit the function if there's no network
+                              } else if (userEmail == '') {}
                               if (_formKey.currentState!.validate()) {
                                 setState(() {
                                   loading = true;
@@ -317,11 +380,13 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               }
                               isPasswordReset = true;
                               _signInUserOTP();
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       VerificationScreen(
                                     isPasswordReset: isPasswordReset,
+                                    userEmail:
+                                        _emailaddressController.text.trim(),
                                   ),
                                 ),
                               );

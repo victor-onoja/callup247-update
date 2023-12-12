@@ -12,19 +12,22 @@ import 'package:pinput/pinput.dart';
 
 class VerificationScreen extends StatefulWidget {
   final bool isPasswordReset;
-  const VerificationScreen({super.key, required this.isPasswordReset});
+  final String userEmail;
+  const VerificationScreen(
+      {super.key, required this.isPasswordReset, required this.userEmail});
 
   @override
   State<VerificationScreen> createState() =>
-      _VerificationScreenState(isPasswordReset);
+      _VerificationScreenState(isPasswordReset, userEmail);
 }
 
 class _VerificationScreenState extends State<VerificationScreen>
     with SingleTickerProviderStateMixin {
   bool isPasswordReset;
+  String userEmail;
 
-  _VerificationScreenState(this.isPasswordReset);
-  // use case verify user
+  _VerificationScreenState(this.isPasswordReset, this.userEmail);
+  // 01 - use case verify user
 
   Future<void> _verifyUser(BuildContext context) async {
     try {
@@ -34,7 +37,6 @@ class _VerificationScreenState extends State<VerificationScreen>
       await supabase.auth.verifyOTP(
           token: token, type: OtpType.magiclink, email: emailaddress);
       if (mounted) {
-        // print('verify success');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             'You are valid!',
@@ -103,10 +105,10 @@ class _VerificationScreenState extends State<VerificationScreen>
     }
   }
 
-  // 0? - use case resend otp
+  // 02 - use case resend otp
 
   Future<void> _resendOTP() async {
-    final useremailaddress = emailaddress;
+    final useremailaddress = userEmail;
 
     try {
       await supabase.auth.signInWithOtp(
@@ -116,7 +118,9 @@ class _VerificationScreenState extends State<VerificationScreen>
       );
       if (mounted) {}
     } on PostgrestException catch (error) {
+      //
     } catch (error) {
+      //
     } finally {
       if (mounted) {}
     }
@@ -130,7 +134,7 @@ class _VerificationScreenState extends State<VerificationScreen>
     _initializeData();
   }
 
-  // use case initialize data
+  // 03 - use case initialize data
 
   Future<void> _initializeData() async {
     _acontroller = AnimationController(
@@ -151,9 +155,174 @@ class _VerificationScreenState extends State<VerificationScreen>
       });
       // You can now use `emailaddress` as needed.
     } else {
-      // Handle the case where no user profile data is found in SharedPreferences.
-      // For example, show a snackbar.
+      //  query database for user information
+      try {
+        final response = await supabase
+            .from('profiles')
+            .select()
+            .eq('email', userEmail)
+            .single();
+
+        if (mounted) {
+          setState(() {
+            serviceprovider = response['service_provider'];
+            emailaddress = response['email'];
+            userResponse = response;
+          });
+          if (serviceprovider == 'TRUE') {
+            try {
+              final response2 = await supabase
+                  .from('serviceproviders_profile')
+                  .select()
+                  .eq('gmail_link', userEmail)
+                  .single();
+              if (mounted) {
+                setState(() {
+                  userResponse2 = response2;
+                });
+              }
+            } catch (e) {
+              //
+            }
+
+            // save customer data
+            _saveProfileLocallyServiceProvider();
+            _saveServiceProviderProfilelocally();
+            // save serviceprovider data
+          } else {
+            // save customer data
+            _saveProfileLocallyCustomer();
+          }
+        }
+      } on PostgrestException catch (error) {
+        if (!context.mounted) return;
+        final messenger = ScaffoldMessenger.of(context);
+        final tError = error.message;
+
+        messenger.showSnackBar(SnackBar(
+          content: Text(
+            'Server Error: $tError, Please try again',
+            style:
+                responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+        Navigator.pop(context);
+      } catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Unexpected Error, Please check your network settings & try again',
+            style:
+                responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+        Navigator.pop(context);
+      }
     }
+  }
+
+  // 04 - use case save user information locally
+
+  Future<void> _saveProfileLocallyCustomer() async {
+    final fullname = userResponse['full_name'];
+    final emailaddress = userResponse['email'];
+    final country = userResponse['country'];
+    final state = userResponse['state'];
+    final city = userResponse['city'];
+    final displaypicture = userResponse['avatar_url'];
+
+    // Create a map to represent the user's profile data
+    final userProfile = {
+      'fullname': fullname,
+      'email': emailaddress,
+      'country': country,
+      'state': state,
+      'city': city,
+      'displaypicture': displaypicture,
+      'service_provider': 'FALSE'
+    };
+
+    // Encode the map to JSON and save it as a single string
+    final jsonString = json.encode(userProfile);
+
+    // Obtain shared preferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Set the JSON string in SharedPreferences
+    await prefs.setString('userprofile', jsonString);
+  }
+
+  // 04A - use case save user information locally
+
+  Future<void> _saveProfileLocallyServiceProvider() async {
+    final fullname = userResponse['full_name'];
+    final emailaddress = userResponse['email'];
+    final country = userResponse['country'];
+    final state = userResponse['state'];
+    final city = userResponse['city'];
+    final displaypicture = userResponse['avatar_url'];
+
+    // Create a map to represent the user's profile data
+    final userProfile = {
+      'fullname': fullname,
+      'email': emailaddress,
+      'country': country,
+      'state': state,
+      'city': city,
+      'displaypicture': displaypicture,
+      'service_provider': 'TRUE'
+    };
+
+    // Encode the map to JSON and save it as a single string
+    final jsonString = json.encode(userProfile);
+
+    // Obtain shared preferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Set the JSON string in SharedPreferences
+    await prefs.setString('userprofile', jsonString);
+  }
+
+  // 07 - use save service provider profile locally
+
+  Future<void> _saveServiceProviderProfilelocally() async {
+    final serviceprovided = userResponse2['service_provided'];
+    final media1 = userResponse2['media_url1'];
+    final media2 = userResponse2['media_url2'];
+    final media3 = userResponse2['media_url3'];
+    final ig = userResponse2['ig_url'];
+    final x = userResponse2['x_url'];
+    final fb = userResponse2['fb_url'];
+    final web = userResponse2['web_link'];
+    final gmail = userResponse2['gmail_link'];
+    final bio = userResponse2['bio'];
+    final experience = userResponse2['experience'];
+    final availability = userResponse2['availability'];
+    final specialoffers = userResponse2['special_offers'];
+
+    final details = {
+      'service_provided': serviceprovided,
+      'media_url1': media1,
+      'media_url2': media2,
+      'media_url3': media3,
+      'ig_url': ig,
+      'x_url': x,
+      'fb_url': fb,
+      'web_link': web,
+      'gmail_link': gmail,
+      'bio': bio,
+      'experience': experience,
+      'availability': availability,
+      'special_offers': specialoffers,
+    };
+
+    final jsonString = json.encode(details);
+
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('serviceproviderprofile', jsonString);
   }
 
   // dispose
@@ -164,12 +333,17 @@ class _VerificationScreenState extends State<VerificationScreen>
   }
 
   // variables
+
   late AnimationController _acontroller;
   bool linkTappedResendOTP = false;
   bool loading = false;
   String token = '';
-  String emailaddress = '';
+  String? emailaddress;
   String serviceprovider = '';
+  dynamic userResponse = {};
+  dynamic userResponse2 = {};
+
+// build method
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +407,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                                   context, 18, Colors.black, null),
                             ),
                             Text(
-                              emailaddress,
+                              emailaddress ?? userEmail,
                               style: responsiveTextStyle(
                                   context, 18, Colors.white, null),
                             ),

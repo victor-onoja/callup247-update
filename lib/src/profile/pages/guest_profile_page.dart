@@ -212,16 +212,7 @@ class _GuestProfilePageState extends State<GuestProfilePage> {
                                   context, 16, Colors.white, FontWeight.bold)),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text('Can Travel:', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Text(' Yes, State', // Information
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, FontWeight.bold)),
-                        ],
-                      ),
+
                       Row(
                         children: [
                           Text('Availability:', // Label
@@ -232,19 +223,7 @@ class _GuestProfilePageState extends State<GuestProfilePage> {
                                   context, 16, Colors.white, FontWeight.bold)),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text('Languages Spoken:', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(' English',
-                                // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+
                       Row(
                         children: [
                           Text('Special Offers:', // Label

@@ -51,8 +51,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
       final userExperience = serviceProviderMap['experience'];
       final userAvailability = serviceProviderMap['availability'];
       final userSpecialOffers = serviceProviderMap['special_offers'];
-      final userhomeService = serviceProviderMap['home_service'];
-      final userLanguagesSpoken = serviceProviderMap['languages_spoken'];
 
       setState(() {
         pfp = userPfp;
@@ -68,8 +66,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
         experience = userExperience;
         availability = userAvailability;
         specialoffers = userSpecialOffers;
-        homeservice = userhomeService;
-        languagesspoken = userLanguagesSpoken;
       });
     } else {}
   }
@@ -150,9 +146,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String maillink = '';
   String fullname = '';
   String experience = '';
-  String homeservice = '';
+
   String availability = '';
-  String languagesspoken = '';
+
   String specialoffers = '';
 
   // build method
@@ -683,42 +679,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                                   context, 16, Colors.black, FontWeight.bold)),
                           Flexible(
                             child: Text(experience, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Home Service :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(homeservice, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Availability :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(availability, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Languages Spoken :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(languagesspoken, // Information
                                 style: responsiveTextStyle(context, 16,
                                     Colors.white, FontWeight.bold)),
                           ),

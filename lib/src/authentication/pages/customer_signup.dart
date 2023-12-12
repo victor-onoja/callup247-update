@@ -80,9 +80,10 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
         loading = false;
       });
       if (!context.mounted) return;
+
       messenger.showSnackBar(SnackBar(
         content: Text(
-          'Unexpected Error, Please try again in a bit :)',
+          'Unexpected $error, Please try again in a bit :)',
           style:
               responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
         ),
@@ -119,6 +120,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
   Future<void> _updateProfile() async {
     final messenger = ScaffoldMessenger.of(context);
     final fullname = _fullnameController.text.trim();
+    final email = _emailaddressController.text.trim();
     final country = _countryValue.text;
     final state = _stateValue.text;
     final city = _cityValue.text;
@@ -130,6 +132,7 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
       'id': user!.id,
       'updated_at': DateTime.now().toIso8601String(),
       'full_name': fullname,
+      'email': email,
       'country': country,
       'state': state,
       'city': city,
@@ -566,6 +569,8 @@ class _CustomerSignUpScreenState extends State<CustomerSignUpScreen> {
                                     builder: (BuildContext context) =>
                                         VerificationScreen(
                                       isPasswordReset: isPasswordReset,
+                                      userEmail:
+                                          _emailaddressController.text.trim(),
                                     ),
                                   ),
                                 );

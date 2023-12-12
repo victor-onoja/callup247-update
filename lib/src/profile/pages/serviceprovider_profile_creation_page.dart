@@ -21,6 +21,7 @@ class ServiceProviderProfileCreation extends StatefulWidget {
 class _ServiceProviderProfileCreationState
     extends State<ServiceProviderProfileCreation> {
   // services list
+
   List<String> servicesList = [
     'Accountant',
     'Accounts Clerk',
@@ -375,6 +376,7 @@ class _ServiceProviderProfileCreationState
   // end of list of services
 
   // 01 - use case become a service provider
+
   Future<void> _becomeAServiceProvider() async {
     try {
       await supabase.from('profiles').update(
@@ -470,9 +472,6 @@ class _ServiceProviderProfileCreationState
   final TextEditingController _availabilityController = TextEditingController();
   final TextEditingController _specialOffersController =
       TextEditingController();
-  final TextEditingController _homeServiceController = TextEditingController();
-  final TextEditingController _languagesSpokenController =
-      TextEditingController();
   String emailaddress = '';
   String fullname = '';
   var loading = false;
@@ -490,8 +489,6 @@ class _ServiceProviderProfileCreationState
     _experienceController.dispose();
     _availabilityController.dispose();
     _specialOffersController.dispose();
-    _homeServiceController.dispose();
-    _languagesSpokenController.dispose();
     super.dispose();
   }
 
@@ -554,7 +551,7 @@ class _ServiceProviderProfileCreationState
     _initializeData();
   }
 
-  // use case initialize data
+  // 05 - use case initialize data
 
   Future<void> _initializeData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -584,7 +581,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // create service provider profile
+  // 06 - create service provider profile
 
   Future<void> _createServiceProviderProfile() async {
     final serviceprovided = _serviceProvidedController.text.trim();
@@ -600,8 +597,7 @@ class _ServiceProviderProfileCreationState
     final experience = _experienceController.text.trim();
     final availability = _availabilityController.text.trim();
     final specialoffers = _specialOffersController.text.trim();
-    final homeservice = _homeServiceController.text.trim();
-    final languagesspoken = _languagesSpokenController.text.trim();
+
     final user = supabase.auth.currentUser;
 
     final details = {
@@ -620,8 +616,6 @@ class _ServiceProviderProfileCreationState
       'experience': experience,
       'availability': availability,
       'special_offers': specialoffers,
-      'home_service': homeservice,
-      'languages_spoken': languagesspoken
     };
 
     try {
@@ -671,7 +665,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // create service provider profile
+  // 07 - use save service provider profile locally
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final serviceprovided = _serviceProvidedController.text.trim();
@@ -687,8 +681,6 @@ class _ServiceProviderProfileCreationState
     final experience = _experienceController.text.trim();
     final availability = _availabilityController.text.trim();
     final specialoffers = _specialOffersController.text.trim();
-    final homeservice = _homeServiceController.text.trim();
-    final languagesspoken = _languagesSpokenController.text.trim();
 
     final details = {
       'service_provided': serviceprovided,
@@ -704,8 +696,6 @@ class _ServiceProviderProfileCreationState
       'experience': experience,
       'availability': availability,
       'special_offers': specialoffers,
-      'home_service': homeservice,
-      'languages_spoken': languagesspoken
     };
 
     final jsonString = json.encode(details);
@@ -714,6 +704,8 @@ class _ServiceProviderProfileCreationState
 
     await prefs.setString('serviceproviderprofile', jsonString);
   }
+
+// build method
 
   @override
   Widget build(BuildContext context) {
@@ -1199,42 +1191,7 @@ class _ServiceProviderProfileCreationState
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Text('Home Service :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _homeServiceController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g Yes, Citywide, Statewide, Countrywide',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Languages Spoken :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _languagesSpokenController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g English, Yoruba, Idoma',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
                 // submit button

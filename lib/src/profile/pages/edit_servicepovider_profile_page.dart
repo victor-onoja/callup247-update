@@ -34,8 +34,6 @@ class _EditServiceProviderProfileState
       _experienceController.text = experience;
       _availabilityController.text = availability;
       _specialOffersController.text = specialoffers;
-      _homeServiceController.text = homeservice;
-      _languagesSpokenController.text = languagesspoken;
     });
   }
 
@@ -69,8 +67,6 @@ class _EditServiceProviderProfileState
       final userBio = serviceProviderMap['bio'];
       final userAvailability = serviceProviderMap['availability'];
       final userSpecialOffers = serviceProviderMap['special_offers'];
-      final userhomeService = serviceProviderMap['home_service'];
-      final userLanguagesSpoken = serviceProviderMap['languages_spoken'];
 
       setState(() {
         media1 = userMedia1;
@@ -85,8 +81,6 @@ class _EditServiceProviderProfileState
         experience = userExperience;
         availability = userAvailability;
         specialoffers = userSpecialOffers;
-        homeservice = userhomeService;
-        languagesspoken = userLanguagesSpoken;
       });
     } else {}
   }
@@ -314,8 +308,6 @@ class _EditServiceProviderProfileState
     final experience = _experienceController.text.trim();
     final availability = _availabilityController.text.trim();
     final specialoffers = _specialOffersController.text.trim();
-    final homeservice = _homeServiceController.text.trim();
-    final languagesspoken = _languagesSpokenController.text.trim();
     final user = supabase.auth.currentUser;
 
     final details = {
@@ -329,8 +321,6 @@ class _EditServiceProviderProfileState
       'experience': experience,
       'availability': availability,
       'special_offers': specialoffers,
-      'home_service': homeservice,
-      'languages_spoken': languagesspoken
     };
 
     try {
@@ -396,9 +386,6 @@ class _EditServiceProviderProfileState
       serviceProviderMap['availability'] = _availabilityController.text.trim();
       serviceProviderMap['special_offers'] =
           _specialOffersController.text.trim();
-      serviceProviderMap['home_service'] = _homeServiceController.text.trim();
-      serviceProviderMap['languages_spoken'] =
-          _languagesSpokenController.text.trim();
 
       final updatedServiceProviderJson = json.encode(serviceProviderMap);
 
@@ -423,9 +410,9 @@ class _EditServiceProviderProfileState
   String weblink = '';
   String bio = '';
   String experience = '';
-  String homeservice = '';
+
   String availability = '';
-  String languagesspoken = '';
+
   String specialoffers = '';
   String fullname = '';
   var loading = false;
@@ -442,10 +429,6 @@ class _EditServiceProviderProfileState
       TextEditingController();
   late final TextEditingController _specialOffersController =
       TextEditingController();
-  late final TextEditingController _homeServiceController =
-      TextEditingController();
-  late final TextEditingController _languagesSpokenController =
-      TextEditingController();
 
   // dispose
 
@@ -459,8 +442,7 @@ class _EditServiceProviderProfileState
     _experienceController.dispose();
     _availabilityController.dispose();
     _specialOffersController.dispose();
-    _homeServiceController.dispose();
-    _languagesSpokenController.dispose();
+
     super.dispose();
   }
 
@@ -799,42 +781,7 @@ class _EditServiceProviderProfileState
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Text('Home Service :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _homeServiceController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g Yes, Citywide, Statewide, Countrywide',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Languages Spoken :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _languagesSpokenController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g English, Yoruba, Idoma',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
                 // submit button

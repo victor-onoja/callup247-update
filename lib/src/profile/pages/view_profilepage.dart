@@ -20,9 +20,7 @@ class ViewProfilePage extends StatefulWidget {
       required this.mailLink,
       required this.fullname,
       required this.experience,
-      required this.homeservice,
       required this.availability,
-      required this.languagesspoken,
       required this.specialoffers});
 
   final String pfp,
@@ -36,9 +34,7 @@ class ViewProfilePage extends StatefulWidget {
       mailLink,
       fullname,
       experience,
-      homeservice,
       availability,
-      languagesspoken,
       specialoffers;
 
   @override
@@ -670,18 +666,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text('Home Service :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(widget.homeservice, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+
                       Row(
                         children: [
                           Text('Availability :- ', // Label
@@ -694,18 +679,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text('Languages Spoken :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(widget.languagesspoken, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+
                       Row(
                         children: [
                           Text('Special Offers :- ', // Label

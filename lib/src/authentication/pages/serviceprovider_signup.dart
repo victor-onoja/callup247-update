@@ -119,6 +119,7 @@ class _ServiceProviderSignUpScreenState
 
   Future<void> _updateProfile() async {
     final fullname = _fullnameController.text.trim();
+    final email = _emailaddressController.text.trim();
     final country = _countryValue.text;
     final state = _stateValue.text;
     final city = _cityValue.text;
@@ -130,6 +131,7 @@ class _ServiceProviderSignUpScreenState
       'id': user!.id,
       'updated_at': DateTime.now().toIso8601String(),
       'full_name': fullname,
+      'email': email,
       'country': country,
       'state': state,
       'city': city,
@@ -567,6 +569,8 @@ class _ServiceProviderSignUpScreenState
                                     builder: (BuildContext context) =>
                                         VerificationScreen(
                                       isPasswordReset: isPasswordReset,
+                                      userEmail:
+                                          _emailaddressController.text.trim(),
                                     ),
                                   ),
                                 );
