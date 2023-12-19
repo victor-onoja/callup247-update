@@ -710,592 +710,600 @@ class _ServiceProviderProfileCreationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF039fdc),
-                Color(0xFF13CAF1),
-              ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: [
+                  Color(0xFF039fdc),
+                  Color(0xFF13CAF1),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Set up your Profile',
-                      style: responsiveTextStyle(
-                          context, 20, Colors.black, FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-
-                // add service
-
-                Text(
-                  'What Service will you be providing ?',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                Text(
-                  'hint: this can\'t be changed later, only through customer care :)',
-                  style: responsiveTextStyle(context, 12, Colors.black45, null),
-                ),
-
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _serviceProvidedController,
-                        focusNode: searchFocusNode,
-                        showCursor: false,
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Set up your Profile',
                         style: responsiveTextStyle(
-                            context, 16, Colors.white, FontWeight.bold),
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          suffixIcon: InkWell(
-                              radius: 50,
-                              splashColor: Colors.greenAccent,
-                              onTap: () {
-                                FocusScope.of(context).unfocus();
-                                setState(() {
-                                  isSearching = false;
-                                  // When suffix icon is tapped, set isTyping to false
-                                  isTyping = false;
-                                  // You can also clear the text field if needed
-                                  _serviceProvidedController.clear();
-                                  // Update the filtered services here as well
-                                  filteredServices = [];
-                                });
-                              },
-                              child: const Icon(
-                                Icons.cancel,
-                                color: Colors.black54,
-                              )),
-                          hintText: 'Start typing to search...',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            // Filter services here and update UI.
-                            filteredServices = servicesList
-                                .where((service) => service
-                                    .toLowerCase()
-                                    .startsWith(value.toLowerCase()))
-                                .toList();
-                            if (value.isNotEmpty) {
-                              isTyping =
-                                  true; // User is typing, hide the content above
-                            } else {
-                              isTyping =
-                                  false; // User has stopped typing, show the content above
-                            }
-                            isSearching = false;
-                          });
-                        },
+                            context, 20, Colors.black, FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
 
-                Visibility(
-                  visible: isTyping, // Content is visible when typing
-                  child: Container(
-                    color: Colors.white,
-                    height: MediaQuery.sizeOf(context).height * 0.7,
-                    child: filteredServices.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              "Sorry, we don't have this service currently. Please pick a registered service.",
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
+                  // add service
+
+                  Text(
+                    'What Service will you be providing ?',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  Text(
+                    'hint: this can\'t be changed later, only through customer care :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null),
+                  ),
+
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _serviceProvidedController,
+                          focusNode: searchFocusNode,
+                          showCursor: false,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, FontWeight.bold),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.white,
                             ),
-                          )
-                        : ListView.builder(
-                            itemCount: filteredServices.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                  filteredServices[index],
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
+                            suffixIcon: InkWell(
+                                radius: 50,
+                                splashColor: Colors.greenAccent,
                                 onTap: () {
-                                  // Handle user selection here.
                                   FocusScope.of(context).unfocus();
                                   setState(() {
-                                    isSearching = true;
-                                    // When tile is tapped, set isTyping to false
+                                    isSearching = false;
+                                    // When suffix icon is tapped, set isTyping to false
                                     isTyping = false;
-                                    searchchoice = filteredServices[index];
-                                    _serviceProvidedController.text =
-                                        filteredServices[index];
-
+                                    // You can also clear the text field if needed
+                                    _serviceProvidedController.clear();
                                     // Update the filtered services here as well
                                     filteredServices = [];
                                   });
                                 },
-                              );
-                            },
+                                child: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.black54,
+                                )),
+                            hintText: 'Start typing to search...',
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              // Filter services here and update UI.
+                              filteredServices = servicesList
+                                  .where((service) => service
+                                      .toLowerCase()
+                                      .startsWith(value.toLowerCase()))
+                                  .toList();
+                              if (value.isNotEmpty) {
+                                isTyping =
+                                    true; // User is typing, hide the content above
+                              } else {
+                                isTyping =
+                                    false; // User has stopped typing, show the content above
+                              }
+                              isSearching = false;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
 
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+                  Visibility(
+                    visible: isTyping, // Content is visible when typing
+                    child: Container(
+                      color: Colors.white,
+                      height: MediaQuery.sizeOf(context).height * 0.7,
+                      child: filteredServices.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                "Sorry, we don't have this service currently. Please pick a registered service.",
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.black, FontWeight.bold),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: filteredServices.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    filteredServices[index],
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  onTap: () {
+                                    // Handle user selection here.
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      isSearching = true;
+                                      // When tile is tapped, set isTyping to false
+                                      isTyping = false;
+                                      searchchoice = filteredServices[index];
+                                      _serviceProvidedController.text =
+                                          filteredServices[index];
 
-                // add media
+                                      // Update the filtered services here as well
+                                      filteredServices = [];
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ),
 
-                Text(
-                  'Add Media :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                Text(
-                  'hint: you can add up to three images that showcase your work :)',
-                  style: responsiveTextStyle(context, 12, Colors.black45, null),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+
+                  // add media
+
+                  Text(
+                    'Add Media :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  Text(
+                    'hint: you can add up to three images that showcase your work :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        // image 1
+                        Container(
+                          color: Colors.black45,
+                          height: 250,
+                          width: 250,
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage1();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image1 != null)
+                                  Image.file(
+                                    _image1!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  const Icon(
+                                    Icons.camera_alt,
+                                    size: 250,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.025),
+                        // image 2
+                        Container(
+                          color: Colors.black45,
+                          height: 250,
+                          width: 250,
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage2();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image2 != null)
+                                  Image.file(
+                                    _image2!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  const Icon(
+                                    Icons.camera_alt,
+                                    size: 250,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.025),
+                        // image 3
+                        Container(
+                          color: Colors.black45,
+                          height: 250,
+                          width: 250,
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage3();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image3 != null)
+                                  Image.file(
+                                    _image3!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  const Icon(
+                                    Icons.camera_alt,
+                                    size: 250,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+
+                  Text(
+                      'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
+                      style: responsiveTextStyle(
+                          context, 12, Colors.black45, null)),
+
+                  // add social links
+
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+                  Text(
+                    'Add Your Social links :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  Text(
+                      'hint: click on the app icons for easy navigation to share your proile :)',
+                      style: responsiveTextStyle(
+                          context, 12, Colors.black45, null)),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  Column(
                     children: [
-                      // image 1
-                      Container(
-                        color: Colors.black45,
-                        height: 250,
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage1();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image1 != null)
-                                Image.file(
-                                  _image1!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                const Icon(
-                                  Icons.camera_alt,
-                                  size: 250,
-                                ),
-                            ],
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.instagram.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/ig-icon.png',
+                              width: 25,
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
-                      // image 2
-                      Container(
-                        color: Colors.black45,
-                        height: 250,
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage2();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image2 != null)
-                                Image.file(
-                                  _image2!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                const Icon(
-                                  Icons.camera_alt,
-                                  size: 250,
-                                ),
-                            ],
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Instagram :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _instagramController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
-                      // image 3
-                      Container(
-                        color: Colors.black45,
-                        height: 250,
-                        width: 250,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage3();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image3 != null)
-                                Image.file(
-                                  _image3!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                const Icon(
-                                  Icons.camera_alt,
-                                  size: 250,
-                                ),
-                            ],
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url = Uri.parse('https://twitter.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/x-icon.webp',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('X :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _xController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url = Uri.parse(
+                                  'https://web.facebook.com/?_rdc=1&_rdr');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/facebook.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Facebook :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _facebookController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.google.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/web-icon.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Website :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _websiteController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+
+                  // add details
+
+                  Text(
+                    'Add Your Details :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  Text(
+                    'hint: you can be as expressive as you like :)',
+                    style:
+                        responsiveTextStyle(context, 12, Colors.black45, null),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  Row(
+                    children: [
+                      Text('Bio :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _bioController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText:
+                                'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-
-                Text(
-                    'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null)),
-
-                // add social links
-
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-                Text(
-                  'Add Your Social links :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                Text(
-                    'hint: click on the app icons for easy navigation to share your proile :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null)),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url =
-                                Uri.parse('https://www.instagram.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/ig-icon.png',
-                            width: 25,
+                  Row(
+                    children: [
+                      Text('Experience :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _experienceController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 5+ years',
                           ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Instagram :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _instagramController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url = Uri.parse('https://twitter.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/x-icon.webp',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('X :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _xController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url = Uri.parse(
-                                'https://web.facebook.com/?_rdc=1&_rdr');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/facebook.png',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Facebook :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _facebookController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url =
-                                Uri.parse('https://www.google.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/web-icon.png',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Website :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _websiteController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-
-                // add details
-
-                Text(
-                  'Add Your Details :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                Text(
-                  'hint: you can be as expressive as you like :)',
-                  style: responsiveTextStyle(context, 12, Colors.black45, null),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                Row(
-                  children: [
-                    Text('Bio :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _bioController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText:
-                              'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Experience :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _experienceController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 5+ years',
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Availability :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _availabilityController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 9am - 5pm, Mon - Sat',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Availability :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _availabilityController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 9am - 5pm, Mon - Sat',
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Special Offers :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _specialOffersController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 20% off till Jan 2024',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Special Offers :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _specialOffersController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 20% off till Jan 2024',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
-                // submit button
+                  // submit button
 
-                Center(
-                  child: loading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              loading = true;
-                            });
-                            // prevent unregistered services
-                            if (isTyping) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'Please pick a registered service :(',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
+                  Center(
+                    child: loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () async {
                               setState(() {
-                                loading = false;
+                                loading = true;
                               });
-                              return;
-                            }
-                            // Check network connectivity
-                            bool isConnected =
-                                await _checkInternetConnectivity();
-                            if (!isConnected) {
-                              if (!context.mounted) return;
-                              // Show a snackbar for no network
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'No internet connection. Please check your network settings.',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                              setState(() {
-                                loading = false;
-                              });
-                              return; // Exit the function if there's no network
-                            }
-
-                            // todo: make this one request
-                            try {
-                              if (_image1 != null) {
-                                await _uploadImage1();
+                              // prevent unregistered services
+                              if (isTyping) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Please pick a registered service :(',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                                setState(() {
+                                  loading = false;
+                                });
+                                return;
                               }
-                              if (_image2 != null) {
-                                await _uploadImage2();
-                              }
-                              if (_image3 != null) {
-                                await _uploadImage3();
+                              // Check network connectivity
+                              bool isConnected =
+                                  await _checkInternetConnectivity();
+                              if (!isConnected) {
+                                if (!context.mounted) return;
+                                // Show a snackbar for no network
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'No internet connection. Please check your network settings.',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                                setState(() {
+                                  loading = false;
+                                });
+                                return; // Exit the function if there's no network
                               }
 
-                              await _becomeAServiceProvider();
-                              await _createServiceProviderProfile();
-                              await _saveServiceProviderProfilelocally();
+                              // todo: make this one request
+                              try {
+                                if (_image1 != null) {
+                                  await _uploadImage1();
+                                }
+                                if (_image2 != null) {
+                                  await _uploadImage2();
+                                }
+                                if (_image3 != null) {
+                                  await _uploadImage3();
+                                }
 
-                              await Future.delayed(const Duration(seconds: 2));
-                              if (!context.mounted) return;
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const ServiceProviderHomePage()),
-                              );
-                            } catch (error) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'An error occurred. Please try again later.',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                            } finally {
-                              setState(() {
-                                loading = false;
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF13CAF1),
-                            minimumSize: Size(
-                                MediaQuery.sizeOf(context).width * 0.5,
-                                MediaQuery.sizeOf(context).height *
-                                    0.06), // Set the button's width and height
+                                await _becomeAServiceProvider();
+                                await _createServiceProviderProfile();
+                                await _saveServiceProviderProfilelocally();
+
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
+                                if (!context.mounted) return;
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const ServiceProviderHomePage()),
+                                );
+                              } catch (error) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'An error occurred. Please try again later.',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                              } finally {
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF13CAF1),
+                              minimumSize: Size(
+                                  MediaQuery.sizeOf(context).width * 0.5,
+                                  MediaQuery.sizeOf(context).height *
+                                      0.06), // Set the button's width and height
+                            ),
+                            child: Text(
+                              'Submit',
+                              style: responsiveTextStyle(
+                                  context, 14, Colors.black, FontWeight.bold),
+                            ),
                           ),
-                          child: Text(
-                            'Submit',
-                            style: responsiveTextStyle(
-                                context, 14, Colors.black, FontWeight.bold),
-                          ),
-                        ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

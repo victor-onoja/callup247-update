@@ -926,844 +926,861 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        height: MediaQuery.sizeOf(context).height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF039fdc),
-              Color(0xFF13CAF1),
-            ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.sizeOf(context).height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
-            child: FocusScope(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RotationTransition(
-                        turns:
-                            Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                        child: Image.asset(
-                          'assets/logo_t.png',
-                          height: 75,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
+              child: FocusScope(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RotationTransition(
+                          turns:
+                              Tween(begin: 0.0, end: 1.0).animate(_acontroller),
+                          child: Image.asset(
+                            'assets/logo_t.png',
+                            height: 75,
+                          ),
                         ),
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              // customer pfp
-                              pfpChange
-                                  ? CircleAvatar(
-                                      backgroundImage: FileImage(_image!),
-                                      radius: 30,
-                                    )
-                                  :
-                                  // Wrap your CircleAvatar with a FutureBuilder
-                                  // todo: cache the image
-                                  FutureBuilder<ImageProvider>(
-                                      future: _pfpImageProvider(pfp),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          // If the future is complete, you can use the ImageProvider
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                // customer pfp
+                                pfpChange
+                                    ? CircleAvatar(
+                                        backgroundImage: FileImage(_image!),
+                                        radius: 30,
+                                      )
+                                    :
+                                    // Wrap your CircleAvatar with a FutureBuilder
+                                    // todo: cache the image
+                                    FutureBuilder<ImageProvider>(
+                                        future: _pfpImageProvider(pfp),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+                                            // If the future is complete, you can use the ImageProvider
 
-                                          return CircleAvatar(
-                                            backgroundImage: snapshot.data,
-                                            radius: 30,
-                                          );
-                                        } else {
-                                          // While the future is loading, you can show a placeholder or loading indicator
-                                          return const SpinKitPianoWave(
-                                            size: 30,
-                                            color: Color(0xFF13CAF1),
-                                            itemCount: 4,
-                                          );
-                                        }
-                                      },
-                                    ),
+                                            return CircleAvatar(
+                                              backgroundImage: snapshot.data,
+                                              radius: 30,
+                                            );
+                                          } else {
+                                            // While the future is loading, you can show a placeholder or loading indicator
+                                            return const SpinKitPianoWave(
+                                              size: 30,
+                                              color: Color(0xFF13CAF1),
+                                              itemCount: 4,
+                                            );
+                                          }
+                                        },
+                                      ),
 
-                              // end of customer pfp
-                              PopupMenuButton(
-                                itemBuilder: (BuildContext context) {
-                                  return [
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'changeDisplayPicture',
-                                      child: const Text(
-                                        'Change Display Picture',
+                                // end of customer pfp
+                                PopupMenuButton(
+                                  itemBuilder: (BuildContext context) {
+                                    return [
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'changeDisplayPicture',
+                                        child: const Text(
+                                          'Change Display Picture',
+                                        ),
                                       ),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'editLocation',
-                                      child: const Text(
-                                        'Edit Location',
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'editLocation',
+                                        child: const Text(
+                                          'Edit Location',
+                                        ),
                                       ),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'editProfile',
-                                      child: const Text(
-                                        'Edit Profile',
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'editProfile',
+                                        child: const Text(
+                                          'Edit Profile',
+                                        ),
                                       ),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'viewProfile',
-                                      child: const Text('View profile'),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'customerCare',
-                                      child: const Text('Customer Care'),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'termsAndConditions',
-                                      child: const Text('Terms and Conditions'),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'signOut',
-                                      child: const Text('Sign Out'),
-                                    ),
-                                  ];
-                                },
-                                onSelected: (value) {
-                                  // Handle the selected menu item (navigate to the corresponding screen)
-                                  if (value == 'changeDisplayPicture') {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'Please Pick a new Image'),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      pfpChange = false;
-                                                    });
-                                                    _pickImage();
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.camera_alt,
-                                                    size: 100,
-                                                    color: Colors.black54,
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'viewProfile',
+                                        child: const Text('View profile'),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'customerCare',
+                                        child: const Text('Customer Care'),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'termsAndConditions',
+                                        child:
+                                            const Text('Terms and Conditions'),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'signOut',
+                                        child: const Text('Sign Out'),
+                                      ),
+                                    ];
+                                  },
+                                  onSelected: (value) {
+                                    // Handle the selected menu item (navigate to the corresponding screen)
+                                    if (value == 'changeDisplayPicture') {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Please Pick a new Image'),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        pfpChange = false;
+                                                      });
+                                                      _pickImage();
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.camera_alt,
+                                                      size: 100,
+                                                      color: Colors.black54,
+                                                    ),
                                                   ),
-                                                ),
-                                                const Text(
-                                                    '1) Tap the camera icon to pick an image\n2) Tap the refresh button to confirm your image before uploading :)')
-                                              ],
-                                            ),
-                                            actions: [
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    if (_image != null) {
-                                                      Navigator.pop(context);
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return AlertDialog(
-                                                              title: const Text(
-                                                                  'Here\'s your image :)'),
-                                                              content:
-                                                                  Image.file(
-                                                                      _image!),
-                                                              actions: [
-                                                                ElevatedButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    _uploadImage();
-
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  child: const Text(
-                                                                      'Upload'),
-                                                                ),
-                                                                ElevatedButton(
+                                                  const Text(
+                                                      '1) Tap the camera icon to pick an image\n2) Tap the refresh button to confirm your image before uploading :)')
+                                                ],
+                                              ),
+                                              actions: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      if (_image != null) {
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return AlertDialog(
+                                                                title: const Text(
+                                                                    'Here\'s your image :)'),
+                                                                content:
+                                                                    Image.file(
+                                                                        _image!),
+                                                                actions: [
+                                                                  ElevatedButton(
                                                                     onPressed:
                                                                         () {
+                                                                      _uploadImage();
+
                                                                       Navigator.pop(
                                                                           context);
                                                                     },
                                                                     child: const Text(
-                                                                        'Cancel'))
-                                                              ],
-                                                            );
-                                                          });
-                                                    }
-                                                  },
-                                                  child: const Text('Refresh')),
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Cancel'))
-                                            ],
-                                          );
-                                        });
-                                  } else if (value == 'editLocation') {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'Set your new Location'),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                CountryStateCityPicker(
-                                                    country: _countryValue,
-                                                    state: _stateValue,
-                                                    city: _cityValue),
+                                                                        'Upload'),
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Cancel'))
+                                                                ],
+                                                              );
+                                                            });
+                                                      }
+                                                    },
+                                                    child:
+                                                        const Text('Refresh')),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Cancel'))
                                               ],
-                                            ),
-                                            actions: [
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    _updateUserLocation();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Confirm')),
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Cancel'))
-                                            ],
-                                          );
-                                        });
-                                  } else if (value == 'signOut') {
-                                    _signOut();
-                                  } else if (value == 'viewProfile') {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const ServiceProviderProfile()));
-                                  } else if (value == 'editProfile') {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const EditServiceProviderProfile()));
-                                  } else if (value == 'customerCare') {}
-                                  // Add more cases for other menu items
-                                },
-                              ),
-                            ],
-                          ),
-                          // customer name
-                          Text(
-                            fullname,
+                                            );
+                                          });
+                                    } else if (value == 'editLocation') {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Set your new Location'),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  CountryStateCityPicker(
+                                                      country: _countryValue,
+                                                      state: _stateValue,
+                                                      city: _cityValue),
+                                                ],
+                                              ),
+                                              actions: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      _updateUserLocation();
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child:
+                                                        const Text('Confirm')),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Cancel'))
+                                              ],
+                                            );
+                                          });
+                                    } else if (value == 'signOut') {
+                                      _signOut();
+                                    } else if (value == 'viewProfile') {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const ServiceProviderProfile()));
+                                    } else if (value == 'editProfile') {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const EditServiceProviderProfile()));
+                                    } else if (value == 'customerCare') {}
+                                    // Add more cases for other menu items
+                                  },
+                                ),
+                              ],
+                            ),
+                            // customer name
+                            Text(
+                              fullname,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, FontWeight.bold),
+                            ),
+                            // end of customer name
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _controller,
+                            focusNode: searchFocusNode,
+                            showCursor: false,
                             style: responsiveTextStyle(
                                 context, 16, Colors.white, FontWeight.bold),
-                          ),
-                          // end of customer name
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _controller,
-                          focusNode: searchFocusNode,
-                          showCursor: false,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, FontWeight.bold),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            suffixIcon: InkWell(
-                                radius: 50,
-                                splashColor: Colors.greenAccent,
-                                onTap: () {
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.black54,
-                                )),
-                            hintText: 'Search...',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              // Filter services here and update UI.
-                              filteredServices = servicesList
-                                  .where((service) => service
-                                      .toLowerCase()
-                                      .startsWith(value.toLowerCase()))
-                                  .toList();
-                              if (value.isNotEmpty) {
-                                isTyping =
-                                    true; // User is typing, hide the content above
-                              } else {
-                                isTyping =
-                                    false; // User has stopped typing, show the content above
-                              }
-                              isSearching = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: isTyping, // Content is visible when typing
-                    child: Container(
-                      color: Colors.white,
-                      height: MediaQuery.sizeOf(context).height * 0.7,
-                      child: filteredServices.isEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "Sorry, we don't have this service currently. Please pick a registered service.",
-                                style: responsiveTextStyle(
-                                    context, 16, Colors.black, FontWeight.bold),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.white,
                               ),
-                            )
-                          : ListView.builder(
-                              itemCount: filteredServices.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(
-                                    filteredServices[index],
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  onTap: () async {
-                                    // Handle user selection here.
+                              suffixIcon: InkWell(
+                                  radius: 50,
+                                  splashColor: Colors.greenAccent,
+                                  onTap: () {
                                     FocusScope.of(context).unfocus();
                                     setState(() {
-                                      isSearching = true;
-                                      // When tile is tapped, set isTyping to false
+                                      isSearching = false;
+                                      // When suffix icon is tapped, set isTyping to false
                                       isTyping = false;
-                                      searchchoice = filteredServices[index];
-                                      _controller.text =
-                                          filteredServices[index];
-
+                                      // You can also clear the text field if needed
+                                      _controller.clear();
                                       // Update the filtered services here as well
                                       filteredServices = [];
                                     });
-                                    List<dynamic> profileIds;
-
-                                    if (city != null || city == '') {
-                                      profileIds =
-                                          await _queryProfilesTable(city: city);
-                                    } else {
-                                      profileIds = await _queryProfilesTable(
-                                          state: state);
-                                    }
-
-                                    List<dynamic> serviceProviders =
-                                        await _queryServiceProvidersTable(
-                                            profileIds);
-                                    List<dynamic> filteredServiceProviders =
-                                        serviceProviders
-                                            .where((provider) =>
-                                                provider['service_provided'] ==
-                                                searchchoice)
-                                            .toList();
-
-                                    setState(() {
-                                      appFilteredServiceProviders =
-                                          filteredServiceProviders;
-                                    });
                                   },
-                                );
-                              },
+                                  child: const Icon(
+                                    Icons.cancel,
+                                    color: Colors.black54,
+                                  )),
+                              hintText: 'Search...',
                             ),
-                    ),
-                  ),
-                  // saved searches
-                  Stack(children: [
-                    Visibility(
-                        visible: isSearching
-                            ? isTyping
-                            : !isTyping, // Content is visible when not typing
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.15),
-                            Text(
-                              'Saved Searches',
-                              style: responsiveTextStyle(
-                                  context, 20, null, FontWeight.bold),
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.0125),
-                            FutureBuilder(
-                              future:
-                                  _queryServiceProvidersTable(savedSearches),
-                              builder: (context,
-                                  AsyncSnapshot<List<dynamic>> snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const SpinKitPianoWave(
-                                    size: 30,
-                                    color: Color(0xFF13CAF1),
-                                    itemCount: 4,
-                                  ); // or any loading indicator
-                                } else if (snapshot.hasError) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/logo_t.png',
-                                        height: 75,
-                                      ),
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.sizeOf(context).height *
-                                                0.15,
-                                      ),
-                                      Text(
-                                        'Error loading saved searches. Please try again.',
-                                        style: responsiveTextStyle(context, 16,
-                                            Colors.red, FontWeight.bold),
-                                      ),
-                                    ],
-                                  );
+                            onChanged: (value) {
+                              setState(() {
+                                // Filter services here and update UI.
+                                filteredServices = servicesList
+                                    .where((service) => service
+                                        .toLowerCase()
+                                        .startsWith(value.toLowerCase()))
+                                    .toList();
+                                if (value.isNotEmpty) {
+                                  isTyping =
+                                      true; // User is typing, hide the content above
                                 } else {
-                                  List<dynamic>? savedSearchProviders =
-                                      snapshot.data;
-
-                                  // Check if the future is complete and savedSearchProviders is still empty
-                                  if (snapshot.connectionState ==
-                                          ConnectionState.done &&
-                                      savedSearchProviders!.isEmpty) {
-                                    // Display a message when there are no saved searches
-                                    return Column(
-                                      children: [
-                                        Image.asset('assets/search.png'),
-                                        SizedBox(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              0.0125,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'No saved searches yet?\nStart searching now',
-                                              style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.black,
-                                                  null),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  }
-
-                                  // Display the saved searches
-                                  return SizedBox(
-                                      height:
-                                          MediaQuery.sizeOf(context).height *
-                                              0.6,
-                                      child: ListView.builder(
-                                          itemCount:
-                                              savedSearchProviders!.length,
-                                          itemBuilder: (context, index) {
-                                            // Use savedSearchProviders[index] to display the saved searches
-                                            // Implement your UI accordingly
-                                            // ...
-                                            dynamic savedSearchProviderData =
-                                                savedSearchProviders[index];
-
-                                            return FutureBuilder(
-                                                future: _getProfileData(
-                                                    savedSearchProviderData[
-                                                        'id']),
-                                                builder: (context,
-                                                    AsyncSnapshot<dynamic>
-                                                        snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const SpinKitPianoWave(
-                                                      size: 30,
-                                                      color: Color(0xFF13CAF1),
-                                                      itemCount: 4,
-                                                    ); // or any loading indicator
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/logo_t.png',
-                                                          height: 75,
-                                                        ),
-                                                        SizedBox(
-                                                          height:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  0.15,
-                                                        ),
-                                                        Text(
-                                                          'Error loading saved searches. Please try again.',
-                                                          style:
-                                                              responsiveTextStyle(
-                                                                  context,
-                                                                  16,
-                                                                  Colors.red,
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  } else {
-                                                    dynamic
-                                                        additionalProfileData =
-                                                        snapshot.data;
-
-                                                    return Column(
-                                                      children: [
-                                                        ServiceProviderCard(
-                                                          name:
-                                                              additionalProfileData[
-                                                                  'full_name'],
-                                                          bio:
-                                                              savedSearchProviderData[
-                                                                  'bio'],
-                                                          img:
-                                                              savedSearchProviderData[
-                                                                  'media_url1'],
-                                                          guest: false,
-                                                          // view profile
-                                                          onPressedButton1: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              MaterialPageRoute(
-                                                                builder: (BuildContext
-                                                                        context) =>
-                                                                    ViewProfilePage(
-                                                                  availability:
-                                                                      savedSearchProviderData[
-                                                                          'availability'],
-                                                                  experience:
-                                                                      savedSearchProviderData[
-                                                                          'experience'],
-                                                                  fbLink: savedSearchProviderData[
-                                                                      'fb_url'],
-                                                                  fullname:
-                                                                      additionalProfileData[
-                                                                          'full_name'],
-                                                                  igLink: savedSearchProviderData[
-                                                                      'ig_url'],
-                                                                  mailLink:
-                                                                      savedSearchProviderData[
-                                                                          'gmail_link'],
-                                                                  media1: savedSearchProviderData[
-                                                                      'media_url1'],
-                                                                  media2: savedSearchProviderData[
-                                                                      'media_url2'],
-                                                                  media3: savedSearchProviderData[
-                                                                      'media_url3'],
-                                                                  pfp: additionalProfileData[
-                                                                      'avatar_url'],
-                                                                  specialoffers:
-                                                                      savedSearchProviderData[
-                                                                          'special_offers'],
-                                                                  webLink:
-                                                                      savedSearchProviderData[
-                                                                          'web_link'],
-                                                                  xLink: savedSearchProviderData[
-                                                                      'x_url'],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          isOnline: true,
-                                                          saved: true,
-                                                          onPressedButton2: () {
-                                                            final userid =
-                                                                supabase
-                                                                    .auth
-                                                                    .currentUser!
-                                                                    .id;
-                                                            final serviceproviderid =
-                                                                additionalProfileData[
-                                                                    'id'];
-                                                            _deleteSavedSearch(
-                                                                userid,
-                                                                serviceproviderid);
-                                                          },
-                                                        ),
-                                                        SizedBox(
-                                                          height:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  0.0125,
-                                                        )
-                                                      ],
-                                                    );
-                                                  }
-                                                });
-                                          }));
+                                  isTyping =
+                                      false; // User has stopped typing, show the content above
                                 }
-                              },
-                            )
-                          ],
-                        )),
+                                isSearching = false;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     Visibility(
-                      visible:
-                          isSearching, // Content is visible when typing searching
-                      child: Positioned(
-                        child: Container(
-                          height: MediaQuery.sizeOf(context).height * 0.95,
-                          color: Colors.transparent,
+                      visible: isTyping, // Content is visible when typing
+                      child: Container(
+                        color: Colors.white,
+                        height: MediaQuery.sizeOf(context).height * 0.7,
+                        child: filteredServices.isEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  "Sorry, we don't have this service currently. Please pick a registered service.",
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: filteredServices.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(
+                                      filteredServices[index],
+                                      style: responsiveTextStyle(context, 16,
+                                          Colors.black, FontWeight.bold),
+                                    ),
+                                    onTap: () async {
+                                      // Handle user selection here.
+                                      FocusScope.of(context).unfocus();
+                                      setState(() {
+                                        isSearching = true;
+                                        // When tile is tapped, set isTyping to false
+                                        isTyping = false;
+                                        searchchoice = filteredServices[index];
+                                        _controller.text =
+                                            filteredServices[index];
+
+                                        // Update the filtered services here as well
+                                        filteredServices = [];
+                                      });
+                                      List<dynamic> profileIds;
+
+                                      if (city != null || city == '') {
+                                        profileIds = await _queryProfilesTable(
+                                            city: city);
+                                      } else {
+                                        profileIds = await _queryProfilesTable(
+                                            state: state);
+                                      }
+
+                                      List<dynamic> serviceProviders =
+                                          await _queryServiceProvidersTable(
+                                              profileIds);
+                                      List<dynamic> filteredServiceProviders =
+                                          serviceProviders
+                                              .where((provider) =>
+                                                  provider[
+                                                      'service_provided'] ==
+                                                  searchchoice)
+                                              .toList();
+
+                                      setState(() {
+                                        appFilteredServiceProviders =
+                                            filteredServiceProviders;
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                      ),
+                    ),
+                    // saved searches
+                    Stack(children: [
+                      Visibility(
+                          visible: isSearching
+                              ? isTyping
+                              : !isTyping, // Content is visible when not typing
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
                                   height:
-                                      MediaQuery.sizeOf(context).height * 0.05),
+                                      MediaQuery.sizeOf(context).height * 0.15),
                               Text(
-                                '$searchchoice(s)',
+                                'Saved Searches',
                                 style: responsiveTextStyle(
                                     context, 20, null, FontWeight.bold),
                               ),
                               SizedBox(
                                   height: MediaQuery.sizeOf(context).height *
-                                      0.025),
-                              Expanded(
-                                child: FutureBuilder(
-                                  future: Future.wait(
-                                      appFilteredServiceProviders.map(
-                                          (serviceProviderData) =>
-                                              _getProfileData(
-                                                  serviceProviderData['id']))),
-                                  builder: (context,
-                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                      0.0125),
+                              FutureBuilder(
+                                future:
+                                    _queryServiceProvidersTable(savedSearches),
+                                builder: (context,
+                                    AsyncSnapshot<List<dynamic>> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const SpinKitPianoWave(
+                                      size: 30,
+                                      color: Color(0xFF13CAF1),
+                                      itemCount: 4,
+                                    ); // or any loading indicator
+                                  } else if (snapshot.hasError) {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/logo_t.png',
+                                          height: 75,
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.sizeOf(context)
+                                                  .height *
+                                              0.15,
+                                        ),
+                                        Text(
+                                          'Error loading saved searches. Please try again.',
+                                          style: responsiveTextStyle(context,
+                                              16, Colors.red, FontWeight.bold),
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    List<dynamic>? savedSearchProviders =
+                                        snapshot.data;
+
+                                    // Check if the future is complete and savedSearchProviders is still empty
                                     if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const SpinKitPianoWave(
-                                        size: 30,
-                                        color: Color(0xFF13CAF1),
-                                        itemCount: 4,
-                                      ); // or any loading indicator
-                                    } else if (snapshot.hasError) {
+                                            ConnectionState.done &&
+                                        savedSearchProviders!.isEmpty) {
+                                      // Display a message when there are no saved searches
                                       return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: [
-                                          Image.asset(
-                                            'assets/logo_t.png',
-                                            height: 75,
-                                          ),
+                                          Image.asset('assets/search.png'),
                                           SizedBox(
-                                              height: MediaQuery.sizeOf(context)
-                                                      .height *
-                                                  0.15),
-                                          Text(
-                                            'Error loading data. Please try again.',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.red,
-                                                FontWeight.bold),
+                                            height: MediaQuery.sizeOf(context)
+                                                    .height *
+                                                0.0125,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'No saved searches yet?\nStart searching now',
+                                                style: responsiveTextStyle(
+                                                    context,
+                                                    16,
+                                                    Colors.black,
+                                                    null),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       );
-                                    } else {
-                                      List<dynamic>? additionalProfileDataList =
-                                          snapshot.data;
+                                    }
 
-                                      // Check if the future is complete and app_filteredServiceProviders is still empty
+                                    // Display the saved searches
+                                    return SizedBox(
+                                        height:
+                                            MediaQuery.sizeOf(context).height *
+                                                0.6,
+                                        child: ListView.builder(
+                                            itemCount:
+                                                savedSearchProviders!.length,
+                                            itemBuilder: (context, index) {
+                                              // Use savedSearchProviders[index] to display the saved searches
+                                              // Implement your UI accordingly
+                                              // ...
+                                              dynamic savedSearchProviderData =
+                                                  savedSearchProviders[index];
+
+                                              return FutureBuilder(
+                                                  future: _getProfileData(
+                                                      savedSearchProviderData[
+                                                          'id']),
+                                                  builder: (context,
+                                                      AsyncSnapshot<dynamic>
+                                                          snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const SpinKitPianoWave(
+                                                        size: 30,
+                                                        color:
+                                                            Color(0xFF13CAF1),
+                                                        itemCount: 4,
+                                                      ); // or any loading indicator
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/logo_t.png',
+                                                            height: 75,
+                                                          ),
+                                                          SizedBox(
+                                                            height: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.15,
+                                                          ),
+                                                          Text(
+                                                            'Error loading saved searches. Please try again.',
+                                                            style:
+                                                                responsiveTextStyle(
+                                                                    context,
+                                                                    16,
+                                                                    Colors.red,
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    } else {
+                                                      dynamic
+                                                          additionalProfileData =
+                                                          snapshot.data;
+
+                                                      return Column(
+                                                        children: [
+                                                          ServiceProviderCard(
+                                                            name:
+                                                                additionalProfileData[
+                                                                    'full_name'],
+                                                            bio:
+                                                                savedSearchProviderData[
+                                                                    'bio'],
+                                                            img: savedSearchProviderData[
+                                                                'media_url1'],
+                                                            guest: false,
+                                                            // view profile
+                                                            onPressedButton1:
+                                                                () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(
+                                                                MaterialPageRoute(
+                                                                  builder: (BuildContext
+                                                                          context) =>
+                                                                      ViewProfilePage(
+                                                                    availability:
+                                                                        savedSearchProviderData[
+                                                                            'availability'],
+                                                                    experience:
+                                                                        savedSearchProviderData[
+                                                                            'experience'],
+                                                                    fbLink: savedSearchProviderData[
+                                                                        'fb_url'],
+                                                                    fullname:
+                                                                        additionalProfileData[
+                                                                            'full_name'],
+                                                                    igLink: savedSearchProviderData[
+                                                                        'ig_url'],
+                                                                    mailLink:
+                                                                        savedSearchProviderData[
+                                                                            'gmail_link'],
+                                                                    media1: savedSearchProviderData[
+                                                                        'media_url1'],
+                                                                    media2: savedSearchProviderData[
+                                                                        'media_url2'],
+                                                                    media3: savedSearchProviderData[
+                                                                        'media_url3'],
+                                                                    pfp: additionalProfileData[
+                                                                        'avatar_url'],
+                                                                    specialoffers:
+                                                                        savedSearchProviderData[
+                                                                            'special_offers'],
+                                                                    webLink:
+                                                                        savedSearchProviderData[
+                                                                            'web_link'],
+                                                                    xLink: savedSearchProviderData[
+                                                                        'x_url'],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            isOnline: true,
+                                                            saved: true,
+                                                            onPressedButton2:
+                                                                () {
+                                                              final userid =
+                                                                  supabase
+                                                                      .auth
+                                                                      .currentUser!
+                                                                      .id;
+                                                              final serviceproviderid =
+                                                                  additionalProfileData[
+                                                                      'id'];
+                                                              _deleteSavedSearch(
+                                                                  userid,
+                                                                  serviceproviderid);
+                                                            },
+                                                          ),
+                                                          SizedBox(
+                                                            height: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.0125,
+                                                          )
+                                                        ],
+                                                      );
+                                                    }
+                                                  });
+                                            }));
+                                  }
+                                },
+                              )
+                            ],
+                          )),
+                      Visibility(
+                        visible:
+                            isSearching, // Content is visible when typing searching
+                        child: Positioned(
+                          child: Container(
+                            height: MediaQuery.sizeOf(context).height * 0.95,
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.05),
+                                Text(
+                                  '$searchchoice(s)',
+                                  style: responsiveTextStyle(
+                                      context, 20, null, FontWeight.bold),
+                                ),
+                                SizedBox(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.025),
+                                Expanded(
+                                  child: FutureBuilder(
+                                    future: Future.wait(
+                                        appFilteredServiceProviders.map(
+                                            (serviceProviderData) =>
+                                                _getProfileData(
+                                                    serviceProviderData[
+                                                        'id']))),
+                                    builder: (context,
+                                        AsyncSnapshot<List<dynamic>> snapshot) {
                                       if (snapshot.connectionState ==
-                                              ConnectionState.done &&
-                                          appFilteredServiceProviders.isEmpty) {
-                                        // Display a message when there are no service providers
+                                          ConnectionState.waiting) {
+                                        return const SpinKitPianoWave(
+                                          size: 30,
+                                          color: Color(0xFF13CAF1),
+                                          itemCount: 4,
+                                        ); // or any loading indicator
+                                      } else if (snapshot.hasError) {
                                         return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              'Sorry, We don\'t have any service providers offering this service in your city.',
-                                              style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold,
-                                              ),
+                                            Image.asset(
+                                              'assets/logo_t.png',
+                                              height: 75,
                                             ),
                                             SizedBox(
-                                              height: MediaQuery.sizeOf(context)
-                                                      .height *
-                                                  0.025,
-                                            ),
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.15),
                                             Text(
-                                              'Share this link to invite them:',
+                                              'Error loading data. Please try again.',
                                               style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold,
-                                              ),
+                                                  context,
+                                                  16,
+                                                  Colors.red,
+                                                  FontWeight.bold),
                                             ),
-                                            // Add your shareable link widget here
-                                            // For example, you can use a TextFormField to display and copy the link
                                           ],
                                         );
-                                      }
+                                      } else {
+                                        List<dynamic>?
+                                            additionalProfileDataList =
+                                            snapshot.data;
 
-                                      return ListView.builder(
-                                        itemCount:
-                                            appFilteredServiceProviders.length,
-                                        itemBuilder: (context, index) {
-                                          dynamic serviceProviderData =
-                                              appFilteredServiceProviders[
-                                                  index];
-                                          dynamic additionalProfileData =
-                                              additionalProfileDataList![index];
-
+                                        // Check if the future is complete and app_filteredServiceProviders is still empty
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            appFilteredServiceProviders
+                                                .isEmpty) {
+                                          // Display a message when there are no service providers
                                           return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              ServiceProviderCard(
-                                                saved: false,
-                                                name: additionalProfileData[
-                                                    'full_name'],
-                                                bio: serviceProviderData['bio'],
-                                                // view profile
-                                                onPressedButton1: () {
-                                                  // Implement the action for Button 1 here.
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          ViewProfilePage(
-                                                        availability:
-                                                            serviceProviderData[
-                                                                'availability'],
-                                                        experience:
-                                                            serviceProviderData[
-                                                                'experience'],
-                                                        fbLink:
-                                                            serviceProviderData[
-                                                                'fb_url'],
-                                                        fullname:
-                                                            additionalProfileData[
-                                                                'full_name'],
-                                                        igLink:
-                                                            serviceProviderData[
-                                                                'ig_url'],
-                                                        mailLink:
-                                                            serviceProviderData[
-                                                                'gmail_link'],
-                                                        media1:
-                                                            serviceProviderData[
-                                                                'media_url1'],
-                                                        media2:
-                                                            serviceProviderData[
-                                                                'media_url2'],
-                                                        media3:
-                                                            serviceProviderData[
-                                                                'media_url3'],
-                                                        pfp:
-                                                            additionalProfileData[
-                                                                'avatar_url'],
-                                                        specialoffers:
-                                                            serviceProviderData[
-                                                                'special_offers'],
-                                                        webLink:
-                                                            serviceProviderData[
-                                                                'web_link'],
-                                                        xLink:
-                                                            serviceProviderData[
-                                                                'x_url'],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                // add to saved
-                                                onPressedButton2: () {
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                  setState(() {
-                                                    isSearching = false;
-                                                    isTyping = false;
-                                                    _controller.clear();
-                                                    filteredServices = [];
-                                                  });
-                                                  final userid = supabase
-                                                      .auth.currentUser!.id;
-                                                  final serviceproviderid =
-                                                      additionalProfileData[
-                                                          'id'];
-                                                  _createSavedSearch(userid,
-                                                      serviceproviderid);
-                                                },
-                                                isOnline: true,
-                                                guest: false,
-                                                img: serviceProviderData[
-                                                    'media_url1'],
+                                              Text(
+                                                'Sorry, We don\'t have any service providers offering this service in your city.',
+                                                style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold,
+                                                ),
                                               ),
                                               SizedBox(
                                                 height:
                                                     MediaQuery.sizeOf(context)
                                                             .height *
-                                                        0.0125,
-                                              )
+                                                        0.025,
+                                              ),
+                                              Text(
+                                                'Share this link to invite them:',
+                                                style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold,
+                                                ),
+                                              ),
+                                              // Add your shareable link widget here
+                                              // For example, you can use a TextFormField to display and copy the link
                                             ],
                                           );
-                                        },
-                                      );
-                                    }
-                                  },
+                                        }
+
+                                        return ListView.builder(
+                                          itemCount: appFilteredServiceProviders
+                                              .length,
+                                          itemBuilder: (context, index) {
+                                            dynamic serviceProviderData =
+                                                appFilteredServiceProviders[
+                                                    index];
+                                            dynamic additionalProfileData =
+                                                additionalProfileDataList![
+                                                    index];
+
+                                            return Column(
+                                              children: [
+                                                ServiceProviderCard(
+                                                  saved: false,
+                                                  name: additionalProfileData[
+                                                      'full_name'],
+                                                  bio: serviceProviderData[
+                                                      'bio'],
+                                                  // view profile
+                                                  onPressedButton1: () {
+                                                    // Implement the action for Button 1 here.
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            ViewProfilePage(
+                                                          availability:
+                                                              serviceProviderData[
+                                                                  'availability'],
+                                                          experience:
+                                                              serviceProviderData[
+                                                                  'experience'],
+                                                          fbLink:
+                                                              serviceProviderData[
+                                                                  'fb_url'],
+                                                          fullname:
+                                                              additionalProfileData[
+                                                                  'full_name'],
+                                                          igLink:
+                                                              serviceProviderData[
+                                                                  'ig_url'],
+                                                          mailLink:
+                                                              serviceProviderData[
+                                                                  'gmail_link'],
+                                                          media1:
+                                                              serviceProviderData[
+                                                                  'media_url1'],
+                                                          media2:
+                                                              serviceProviderData[
+                                                                  'media_url2'],
+                                                          media3:
+                                                              serviceProviderData[
+                                                                  'media_url3'],
+                                                          pfp:
+                                                              additionalProfileData[
+                                                                  'avatar_url'],
+                                                          specialoffers:
+                                                              serviceProviderData[
+                                                                  'special_offers'],
+                                                          webLink:
+                                                              serviceProviderData[
+                                                                  'web_link'],
+                                                          xLink:
+                                                              serviceProviderData[
+                                                                  'x_url'],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  // add to saved
+                                                  onPressedButton2: () {
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                    setState(() {
+                                                      isSearching = false;
+                                                      isTyping = false;
+                                                      _controller.clear();
+                                                      filteredServices = [];
+                                                    });
+                                                    final userid = supabase
+                                                        .auth.currentUser!.id;
+                                                    final serviceproviderid =
+                                                        additionalProfileData[
+                                                            'id'];
+                                                    _createSavedSearch(userid,
+                                                        serviceproviderid);
+                                                  },
+                                                  isOnline: true,
+                                                  guest: false,
+                                                  img: serviceProviderData[
+                                                      'media_url1'],
+                                                ),
+                                                SizedBox(
+                                                  height:
+                                                      MediaQuery.sizeOf(context)
+                                                              .height *
+                                                          0.0125,
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-                ],
+                    ]),
+                  ],
+                ),
               ),
             ),
           ),

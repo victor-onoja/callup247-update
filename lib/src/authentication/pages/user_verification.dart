@@ -359,115 +359,118 @@ class _VerificationScreenState extends State<VerificationScreen>
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.sizeOf(context).height,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Color(0xFF039fdc),
-                  Color(0xFF13CAF1),
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: 32,
-                  right: 32,
-                  top: MediaQuery.sizeOf(context).height * 0.01,
-                  bottom: MediaQuery.sizeOf(context).height * 0.1),
-              child: Center(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        RotationTransition(
-                          turns:
-                              Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                          child: Image.asset(
-                            'assets/logo_t.png',
-                            height: 75,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Please, enter the code sent to : ',
-                              style: responsiveTextStyle(
-                                  context, 18, Colors.black, null),
-                            ),
-                            Text(
-                              emailaddress ?? userEmail,
-                              style: responsiveTextStyle(
-                                  context, 18, Colors.white, null),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                    Pinput(
-                      length: 6,
-                      onCompleted: (value) {
-                        setState(() {
-                          token = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                    loading
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () {
-                              _verifyUser(context);
-                            },
-                            child: Text(
-                              'Verify',
-                              style: responsiveTextStyle(
-                                  context, 14, Colors.black, FontWeight.bold),
-                            ),
-                          ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              linkTappedResendOTP = true;
-                            });
-                            _resendOTP();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'OTP resent. Check your email.',
-                                style: responsiveTextStyle(
-                                    context, 16, Colors.black, FontWeight.bold),
-                              ),
-                              backgroundColor: Colors.green,
-                            ));
-                          },
-                          icon: const Icon(
-                            Icons.refresh,
-                            color: Colors.black54,
-                          ),
-                          label: Text('Resend OTP',
-                              style: linkTappedResendOTP
-                                  ? const TextStyle(color: Colors.black45)
-                                  : null),
-                        ),
-                      ],
-                    ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.sizeOf(context).height,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  colors: [
+                    Color(0xFF039fdc),
+                    Color(0xFF13CAF1),
                   ],
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: 32,
+                    right: 32,
+                    top: MediaQuery.sizeOf(context).height * 0.01,
+                    bottom: MediaQuery.sizeOf(context).height * 0.1),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          RotationTransition(
+                            turns: Tween(begin: 0.0, end: 1.0)
+                                .animate(_acontroller),
+                            child: Image.asset(
+                              'assets/logo_t.png',
+                              height: 75,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Please, enter the code sent to : ',
+                                style: responsiveTextStyle(
+                                    context, 18, Colors.black, null),
+                              ),
+                              Text(
+                                emailaddress ?? userEmail,
+                                style: responsiveTextStyle(
+                                    context, 18, Colors.white, null),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                      Pinput(
+                        length: 6,
+                        onCompleted: (value) {
+                          setState(() {
+                            token = value;
+                          });
+                        },
+                      ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                      loading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: () {
+                                _verifyUser(context);
+                              },
+                              child: Text(
+                                'Verify',
+                                style: responsiveTextStyle(
+                                    context, 14, Colors.black, FontWeight.bold),
+                              ),
+                            ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                linkTappedResendOTP = true;
+                              });
+                              _resendOTP();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'OTP resent. Check your email.',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.green,
+                              ));
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: Colors.black54,
+                            ),
+                            label: Text('Resend OTP',
+                                style: linkTappedResendOTP
+                                    ? const TextStyle(color: Colors.black45)
+                                    : null),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

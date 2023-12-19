@@ -68,32 +68,34 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF039fdc),
-              Color(0xFF13CAF1),
-            ],
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
+            ),
           ),
-        ),
-        child: PageView(
-          controller: _pageController,
-          children: <Widget>[
-            _buildOnboardingPage('assets/wide_services.svg',
-                'Comprehensive Service Selection', 0),
-            _buildOnboardingPage('assets/available.svg',
-                'Real-Time Service Provider Availability', 1),
-            _buildOnboardingPage('assets/payments.svg',
-                'Secure Payment and First-Time Seller Approval', 2),
-          ],
-          onPageChanged: (int page) {
-            setState(() {
-              _currentPage = page;
-            });
-          },
+          child: PageView(
+            controller: _pageController,
+            children: <Widget>[
+              _buildOnboardingPage('assets/wide_services.svg',
+                  'Comprehensive Service Selection', 0),
+              _buildOnboardingPage('assets/available.svg',
+                  'Real-Time Service Provider Availability', 1),
+              _buildOnboardingPage('assets/payments.svg',
+                  'Secure Payment and First-Time Seller Approval', 2),
+            ],
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+          ),
         ),
       ),
     );

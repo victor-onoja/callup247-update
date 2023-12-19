@@ -275,329 +275,335 @@ class _ServiceProviderSignUpScreenState
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.sizeOf(context).height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF039fdc),
-                Color(0xFF13CAF1),
-              ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.sizeOf(context).height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: [
+                  Color(0xFF039fdc),
+                  Color(0xFF13CAF1),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  // full name
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // full name
 
-                  TextFormField(
-                    controller: _fullnameController,
-                    cursorColor: Colors.white,
-                    textCapitalization: TextCapitalization.words,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                        labelText: 'First & Last Name',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black87, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87))),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your first and last name';
-                      } else if (value.split(' ').length < 2) {
-                        return 'Please enter both your first and last name';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  // email address
-
-                  TextFormField(
-                    controller: _emailaddressController,
-                    cursorColor: Colors.white,
-                    keyboardType: TextInputType.emailAddress,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black87, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87))),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your email address';
-                      }
-                      // Email address regex pattern for basic validation
-                      const emailPattern =
-                          r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                      final regExp = RegExp(emailPattern);
-                      if (!regExp.hasMatch(value)) {
-                        return 'Please enter a valid email address';
-                      }
-                      // You can add email validation logic here.
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-
-                  // Country Picker
-
-                  CountryStateCityPicker(
-                      country: _countryValue,
-                      state: _stateValue,
-                      city: _cityValue),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        '-- this information is used to help find service providers close to you :)',
-                        style: responsiveTextStyle(
-                            context, 8, Colors.blueGrey, null),
-                      ),
-                    ],
-                  ),
-
-                  // Password
-
-                  TextFormField(
-                    controller: _passwordController,
-                    cursorColor: Colors.white,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle:
-                          responsiveTextStyle(context, 14, Colors.black, null),
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87)),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isPasswordVisible = !isPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.black54,
-                        ),
-                      ),
+                    TextFormField(
+                      controller: _fullnameController,
+                      cursorColor: Colors.white,
+                      textCapitalization: TextCapitalization.words,
+                      style:
+                          responsiveTextStyle(context, 16, Colors.white, null),
+                      decoration: InputDecoration(
+                          labelText: 'First & Last Name',
+                          labelStyle: responsiveTextStyle(
+                              context, 14, Colors.black87, null),
+                          focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black87))),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your first and last name';
+                        } else if (value.split(' ').length < 2) {
+                          return 'Please enter both your first and last name';
+                        }
+                        return null;
+                      },
                     ),
-                    obscureText: !isPasswordVisible,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a password';
-                      }
-                      // Password strength validation criteria
-                      const lengthCriteria = 8; // Minimum length requirement
-                      // final uppercaseCriteria = RegExp(r'[A-Z]');
-                      // final lowercaseCriteria = RegExp(r'[a-z]');
-                      // final digitCriteria = RegExp(r'[0-9]');
-                      // final specialCharCriteria =
-                      //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-                      if (value.length < lengthCriteria) {
-                        return 'Password must be at least $lengthCriteria characters long';
-                      }
-                      // if (!uppercaseCriteria.hasMatch(value) ||
-                      //     !lowercaseCriteria.hasMatch(value) ||
-                      //     !digitCriteria.hasMatch(value) ||
-                      //     !specialCharCriteria.hasMatch(value)) {
-                      //   return 'Password must include uppercase, lowercase, digit, and special characters';
-                      // }
-                      return null;
-                    },
-                  ),
 
-                  // Confirm Password
+                    // email address
 
-                  TextFormField(
-                    controller: _confirmpasswordController,
-                    cursorColor: Colors.white,
-                    style: responsiveTextStyle(context, 16, Colors.white, null),
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      labelStyle:
-                          responsiveTextStyle(context, 14, Colors.black, null),
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87)),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isPasswordConfirmVisible =
-                                !isPasswordConfirmVisible;
-                          });
-                        },
-                        child: Icon(
-                          isPasswordConfirmVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.black54,
-                        ),
-                      ),
+                    TextFormField(
+                      controller: _emailaddressController,
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.emailAddress,
+                      style:
+                          responsiveTextStyle(context, 16, Colors.white, null),
+                      decoration: InputDecoration(
+                          labelText: 'Email Address',
+                          labelStyle: responsiveTextStyle(
+                              context, 14, Colors.black87, null),
+                          focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black87))),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your email address';
+                        }
+                        // Email address regex pattern for basic validation
+                        const emailPattern =
+                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                        final regExp = RegExp(emailPattern);
+                        if (!regExp.hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        // You can add email validation logic here.
+                        return null;
+                      },
                     ),
-                    obscureText: !isPasswordConfirmVisible,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please re-type your password';
-                      }
-                      // todo: confiirm password validation logic
-                      if (value != _passwordController.text) {
-                        return 'passwords must match';
-                      }
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
 
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                    // Country Picker
 
-                  // display picture
+                    CountryStateCityPicker(
+                        country: _countryValue,
+                        state: _stateValue,
+                        city: _cityValue),
 
-                  GestureDetector(
-                    onTap: () {
-                      _pickImage();
-                    },
-                    child: Column(
-                      children: <Widget>[
-                        if (_image != null)
-                          Image.file(
-                            _image!,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          )
-                        else
-                          const Icon(
-                            Icons.camera_alt,
-                            size: 100,
-                            color: Colors.black54,
-                          ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
                         Text(
-                          'Add a display pictue :)',
+                          '-- this information is used to help find service providers close to you :)',
                           style: responsiveTextStyle(
-                              context, 14, Colors.black, null),
+                              context, 8, Colors.blueGrey, null),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
-                  // todo: add terms and conditions document, agreement
+                    // Password
 
-                  // sign up button
+                    TextFormField(
+                      controller: _passwordController,
+                      cursorColor: Colors.white,
+                      style:
+                          responsiveTextStyle(context, 16, Colors.white, null),
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: responsiveTextStyle(
+                            context, 14, Colors.black, null),
+                        focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black87)),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                      obscureText: !isPasswordVisible,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a password';
+                        }
+                        // Password strength validation criteria
+                        const lengthCriteria = 8; // Minimum length requirement
+                        // final uppercaseCriteria = RegExp(r'[A-Z]');
+                        // final lowercaseCriteria = RegExp(r'[a-z]');
+                        // final digitCriteria = RegExp(r'[0-9]');
+                        // final specialCharCriteria =
+                        //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+                        if (value.length < lengthCriteria) {
+                          return 'Password must be at least $lengthCriteria characters long';
+                        }
+                        // if (!uppercaseCriteria.hasMatch(value) ||
+                        //     !lowercaseCriteria.hasMatch(value) ||
+                        //     !digitCriteria.hasMatch(value) ||
+                        //     !specialCharCriteria.hasMatch(value)) {
+                        //   return 'Password must include uppercase, lowercase, digit, and special characters';
+                        // }
+                        return null;
+                      },
+                    ),
 
-                  loading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF039fdc)),
-                          onPressed: () async {
-                            final messenger = ScaffoldMessenger.of(context);
+                    // Confirm Password
 
-                            // Check network connectivity
-                            bool isConnected =
-                                await _checkInternetConnectivity();
-                            if (!isConnected) {
-                              if (!context.mounted) return;
-                              // Show a snackbar for no network
-                              messenger.showSnackBar(SnackBar(
-                                content: Text(
-                                  'No internet connection. Please check your network settings.',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                              return; // Exit the function if there's no network
-                            }
+                    TextFormField(
+                      controller: _confirmpasswordController,
+                      cursorColor: Colors.white,
+                      style:
+                          responsiveTextStyle(context, 16, Colors.white, null),
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        labelStyle: responsiveTextStyle(
+                            context, 14, Colors.black, null),
+                        focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black87)),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPasswordConfirmVisible =
+                                  !isPasswordConfirmVisible;
+                            });
+                          },
+                          child: Icon(
+                            isPasswordConfirmVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                      obscureText: !isPasswordConfirmVisible,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please re-type your password';
+                        }
+                        // todo: confiirm password validation logic
+                        if (value != _passwordController.text) {
+                          return 'passwords must match';
+                        }
 
-                            if (_image == null) {
-                              if (!context.mounted) return;
-                              messenger.showSnackBar(SnackBar(
-                                content: Text(
-                                  'Please add a display picture :)',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                              return;
-                            }
-                            // Add your sign-up logic here.
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                loading = true;
-                              });
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
 
-                              try {
-                                // Run _createUser and wait for it to finish
-                                await _createUser();
+                    // display picture
 
-                                // Only run _uploadImage if _createUser has finished successfully
-                                if (_image != null) {
-                                  await _uploadImage();
-                                }
+                    GestureDetector(
+                      onTap: () {
+                        _pickImage();
+                      },
+                      child: Column(
+                        children: <Widget>[
+                          if (_image != null)
+                            Image.file(
+                              _image!,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )
+                          else
+                            const Icon(
+                              Icons.camera_alt,
+                              size: 100,
+                              color: Colors.black54,
+                            ),
+                          Text(
+                            'Add a display pictue :)',
+                            style: responsiveTextStyle(
+                                context, 14, Colors.black, null),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
-                                // Update profile locally and remotely
-                                await _saveProfileLocally();
+                    // todo: add terms and conditions document, agreement
 
-                                await _updateProfile();
-                                await _signInUser();
+                    // sign up button
+
+                    loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF039fdc)),
+                            onPressed: () async {
+                              final messenger = ScaffoldMessenger.of(context);
+
+                              // Check network connectivity
+                              bool isConnected =
+                                  await _checkInternetConnectivity();
+                              if (!isConnected) {
                                 if (!context.mounted) return;
+                                // Show a snackbar for no network
                                 messenger.showSnackBar(SnackBar(
                                   content: Text(
-                                    'Welcome to callup247!!',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.green,
-                                ));
-
-                                // Delay and navigate
-                                await Future.delayed(
-                                    const Duration(seconds: 1));
-                                if (!context.mounted) return;
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        VerificationScreen(
-                                      isPasswordReset: isPasswordReset,
-                                      userEmail:
-                                          _emailaddressController.text.trim(),
-                                    ),
-                                  ),
-                                );
-                              } catch (error) {
-                                if (!context.mounted) return;
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'An error occurred. Please try again later.',
+                                    'No internet connection. Please check your network settings.',
                                     style: responsiveTextStyle(context, 16,
                                         Colors.black, FontWeight.bold),
                                   ),
                                   backgroundColor: Colors.red,
                                 ));
-                              } finally {
-                                setState(() {
-                                  loading = false;
-                                });
+                                return; // Exit the function if there's no network
                               }
-                            }
-                          },
-                          child: Text(
-                            'Sign Up',
-                            style: responsiveTextStyle(
-                                context, 14, Colors.black, FontWeight.bold),
+
+                              if (_image == null) {
+                                if (!context.mounted) return;
+                                messenger.showSnackBar(SnackBar(
+                                  content: Text(
+                                    'Please add a display picture :)',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                                return;
+                              }
+                              // Add your sign-up logic here.
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  loading = true;
+                                });
+
+                                try {
+                                  // Run _createUser and wait for it to finish
+                                  await _createUser();
+
+                                  // Only run _uploadImage if _createUser has finished successfully
+                                  if (_image != null) {
+                                    await _uploadImage();
+                                  }
+
+                                  // Update profile locally and remotely
+                                  await _saveProfileLocally();
+
+                                  await _updateProfile();
+                                  await _signInUser();
+                                  if (!context.mounted) return;
+                                  messenger.showSnackBar(SnackBar(
+                                    content: Text(
+                                      'Welcome to callup247!!',
+                                      style: responsiveTextStyle(context, 16,
+                                          Colors.black, FontWeight.bold),
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ));
+
+                                  // Delay and navigate
+                                  await Future.delayed(
+                                      const Duration(seconds: 1));
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          VerificationScreen(
+                                        isPasswordReset: isPasswordReset,
+                                        userEmail:
+                                            _emailaddressController.text.trim(),
+                                      ),
+                                    ),
+                                  );
+                                } catch (error) {
+                                  if (!context.mounted) return;
+                                  messenger.showSnackBar(SnackBar(
+                                    content: Text(
+                                      'An error occurred. Please try again later.',
+                                      style: responsiveTextStyle(context, 16,
+                                          Colors.black, FontWeight.bold),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                } finally {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
+                              }
+                            },
+                            child: Text(
+                              'Sign Up',
+                              style: responsiveTextStyle(
+                                  context, 14, Colors.black, FontWeight.bold),
+                            ),
                           ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

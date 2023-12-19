@@ -462,408 +462,414 @@ class _EditServiceProviderProfileState
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF039fdc),
-                Color(0xFF13CAF1),
-              ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: [
+                  Color(0xFF039fdc),
+                  Color(0xFF13CAF1),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                    'hint: if you wish to change the service you\'re providing, reach out to customer care on your homepage :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null)),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      'hint: if you wish to change the service you\'re providing, reach out to customer care on your homepage :)',
+                      style: responsiveTextStyle(
+                          context, 12, Colors.black45, null)),
 
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
 
-                // edit media
+                  // edit media
 
-                Text(
-                  'Edit your Media :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+                  Text(
+                    'Edit your Media :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        // image 1
+                        GestureDetector(
+                            onTap: () {
+                              _pickImage1();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image1 != null)
+                                  Image.file(
+                                    _image1!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  _buildImageWidget(media1),
+                              ],
+                            )),
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.025),
+                        // image 2
+                        GestureDetector(
+                            onTap: () {
+                              _pickImage2();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image2 != null)
+                                  Image.file(
+                                    _image2!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  _buildImageWidget(media2),
+                              ],
+                            )),
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.025),
+                        // image 3
+                        GestureDetector(
+                            onTap: () {
+                              _pickImage3();
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                if (_image3 != null)
+                                  Image.file(
+                                    _image3!,
+                                    height: 250,
+                                    width: 250,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  _buildImageWidget(media3),
+                              ],
+                            )),
+                        SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.025),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+
+                  // edit social links
+
+                  Text(
+                    'Edit Your Social links :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  Text(
+                      'hint: click on the app icons for easy navigation to share your proile :)',
+                      style: responsiveTextStyle(
+                          context, 12, Colors.black45, null)),
+                  Column(
                     children: [
-                      // image 1
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage1();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image1 != null)
-                                Image.file(
-                                  _image1!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                _buildImageWidget(media1),
-                            ],
-                          )),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
-                      // image 2
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage2();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image2 != null)
-                                Image.file(
-                                  _image2!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                _buildImageWidget(media2),
-                            ],
-                          )),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
-                      // image 3
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage3();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              if (_image3 != null)
-                                Image.file(
-                                  _image3!,
-                                  height: 250,
-                                  width: 250,
-                                  fit: BoxFit.cover,
-                                )
-                              else
-                                _buildImageWidget(media3),
-                            ],
-                          )),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.instagram.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/ig-icon.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Instagram :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _instagramController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url = Uri.parse('https://twitter.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/x-icon.webp',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('X :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _xController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url = Uri.parse(
+                                  'https://web.facebook.com/?_rdc=1&_rdr');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/facebook.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Facebook :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _facebookController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.google.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/web-icon.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('Website :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _websiteController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ),
 
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
-                // edit social links
+                  // edit details
 
-                Text(
-                  'Edit Your Social links :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                Text(
-                    'hint: click on the app icons for easy navigation to share your proile :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null)),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url =
-                                Uri.parse('https://www.instagram.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/ig-icon.png',
-                            width: 25,
+                  Text(
+                    'Edit Your Details :',
+                    style: responsiveTextStyle(context, 20, Colors.black, null),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  Row(
+                    children: [
+                      Text('Bio :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _bioController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText:
+                                'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
                           ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Instagram :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _instagramController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url = Uri.parse('https://twitter.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/x-icon.webp',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('X :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _xController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url = Uri.parse(
-                                'https://web.facebook.com/?_rdc=1&_rdr');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/facebook.png',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Facebook :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _facebookController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri url =
-                                Uri.parse('https://www.google.com/');
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {}
-                          },
-                          child: Image.asset(
-                            'assets/web-icon.png',
-                            width: 25,
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Text('Website :',
-                            style: responsiveTextStyle(
-                                context, 16, Colors.black, null)),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.02),
-                        Flexible(
-                          child: TextField(
-                            controller: _websiteController,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, null),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-
-                // edit details
-
-                Text(
-                  'Edit Your Details :',
-                  style: responsiveTextStyle(context, 20, Colors.black, null),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                Row(
-                  children: [
-                    Text('Bio :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _bioController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText:
-                              'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Experience :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _experienceController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 5+ years',
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Experience :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _experienceController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 5+ years',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Availability :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _availabilityController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 9am - 5pm, Mon - Sat',
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Availability :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _availabilityController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 9am - 5pm, Mon - Sat',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Special Offers :',
-                        style: responsiveTextStyle(
-                            context, 16, Colors.black, null)),
-                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                    Flexible(
-                      child: TextField(
-                        controller: _specialOffersController,
-                        style: responsiveTextStyle(
-                            context, 16, Colors.white, null),
-                        decoration: const InputDecoration(
-                          hintText: 'E.g 20% off till Jan 2024',
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Special Offers :',
+                          style: responsiveTextStyle(
+                              context, 16, Colors.black, null)),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                      Flexible(
+                        child: TextField(
+                          controller: _specialOffersController,
+                          style: responsiveTextStyle(
+                              context, 16, Colors.white, null),
+                          decoration: const InputDecoration(
+                            hintText: 'E.g 20% off till Jan 2024',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 
-                // submit button
+                  // submit button
 
-                Center(
-                  child: loading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              loading = true;
-                            });
-                            // Check network connectivity
-                            bool isConnected =
-                                await _checkInternetConnectivity();
-                            if (!isConnected) {
-                              if (!context.mounted) return;
-                              // Show a snackbar for no network
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'No internet connection. Please check your network settings.',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
+                  Center(
+                    child: loading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () async {
                               setState(() {
-                                loading = false;
+                                loading = true;
                               });
-                              return; // Exit the function if there's no network
-                            }
-
-                            try {
-                              if (_image1 != null) {
-                                await _uploadImage1();
+                              // Check network connectivity
+                              bool isConnected =
+                                  await _checkInternetConnectivity();
+                              if (!isConnected) {
+                                if (!context.mounted) return;
+                                // Show a snackbar for no network
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'No internet connection. Please check your network settings.',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                                setState(() {
+                                  loading = false;
+                                });
+                                return; // Exit the function if there's no network
                               }
-                              if (_image2 != null) {
-                                await _uploadImage2();
-                              }
-                              if (_image3 != null) {
-                                await _uploadImage3();
-                              }
 
-                              await _updateServiceProviderProfile();
-                              await _saveServiceProviderProfilelocally();
+                              try {
+                                if (_image1 != null) {
+                                  await _uploadImage1();
+                                }
+                                if (_image2 != null) {
+                                  await _uploadImage2();
+                                }
+                                if (_image3 != null) {
+                                  await _uploadImage3();
+                                }
 
-                              await Future.delayed(const Duration(seconds: 2));
-                              if (!context.mounted) return;
-                              Navigator.of(context).pop();
-                            } catch (error) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                  'An error occurred. Please try again later.',
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
-                                ),
-                                backgroundColor: Colors.red,
-                              ));
-                            } finally {
-                              setState(() {
-                                loading = false;
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF13CAF1),
-                            minimumSize: Size(
-                                MediaQuery.sizeOf(context).width * 0.5,
-                                MediaQuery.sizeOf(context).height *
-                                    0.06), // Set the button's width and height
+                                await _updateServiceProviderProfile();
+                                await _saveServiceProviderProfilelocally();
+
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
+                                if (!context.mounted) return;
+                                Navigator.of(context).pop();
+                              } catch (error) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(
+                                    'An error occurred. Please try again later.',
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ));
+                              } finally {
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF13CAF1),
+                              minimumSize: Size(
+                                  MediaQuery.sizeOf(context).width * 0.5,
+                                  MediaQuery.sizeOf(context).height *
+                                      0.06), // Set the button's width and height
+                            ),
+                            child: Text(
+                              'Submit',
+                              style: responsiveTextStyle(
+                                  context, 14, Colors.black, FontWeight.bold),
+                            ),
                           ),
-                          child: Text(
-                            'Submit',
-                            style: responsiveTextStyle(
-                                context, 14, Colors.black, FontWeight.bold),
-                          ),
-                        ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

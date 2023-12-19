@@ -138,28 +138,30 @@ class SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF039fdc),
-              Color(0xFF13CAF1),
-            ],
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
+            ),
           ),
-        ),
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.5,
-            heightFactor: 0.2,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: FadeTransition(
-                opacity: _opacityAnimation,
-                child: Image.asset(
-                  'assets/logo_t.png',
-                  fit: BoxFit.contain,
+          child: Center(
+            child: FractionallySizedBox(
+              widthFactor: 0.5,
+              heightFactor: 0.2,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: FadeTransition(
+                  opacity: _opacityAnimation,
+                  child: Image.asset(
+                    'assets/logo_t.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),

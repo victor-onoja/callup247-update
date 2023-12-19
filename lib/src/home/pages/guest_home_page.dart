@@ -395,305 +395,132 @@ class _GuestHomePageState extends State<GuestHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        height: MediaQuery.sizeOf(context).height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF039fdc),
-              Color(0xFF13CAF1),
-            ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.sizeOf(context).height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
-            child: FocusScope(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RotationTransition(
-                        turns:
-                            Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                        child: Image.asset(
-                          'assets/logo_t.png',
-                          height: 75,
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              // customer pfp
-                              const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/guest_dp.png'),
-                                radius: 30,
-                              ),
-                              // end of customer pfp
-                              PopupMenuButton(
-                                itemBuilder: (BuildContext context) {
-                                  return [
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'editProfile',
-                                      child: const Text(
-                                        'Edit Profile',
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'theme',
-                                      child: const Text(
-                                        'Theme',
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'customerCare',
-                                      child: const Text('Customer Care'),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'termsAndConditions',
-                                      child: const Text('Terms and Conditions'),
-                                    ),
-                                    PopupMenuItem(
-                                      textStyle: responsiveTextStyle(context,
-                                          16, Colors.black, FontWeight.bold),
-                                      value: 'signOut',
-                                      child: const Text('Sign Out'),
-                                    ),
-                                  ];
-                                },
-                                onSelected: (value) {
-                                  // Handle the selected menu item (navigate to the corresponding screen)
-                                  if (value == 'editProfile') {
-                                    // Navigate to the edit profile screen
-                                  } else if (value == 'theme') {
-                                    // Navigate to the theme screen
-                                  } else if (value == 'signOut') {
-                                    Navigator.pop(context);
-                                  }
-                                },
-                              ),
-                            ],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
+              child: FocusScope(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RotationTransition(
+                          turns:
+                              Tween(begin: 0.0, end: 1.0).animate(_acontroller),
+                          child: Image.asset(
+                            'assets/logo_t.png',
+                            height: 75,
                           ),
-                          // customer name
-                          Text(
-                            'guestuser',
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                // customer pfp
+                                const CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('assets/guest_dp.png'),
+                                  radius: 30,
+                                ),
+                                // end of customer pfp
+                                PopupMenuButton(
+                                  itemBuilder: (BuildContext context) {
+                                    return [
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'editProfile',
+                                        child: const Text(
+                                          'Edit Profile',
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'theme',
+                                        child: const Text(
+                                          'Theme',
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'customerCare',
+                                        child: const Text('Customer Care'),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'termsAndConditions',
+                                        child:
+                                            const Text('Terms and Conditions'),
+                                      ),
+                                      PopupMenuItem(
+                                        textStyle: responsiveTextStyle(context,
+                                            16, Colors.black, FontWeight.bold),
+                                        value: 'signOut',
+                                        child: const Text('Sign Out'),
+                                      ),
+                                    ];
+                                  },
+                                  onSelected: (value) {
+                                    // Handle the selected menu item (navigate to the corresponding screen)
+                                    if (value == 'editProfile') {
+                                      // Navigate to the edit profile screen
+                                    } else if (value == 'theme') {
+                                      // Navigate to the theme screen
+                                    } else if (value == 'signOut') {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            // customer name
+                            Text(
+                              'guestuser',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, FontWeight.bold),
+                            ),
+                            // end of customer name
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _controller,
+                            focusNode: searchFocusNode,
+                            showCursor: false,
                             style: responsiveTextStyle(
                                 context, 16, Colors.white, FontWeight.bold),
-                          ),
-                          // end of customer name
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _controller,
-                          focusNode: searchFocusNode,
-                          showCursor: false,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, FontWeight.bold),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            suffixIcon: InkWell(
-                                radius: 50,
-                                splashColor: Colors.greenAccent,
-                                onTap: () {
-                                  FocusScope.of(context).unfocus();
-                                  setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
-                                    isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _controller.clear();
-                                    // Update the filtered services here as well
-                                    filteredServices = [];
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.black54,
-                                )),
-                            hintText: 'Search...',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              // Filter services here and update UI.
-                              filteredServices = servicesList
-                                  .where((service) => service
-                                      .toLowerCase()
-                                      .startsWith(value.toLowerCase()))
-                                  .toList();
-                              if (value.isNotEmpty) {
-                                isTyping =
-                                    true; // User is typing, hide the content above
-                              } else {
-                                isTyping =
-                                    false; // User has stopped typing, show the content above
-                              }
-                              isSearching = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: isTyping, // Content is visible when typing
-                    child: Container(
-                      color: Colors.white,
-                      height: MediaQuery.sizeOf(context).height * 0.7,
-                      child: ListView.builder(
-                        itemCount: filteredServices.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              filteredServices[index],
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold),
-                            ),
-                            onTap: () {
-                              // Handle user selection here.
-                              FocusScope.of(context).unfocus();
-                              setState(() {
-                                isSearching = true;
-                                // When tile is tapped, set isTyping to false
-                                isTyping = false;
-                                searchchoice = filteredServices[index];
-                                _controller.text = filteredServices[index];
-
-                                // Update the filtered services here as well
-                                filteredServices = [];
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // saved searches
-                  Stack(children: [
-                    Visibility(
-                        visible: isSearching
-                            ? isTyping
-                            : !isTyping, // Content is visible when not typing
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.15),
-                            Text(
-                              'Saved Searches',
-                              style: responsiveTextStyle(
-                                  context, 20, null, FontWeight.bold),
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.0125),
-                            // saved searches
-                            ServiceProviderCard(
-                              saved: true,
-                              name: 'John Doe',
-                              bio:
-                                  'Experienced plumber with 5+ years of experience in fixing pipes.',
-                              image: const AssetImage('assets/plumber.jpg'),
-                              onPressedButton1: () {
-                                // Implement the action for Button 1 here.
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const GuestProfilePage(),
-                                  ),
-                                );
-                              },
-                              isOnline: true,
-                              onPressedButton2: () {},
-                              guest: true,
-                              img: '',
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.0125),
-                            ServiceProviderCard(
-                                saved: true,
-                                name: 'Senior Centy',
-                                bio:
-                                    'Experienced barber with 5+ years of experience in cutting hair.',
-                                image: const AssetImage('assets/barber.jpg'),
-                                onPressedButton1: () {
-                                  // Implement the action for Button 1 here.
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const GuestProfilePage(),
-                                    ),
-                                  );
-                                },
-                                isOnline: false,
-                                onPressedButton2: () {},
-                                guest: true,
-                                img: ''),
-                            // end of saved search
-                          ],
-                        )),
-                    Visibility(
-                      visible:
-                          isSearching, // Content is visible when typing searching
-                      child: Positioned(
-                        child: Container(
-                          color: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.05),
-                              Text(
-                                '${searchchoice}s',
-                                style: responsiveTextStyle(
-                                    context, 20, null, FontWeight.bold),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.white,
                               ),
-                              SizedBox(
-                                  height: MediaQuery.sizeOf(context).height *
-                                      0.0125),
-                              ServiceProviderCard(
-                                  saved: false,
-                                  name: 'John Doe',
-                                  bio:
-                                      'Experienced plumber with 5+ years of experience in fixing pipes.',
-                                  image: const AssetImage('assets/barber.jpg'),
-                                  onPressedButton1: () {
-                                    // Implement the action for Button 1 here.
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const GuestProfilePage(),
-                                      ),
-                                    );
-                                  },
-                                  onPressedButton2: () {
-                                    // Implement the action for Button 2 here.
+                              suffixIcon: InkWell(
+                                  radius: 50,
+                                  splashColor: Colors.greenAccent,
+                                  onTap: () {
                                     FocusScope.of(context).unfocus();
                                     setState(() {
                                       isSearching = false;
@@ -705,15 +532,113 @@ class _GuestHomePageState extends State<GuestHomePage>
                                       filteredServices = [];
                                     });
                                   },
-                                  isOnline:
-                                      true, // Set whether the service provider is online or offline.
-                                  guest: true,
-                                  img: ''),
+                                  child: const Icon(
+                                    Icons.cancel,
+                                    color: Colors.black54,
+                                  )),
+                              hintText: 'Search...',
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                // Filter services here and update UI.
+                                filteredServices = servicesList
+                                    .where((service) => service
+                                        .toLowerCase()
+                                        .startsWith(value.toLowerCase()))
+                                    .toList();
+                                if (value.isNotEmpty) {
+                                  isTyping =
+                                      true; // User is typing, hide the content above
+                                } else {
+                                  isTyping =
+                                      false; // User has stopped typing, show the content above
+                                }
+                                isSearching = false;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: isTyping, // Content is visible when typing
+                      child: Container(
+                        color: Colors.white,
+                        height: MediaQuery.sizeOf(context).height * 0.7,
+                        child: ListView.builder(
+                          itemCount: filteredServices.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                filteredServices[index],
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.black, FontWeight.bold),
+                              ),
+                              onTap: () {
+                                // Handle user selection here.
+                                FocusScope.of(context).unfocus();
+                                setState(() {
+                                  isSearching = true;
+                                  // When tile is tapped, set isTyping to false
+                                  isTyping = false;
+                                  searchchoice = filteredServices[index];
+                                  _controller.text = filteredServices[index];
+
+                                  // Update the filtered services here as well
+                                  filteredServices = [];
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    // saved searches
+                    Stack(children: [
+                      Visibility(
+                          visible: isSearching
+                              ? isTyping
+                              : !isTyping, // Content is visible when not typing
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.15),
+                              Text(
+                                'Saved Searches',
+                                style: responsiveTextStyle(
+                                    context, 20, null, FontWeight.bold),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.sizeOf(context).height *
+                                      0.0125),
+                              // saved searches
+                              ServiceProviderCard(
+                                saved: true,
+                                name: 'John Doe',
+                                bio:
+                                    'Experienced plumber with 5+ years of experience in fixing pipes.',
+                                image: const AssetImage('assets/plumber.jpg'),
+                                onPressedButton1: () {
+                                  // Implement the action for Button 1 here.
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const GuestProfilePage(),
+                                    ),
+                                  );
+                                },
+                                isOnline: true,
+                                onPressedButton2: () {},
+                                guest: true,
+                                img: '',
+                              ),
                               SizedBox(
                                   height: MediaQuery.sizeOf(context).height *
                                       0.0125),
                               ServiceProviderCard(
-                                  saved: false,
+                                  saved: true,
                                   name: 'Senior Centy',
                                   bio:
                                       'Experienced barber with 5+ years of experience in cutting hair.',
@@ -727,30 +652,110 @@ class _GuestHomePageState extends State<GuestHomePage>
                                       ),
                                     );
                                   },
-                                  onPressedButton2: () {
-                                    // Implement the action for Button 2 here.
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      isSearching = false;
-                                      // When suffix icon is tapped, set isTyping to false
-                                      isTyping = false;
-                                      // You can also clear the text field if needed
-                                      _controller.clear();
-                                      // Update the filtered services here as well
-                                      filteredServices = [];
-                                    });
-                                  },
-                                  isOnline:
-                                      false, // Set whether the service provider is online or offline.
+                                  isOnline: false,
+                                  onPressedButton2: () {},
                                   guest: true,
                                   img: ''),
+                              // end of saved search
                             ],
+                          )),
+                      Visibility(
+                        visible:
+                            isSearching, // Content is visible when typing searching
+                        child: Positioned(
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.05),
+                                Text(
+                                  '${searchchoice}s',
+                                  style: responsiveTextStyle(
+                                      context, 20, null, FontWeight.bold),
+                                ),
+                                SizedBox(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.0125),
+                                ServiceProviderCard(
+                                    saved: false,
+                                    name: 'John Doe',
+                                    bio:
+                                        'Experienced plumber with 5+ years of experience in fixing pipes.',
+                                    image:
+                                        const AssetImage('assets/barber.jpg'),
+                                    onPressedButton1: () {
+                                      // Implement the action for Button 1 here.
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const GuestProfilePage(),
+                                        ),
+                                      );
+                                    },
+                                    onPressedButton2: () {
+                                      // Implement the action for Button 2 here.
+                                      FocusScope.of(context).unfocus();
+                                      setState(() {
+                                        isSearching = false;
+                                        // When suffix icon is tapped, set isTyping to false
+                                        isTyping = false;
+                                        // You can also clear the text field if needed
+                                        _controller.clear();
+                                        // Update the filtered services here as well
+                                        filteredServices = [];
+                                      });
+                                    },
+                                    isOnline:
+                                        true, // Set whether the service provider is online or offline.
+                                    guest: true,
+                                    img: ''),
+                                SizedBox(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.0125),
+                                ServiceProviderCard(
+                                    saved: false,
+                                    name: 'Senior Centy',
+                                    bio:
+                                        'Experienced barber with 5+ years of experience in cutting hair.',
+                                    image:
+                                        const AssetImage('assets/barber.jpg'),
+                                    onPressedButton1: () {
+                                      // Implement the action for Button 1 here.
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const GuestProfilePage(),
+                                        ),
+                                      );
+                                    },
+                                    onPressedButton2: () {
+                                      // Implement the action for Button 2 here.
+                                      FocusScope.of(context).unfocus();
+                                      setState(() {
+                                        isSearching = false;
+                                        // When suffix icon is tapped, set isTyping to false
+                                        isTyping = false;
+                                        // You can also clear the text field if needed
+                                        _controller.clear();
+                                        // Update the filtered services here as well
+                                        filteredServices = [];
+                                      });
+                                    },
+                                    isOnline:
+                                        false, // Set whether the service provider is online or offline.
+                                    guest: true,
+                                    img: ''),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-                ],
+                    ]),
+                  ],
+                ),
               ),
             ),
           ),

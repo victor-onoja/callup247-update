@@ -156,613 +156,622 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF039fdc),
-              Color(0xFF13CAF1),
-            ],
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFF039fdc),
+                Color(0xFF13CAF1),
+              ],
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                      left: 16.0,
-                      right: 16,
-                      bottom: 16,
-                      top: MediaQuery.sizeOf(context).height * 0.05),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.arrow_back),
-                          ),
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  isOnline
-                                      ? Text(
-                                          'online',
-                                          style: responsiveTextStyle(
-                                              context,
-                                              12,
-                                              Colors.white,
-                                              FontWeight.bold),
-                                        )
-                                      : Text(
-                                          'offline',
-                                          style: responsiveTextStyle(
-                                              context,
-                                              12,
-                                              Colors.white,
-                                              FontWeight.bold),
-                                        ),
-                                  Icon(
-                                    Icons.circle,
-                                    color:
-                                        isOnline ? Colors.green : Colors.black,
-                                    size: 12,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-
-                              // service provider pfp
-                              FutureBuilder<ImageProvider<Object>?>(
-                                  future: _imageProvider(pfp),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      if (snapshot.hasData &&
-                                          snapshot.data != null) {
-                                        return ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
-                                          child: Image(
-                                            image: snapshot.data!,
-                                            width: 100,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    } else {
-                                      return const SpinKitPianoWave(
-                                        size: 30,
-                                        color: Color(0xFF13CAF1),
-                                        itemCount: 4,
-                                      );
-                                    }
-                                  })
-                              // end of service provider pfp
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.08),
-                      Text(
-                        'Media:',
-                        style: responsiveTextStyle(
-                            context, 20, null, FontWeight.bold),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01),
-
-                      // service provider media territory
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        left: 16.0,
+                        right: 16,
+                        bottom: 16,
+                        top: MediaQuery.sizeOf(context).height * 0.05),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildImageWidget(media1),
-                            SizedBox(
-                                width:
-                                    MediaQuery.sizeOf(context).width * 0.025),
-                            _buildImageWidget(media2),
-                            SizedBox(
-                                width:
-                                    MediaQuery.sizeOf(context).width * 0.025),
-                            _buildImageWidget(media3),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.arrow_back),
+                            ),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    isOnline
+                                        ? Text(
+                                            'online',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                12,
+                                                Colors.white,
+                                                FontWeight.bold),
+                                          )
+                                        : Text(
+                                            'offline',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                12,
+                                                Colors.white,
+                                                FontWeight.bold),
+                                          ),
+                                    Icon(
+                                      Icons.circle,
+                                      color: isOnline
+                                          ? Colors.green
+                                          : Colors.black,
+                                      size: 12,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+
+                                // service provider pfp
+                                FutureBuilder<ImageProvider<Object>?>(
+                                    future: _imageProvider(pfp),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          return ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(16.0),
+                                            child: Image(
+                                              image: snapshot.data!,
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      } else {
+                                        return const SpinKitPianoWave(
+                                          size: 30,
+                                          color: Color(0xFF13CAF1),
+                                          itemCount: 4,
+                                        );
+                                      }
+                                    })
+                                // end of service provider pfp
+                              ],
+                            )
                           ],
                         ),
-                      ),
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.08),
+                        Text(
+                          'Media:',
+                          style: responsiveTextStyle(
+                              context, 20, null, FontWeight.bold),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01),
 
-                      // end of service provider media territory
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.08),
-                      Text(
-                        'Social Links:',
-                        style: responsiveTextStyle(
-                            context, 20, null, FontWeight.bold),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01),
-
-                      // service provider social links
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final ig = iglink;
-                                if (ig.isNotEmpty) {
-                                  final Uri url = Uri.parse(ig);
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    if (!context.mounted) return;
-                                    // If the URL can't be launched, show a dialog
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Cannot Open Link'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Text(
-                                                  'The Instagram link could not be opened :('),
-                                              const Text(
-                                                  'but you can copy the link and open it in your browser:'),
-                                              SelectableText(ig),
-                                            ],
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Copy Link'),
-                                              onPressed: () {
-                                                Clipboard.setData(
-                                                    ClipboardData(text: ig));
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Close'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  // Handle the case where iglink is an empty string (no link provided)
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                            'No Instagram Link Provided'),
-                                        content: const Text(
-                                            'The user did not provide an Instagram link.'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Close'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                              child: Image.asset(
-                                'assets/ig-icon.png',
-                                width: 45,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final x = xlink;
-                                if (x.isNotEmpty) {
-                                  final Uri url = Uri.parse(x);
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    if (!context.mounted) return;
-                                    // If the URL can't be launched, show a dialog
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Cannot Open Link'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Text(
-                                                  'The X link could not be opened :('),
-                                              const Text(
-                                                  'but you can copy the link and open it in your browser:'),
-                                              SelectableText(x),
-                                            ],
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Copy Link'),
-                                              onPressed: () {
-                                                Clipboard.setData(
-                                                    ClipboardData(text: x));
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Close'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  // Handle the case where iglink is an empty string (no link provided)
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('No X Link Provided'),
-                                        content: const Text(
-                                            'The user did not provide an X link.'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Close'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                              child: Image.asset(
-                                'assets/x-icon.webp',
-                                width: 45,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final fb = fblink;
-                                if (fb.isNotEmpty) {
-                                  final Uri url = Uri.parse(fb);
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    if (!context.mounted) return;
-                                    // If the URL can't be launched, show a dialog
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Cannot Open Link'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Text(
-                                                  'The Facebook link could not be opened :('),
-                                              const Text(
-                                                  'but you can copy the link and open it in your browser:'),
-                                              SelectableText(fb),
-                                            ],
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Copy Link'),
-                                              onPressed: () {
-                                                Clipboard.setData(
-                                                    ClipboardData(text: fb));
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Close'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  // Handle the case where iglink is an empty string (no link provided)
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                            'No Facebook Link Provided'),
-                                        content: const Text(
-                                            'The user did not provide a Facebook link.'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Close'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                              child: Image.asset(
-                                'assets/facebook.png',
-                                width: 45,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final web = weblink;
-                                if (web.isNotEmpty) {
-                                  final Uri url = Uri.parse(web);
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    if (!context.mounted) return;
-                                    // If the URL can't be launched, show a dialog
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Cannot Open Link'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Text(
-                                                  'The web link could not be opened :('),
-                                              const Text(
-                                                  'but you can copy the link and open it in your browser:'),
-                                              SelectableText(web),
-                                            ],
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Copy Link'),
-                                              onPressed: () {
-                                                Clipboard.setData(
-                                                    ClipboardData(text: web));
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Close'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  // Handle the case where iglink is an empty string (no link provided)
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title:
-                                            const Text('No Web Link Provided'),
-                                        content: const Text(
-                                            'The user did not provide a website link.'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Close'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                              child: Image.asset(
-                                'assets/web-icon.png',
-                                width: 45,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Mail'),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text('You can send a mail to'),
-                                          SelectableText(maillink)
-                                        ],
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Copy Mail'),
-                                          onPressed: () {
-                                            Clipboard.setData(
-                                                ClipboardData(text: maillink));
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text('Close'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: Image.asset(
-                                'assets/Gmail.png',
-                                width: 45,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      // end of service provider social links
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.08),
-                      Text(
-                        'Details:',
-                        style: responsiveTextStyle(
-                            context, 20, null, FontWeight.bold),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01),
-
-                      // service provider details
-                      Row(
-                        children: [
-                          Text('Name :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(fullname, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Experience :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(experience, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Special Offers :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Flexible(
-                            child: Text(specialoffers, // Information
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.white, FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Customers Review :- ', // Label
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, FontWeight.bold)),
-                          Row(
+                        // service provider media territory
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
                             children: [
-                              Text(' none ', // Information
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.white, FontWeight.bold)),
-                              // const Icon(
-                              //   Icons.star,
-                              //   color: Colors.yellowAccent,
-                              // )
+                              _buildImageWidget(media1),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.025),
+                              _buildImageWidget(media2),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.025),
+                              _buildImageWidget(media3),
                             ],
                           ),
-                        ],
-                      ),
-                      // end of service provider details
-                    ],
+                        ),
+
+                        // end of service provider media territory
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.08),
+                        Text(
+                          'Social Links:',
+                          style: responsiveTextStyle(
+                              context, 20, null, FontWeight.bold),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01),
+
+                        // service provider social links
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final ig = iglink;
+                                  if (ig.isNotEmpty) {
+                                    final Uri url = Uri.parse(ig);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The Instagram link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(ig),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(text: ig));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where iglink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'No Instagram Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide an Instagram link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/ig-icon.png',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final x = xlink;
+                                  if (x.isNotEmpty) {
+                                    final Uri url = Uri.parse(x);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The X link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(x),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(text: x));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where iglink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title:
+                                              const Text('No X Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide an X link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/x-icon.webp',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final fb = fblink;
+                                  if (fb.isNotEmpty) {
+                                    final Uri url = Uri.parse(fb);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The Facebook link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(fb),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(text: fb));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where iglink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'No Facebook Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide a Facebook link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/facebook.png',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final web = weblink;
+                                  if (web.isNotEmpty) {
+                                    final Uri url = Uri.parse(web);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The web link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(web),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(text: web));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where iglink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'No Web Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide a website link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/web-icon.png',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Mail'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                                'You can send a mail to'),
+                                            SelectableText(maillink)
+                                          ],
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Copy Mail'),
+                                            onPressed: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: maillink));
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('Close'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Image.asset(
+                                  'assets/Gmail.png',
+                                  width: 45,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        // end of service provider social links
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.08),
+                        Text(
+                          'Details:',
+                          style: responsiveTextStyle(
+                              context, 20, null, FontWeight.bold),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01),
+
+                        // service provider details
+                        Row(
+                          children: [
+                            Text('Name :- ', // Label
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.black, FontWeight.bold)),
+                            Flexible(
+                              child: Text(fullname, // Information
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.white, FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Experience :- ', // Label
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.black, FontWeight.bold)),
+                            Flexible(
+                              child: Text(experience, // Information
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.white, FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Special Offers :- ', // Label
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.black, FontWeight.bold)),
+                            Flexible(
+                              child: Text(specialoffers, // Information
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.white, FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Customers Review :- ', // Label
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.black, FontWeight.bold)),
+                            Row(
+                              children: [
+                                Text(' none ', // Information
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.white, FontWeight.bold)),
+                                // const Icon(
+                                //   Icons.star,
+                                //   color: Colors.yellowAccent,
+                                // )
+                              ],
+                            ),
+                          ],
+                        ),
+                        // end of service provider details
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-                height: 100, // Adjust the height as needed
-                decoration: BoxDecoration(
-                  color: const Color(0xFF13CAF1),
-                  border: Border.all(width: 2, color: Colors.black),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ActionButton(
-                        text: 'Call History',
+              Container(
+                  height: 100, // Adjust the height as needed
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF13CAF1),
+                    border: Border.all(width: 2, color: Colors.black),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ActionButton(
+                          text: 'Call History',
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.call,
+                            size: 50,
+                          )),
+                      ActionButton(
+                        text: 'Transaction History',
                         onPressed: () {},
                         icon: const Icon(
-                          Icons.call,
+                          Icons.payment,
                           size: 50,
-                        )),
-                    ActionButton(
-                      text: 'Transaction History',
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.payment,
-                        size: 50,
+                        ),
                       ),
-                    ),
-                    ActionButton(
-                      text: 'Chat History',
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.chat,
-                        size: 50,
+                      ActionButton(
+                        text: 'Chat History',
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.chat,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                    ActionButton(
-                      text: 'Review History',
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.reviews,
-                        size: 50,
+                      ActionButton(
+                        text: 'Review History',
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.reviews,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                  ],
-                )),
-          ],
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );

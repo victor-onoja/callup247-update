@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/splash_screen.dart';
 
@@ -18,6 +19,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF13CAF1),
+      ),
+    );
     return const MaterialApp(
       title: 'CallUp247',
       debugShowCheckedModeBanner: false,

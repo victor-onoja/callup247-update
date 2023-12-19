@@ -123,170 +123,175 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.sizeOf(context).height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF039fdc),
-                Color(0xFF13CAF1),
-              ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.sizeOf(context).height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: [
+                  Color(0xFF039fdc),
+                  Color(0xFF13CAF1),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    RotationTransition(
-                      turns: Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                      child: Image.asset(
-                        'assets/logo_t.png',
-                        height: 75,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                    // Password
-
-                    TextFormField(
-                      controller: _passwordController,
-                      cursorColor: Colors.white,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
-                      decoration: InputDecoration(
-                        labelText: 'New Password',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87)),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.black54,
-                          ),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      RotationTransition(
+                        turns:
+                            Tween(begin: 0.0, end: 1.0).animate(_acontroller),
+                        child: Image.asset(
+                          'assets/logo_t.png',
+                          height: 75,
                         ),
                       ),
-                      obscureText: !isPasswordVisible,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        // Password strength validation criteria
-                        const lengthCriteria = 8; // Minimum length requirement
-                        // final uppercaseCriteria = RegExp(r'[A-Z]');
-                        // final lowercaseCriteria = RegExp(r'[a-z]');
-                        // final digitCriteria = RegExp(r'[0-9]');
-                        // final specialCharCriteria =
-                        //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-                        if (value.length < lengthCriteria) {
-                          return 'Password must be at least $lengthCriteria characters long';
-                        }
-                        // if (!uppercaseCriteria.hasMatch(value) ||
-                        //     !lowercaseCriteria.hasMatch(value) ||
-                        //     !digitCriteria.hasMatch(value) ||
-                        //     !specialCharCriteria.hasMatch(value)) {
-                        //   return 'Password must include uppercase, lowercase, digit, and special characters';
-                        // }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.08),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                      // Password
 
-                    // Confirm Password
-
-                    TextFormField(
-                      controller: _confirmpasswordController,
-                      cursorColor: Colors.white,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm New Password',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87)),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordConfirmVisible =
-                                  !isPasswordConfirmVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordConfirmVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                      obscureText: !isPasswordConfirmVisible,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please re-type your password';
-                        }
-                        // todo: confiirm password validation logic
-                        if (value != _passwordController.text) {
-                          return 'passwords must match';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-
-                    // action button
-
-                    loading
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF039fdc)),
-                            onPressed: () async {
-                              final messenger = ScaffoldMessenger.of(context);
-                              // Check network connectivity
-                              bool isConnected =
-                                  await _checkInternetConnectivity();
-                              if (!isConnected) {
-                                if (!context.mounted) return;
-                                // Show a snackbar for no network
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'No internet connection. Please check your network settings.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return; // Exit the function if there's no network
-                              }
-                              if (_formKey.currentState!.validate()) {
-                                setState(() {
-                                  loading = true;
-                                });
-                                _changePassword();
-                              }
+                      TextFormField(
+                        controller: _passwordController,
+                        cursorColor: Colors.white,
+                        style: responsiveTextStyle(
+                            context, 16, Colors.white, null),
+                        decoration: InputDecoration(
+                          labelText: 'New Password',
+                          labelStyle: responsiveTextStyle(
+                              context, 14, Colors.black, null),
+                          focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black87)),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible = !isPasswordVisible;
+                              });
                             },
-                            child: Text(
-                              'Confirm',
-                              style: responsiveTextStyle(
-                                  context, 14, Colors.black, FontWeight.bold),
+                            child: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.black54,
                             ),
                           ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                  ],
-                )),
+                        ),
+                        obscureText: !isPasswordVisible,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          // Password strength validation criteria
+                          const lengthCriteria =
+                              8; // Minimum length requirement
+                          // final uppercaseCriteria = RegExp(r'[A-Z]');
+                          // final lowercaseCriteria = RegExp(r'[a-z]');
+                          // final digitCriteria = RegExp(r'[0-9]');
+                          // final specialCharCriteria =
+                          //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+                          if (value.length < lengthCriteria) {
+                            return 'Password must be at least $lengthCriteria characters long';
+                          }
+                          // if (!uppercaseCriteria.hasMatch(value) ||
+                          //     !lowercaseCriteria.hasMatch(value) ||
+                          //     !digitCriteria.hasMatch(value) ||
+                          //     !specialCharCriteria.hasMatch(value)) {
+                          //   return 'Password must include uppercase, lowercase, digit, and special characters';
+                          // }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.08),
+
+                      // Confirm Password
+
+                      TextFormField(
+                        controller: _confirmpasswordController,
+                        cursorColor: Colors.white,
+                        style: responsiveTextStyle(
+                            context, 16, Colors.white, null),
+                        decoration: InputDecoration(
+                          labelText: 'Confirm New Password',
+                          labelStyle: responsiveTextStyle(
+                              context, 14, Colors.black, null),
+                          focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black87)),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPasswordConfirmVisible =
+                                    !isPasswordConfirmVisible;
+                              });
+                            },
+                            child: Icon(
+                              isPasswordConfirmVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ),
+                        obscureText: !isPasswordConfirmVisible,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please re-type your password';
+                          }
+                          // todo: confiirm password validation logic
+                          if (value != _passwordController.text) {
+                            return 'passwords must match';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+
+                      // action button
+
+                      loading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF039fdc)),
+                              onPressed: () async {
+                                final messenger = ScaffoldMessenger.of(context);
+                                // Check network connectivity
+                                bool isConnected =
+                                    await _checkInternetConnectivity();
+                                if (!isConnected) {
+                                  if (!context.mounted) return;
+                                  // Show a snackbar for no network
+                                  messenger.showSnackBar(SnackBar(
+                                    content: Text(
+                                      'No internet connection. Please check your network settings.',
+                                      style: responsiveTextStyle(context, 16,
+                                          Colors.black, FontWeight.bold),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                  return; // Exit the function if there's no network
+                                }
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  _changePassword();
+                                }
+                              },
+                              child: Text(
+                                'Confirm',
+                                style: responsiveTextStyle(
+                                    context, 14, Colors.black, FontWeight.bold),
+                              ),
+                            ),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                    ],
+                  )),
+            ),
           ),
         ),
       ),
