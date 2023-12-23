@@ -949,6 +949,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                 specialoffers: savedSearchProviderData['special_offers'],
                 webLink: savedSearchProviderData['web_link'],
                 xLink: savedSearchProviderData['x_url'],
+                id: savedSearchProviderData['id'],
               ),
             ),
           );
@@ -1671,6 +1672,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                           xLink:
                                                               serviceProviderData[
                                                                   'x_url'],
+                                                          id: serviceProviderData[
+                                                              'id'],
                                                         ),
                                                       ),
                                                     );

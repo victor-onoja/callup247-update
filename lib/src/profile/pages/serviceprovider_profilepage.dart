@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:callup247/src/chat/pages/chathistory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -754,7 +755,13 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                       ),
                       ActionButton(
                         text: 'Chat History',
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const ChatHistory()),
+                          );
+                        },
                         icon: const Icon(
                           Icons.chat,
                           size: 50,

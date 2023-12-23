@@ -1521,6 +1521,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                             'web_link'],
                                                                     xLink: savedSearchProviderData[
                                                                         'x_url'],
+                                                                    id: savedSearchProviderData[
+                                                                        'id'],
                                                                   ),
                                                                 ),
                                                               );
@@ -1732,6 +1734,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                           xLink:
                                                               serviceProviderData[
                                                                   'x_url'],
+                                                          id: serviceProviderData[
+                                                              'id'],
                                                         ),
                                                       ),
                                                     );

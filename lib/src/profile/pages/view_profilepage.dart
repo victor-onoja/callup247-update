@@ -1,3 +1,5 @@
+import 'package:callup247/main.dart';
+import 'package:callup247/src/chat/pages/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -21,7 +23,8 @@ class ViewProfilePage extends StatefulWidget {
       required this.fullname,
       required this.experience,
       required this.availability,
-      required this.specialoffers});
+      required this.specialoffers,
+      required this.id});
 
   final String pfp,
       media1,
@@ -35,6 +38,7 @@ class ViewProfilePage extends StatefulWidget {
       fullname,
       experience,
       availability,
+      id,
       specialoffers;
 
   @override
@@ -758,7 +762,14 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       ),
                       ActionButton(
                         text: 'Chat',
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => ChatPage(
+                                    serviceproviderid: widget.id,
+                                    userid: supabase.auth.currentUser!.id)),
+                          );
+                        },
                         icon: const Icon(
                           Icons.chat,
                           size: 50,
