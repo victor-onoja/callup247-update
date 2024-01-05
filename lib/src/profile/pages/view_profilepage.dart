@@ -1,9 +1,13 @@
 import 'package:callup247/main.dart';
+import 'package:callup247/src/call/pages/test_voicecall.dart';
 import 'package:callup247/src/chat/pages/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../widgets/profile_page_action_button.dart';
 import '../../responsive_text_styles.dart';
 import 'package:http/http.dart' as http;
@@ -109,6 +113,74 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     );
   }
 
+  // 04 - use case function to fetch user's name from the profiles table
+
+  Future<String?> getUserName() async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', supabase.auth.currentUser!.id)
+          .single();
+
+      if (response == null) {
+        // Handle the case where data is null
+        return null;
+      }
+
+      final Map<String, dynamic> userData = response;
+      return userData['full_name'];
+    } on PostgrestException catch (error) {
+      return null;
+    } catch (error) {
+      // Handle the error here
+      return null;
+    }
+  }
+
+  // 05 - use case function for when call button is pressed
+
+  void onSendCallInvitationFinished(
+    String code,
+    String message,
+    List<String> errorInvitees,
+  ) {
+    if (errorInvitees.isNotEmpty) {
+      var userIDs = '';
+      for (var index = 0; index < errorInvitees.length; index++) {
+        if (index >= 5) {
+          userIDs += '...';
+          break;
+        }
+
+        final userID = errorInvitees.elementAt(index);
+        userIDs += userID;
+      }
+      if (userIDs.isNotEmpty) {
+        userIDs = userIDs.substring(0, userIDs.length - 1);
+      }
+
+      var message = "User doesn't exist or is offline: $userIDs";
+      if (code.isNotEmpty) {
+        message += ', code: $code, message: $message';
+      }
+      showToast(message, position: StyledToastPosition.top, context: context);
+    } else if (code.isNotEmpty) {
+      showToast('code: $code, message: $message',
+          position: StyledToastPosition.top, context: context);
+    }
+  }
+
+  // 06 - use case shorten userid
+
+  String shortenUserID(String userID) {
+    // Use a hash function to generate a shorter representation of the user ID
+    final hashedUserID = userID.hashCode.abs().toString();
+
+    // Ensure the resulting string is not longer than the desired length
+    return hashedUserID.substring(0, 4); // Adjust the length as needed
+  }
+
   // variable
 
   bool isOnline = true;
@@ -117,6 +189,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    String shortenedUserId = shortenUserID(widget.id);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -745,13 +818,37 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           size: 50,
                         ),
                       ),
-                      ActionButton(
-                          text: 'Call',
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.call,
-                            size: 50,
-                          )),
+                      ZegoSendCallInvitationButton(
+                        onPressed: onSendCallInvitationFinished,
+                        invitees: [
+                          ZegoUIKitUser(
+                              id: shortenedUserId, name: widget.fullname)
+                        ],
+                        isVideoCall: false,
+                      ),
+                      // ActionButton(
+                      //     text: 'Call',
+                      //     // test call
+
+                      //     // onPressed: () async {
+                      //     //   final username = await getUserName();
+                      //     //   if (!context.mounted) return;
+                      //     //   Navigator.of(context).push(
+                      //     //     MaterialPageRoute(
+                      //     //         builder: (BuildContext context) => TestCall(
+                      //     //               userId: supabase.auth.currentUser!.id,
+                      //     //               username: username ?? '',
+                      //     //             )),
+                      //     //   );
+                      //     // },
+
+                      //     onPressed: ()async{
+
+                      //     },
+                      //     icon: const Icon(
+                      //       Icons.call,
+                      //       size: 50,
+                      //     )),
                       ActionButton(
                         text: 'Pay',
                         onPressed: () {},

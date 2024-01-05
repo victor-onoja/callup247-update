@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../../profile/pages/view_profilepage.dart';
 import '../../responsive_text_styles.dart';
 import '../widgets/service_provider_card.dart';
@@ -1250,6 +1251,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                           });
                                     } else if (value == 'signOut') {
                                       _signOut();
+                                      ZegoUIKitPrebuiltCallInvitationService()
+                                          .uninit();
                                     } else if (value ==
                                         'becomeAServiceProvider') {
                                       Navigator.of(context).push(

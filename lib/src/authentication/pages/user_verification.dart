@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import '../../responsive_text_styles.dart';
 import 'package:pinput/pinput.dart';
 
@@ -29,7 +31,7 @@ class _VerificationScreenState extends State<VerificationScreen>
   _VerificationScreenState(this.isPasswordReset, this.userEmail);
   // 01 - use case verify user
 
-  Future<void> _verifyUser(BuildContext context) async {
+  Future<void> _verifyUser() async {
     try {
       setState(() {
         loading = true;
@@ -325,7 +327,43 @@ class _VerificationScreenState extends State<VerificationScreen>
     await prefs.setString('serviceproviderprofile', jsonString);
   }
 
+  // 08 - use case function to fetch user's name from the profiles table
+
+  Future<String?> getUserName() async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', supabase.auth.currentUser!.id)
+          .single();
+
+      if (response == null) {
+        // Handle the case where data is null
+        return null;
+      }
+
+      final Map<String, dynamic> userData = response;
+      return userData['full_name'];
+    } on PostgrestException catch (error) {
+      return null;
+    } catch (error) {
+      // Handle the error here
+      return null;
+    }
+  }
+
+  // 09 - use case shorten userid
+
+  String shortenUserID(String userID) {
+    // Use a hash function to generate a shorter representation of the user ID
+    final hashedUserID = userID.hashCode.abs().toString();
+
+    // Ensure the resulting string is not longer than the desired length
+    return hashedUserID.substring(0, 4); // Adjust the length as needed
+  }
+
   // dispose
+
   @override
   void dispose() {
     _acontroller.dispose();
@@ -429,8 +467,44 @@ class _VerificationScreenState extends State<VerificationScreen>
                       loading
                           ? const CircularProgressIndicator()
                           : ElevatedButton(
-                              onPressed: () {
-                                _verifyUser(context);
+                              onPressed: () async {
+                                await _verifyUser();
+                                final username = await getUserName();
+                                ZegoUIKitPrebuiltCallInvitationService().init(
+                                    appID: 1387657630,
+                                    appSign:
+                                        '3ad64942f1d87e41180fe3013a8df56969ff1918a42ad8173b2a334662037a7a',
+                                    userID: shortenUserID(
+                                        supabase.auth.currentUser!.id),
+                                    userName: username ?? '',
+                                    plugins: [ZegoUIKitSignalingPlugin()],
+                                    requireConfig:
+                                        (ZegoCallInvitationData data) {
+                                      final config = (data.invitees.length > 1)
+                                          ? ZegoCallType.videoCall == data.type
+                                              ? ZegoUIKitPrebuiltCallConfig
+                                                  .groupVideoCall()
+                                              : ZegoUIKitPrebuiltCallConfig
+                                                  .groupVoiceCall()
+                                          : ZegoCallType.videoCall == data.type
+                                              ? ZegoUIKitPrebuiltCallConfig
+                                                  .oneOnOneVideoCall()
+                                              : ZegoUIKitPrebuiltCallConfig
+                                                  .oneOnOneVoiceCall();
+
+                                      /// custom avatar
+                                      // config.avatarBuilder =
+                                      //     customAvatarBuilder;
+
+                                      /// support minimizing, show minimizing button
+                                      config.topMenuBarConfig.isVisible = true;
+                                      config.topMenuBarConfig.buttons.insert(
+                                          0,
+                                          ZegoMenuBarButtonName
+                                              .minimizingButton);
+
+                                      return config;
+                                    });
                               },
                               child: Text(
                                 'Verify',

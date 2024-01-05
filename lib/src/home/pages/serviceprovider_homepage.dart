@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import '../../../main.dart';
 import '../../authentication/pages/user_login.dart';
 import '../../profile/pages/view_profilepage.dart';
@@ -1160,6 +1161,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                           });
                                     } else if (value == 'signOut') {
                                       _signOut();
+                                      ZegoUIKitPrebuiltCallInvitationService()
+                                          .uninit();
                                     } else if (value == 'viewProfile') {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (BuildContext context) =>

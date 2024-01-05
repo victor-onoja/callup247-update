@@ -16,6 +16,7 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localDateTime = DateTime.parse(timestamp).toLocal();
     return Container(
       margin: EdgeInsets.only(
         left: isUser ? 40 : 0,
@@ -38,7 +39,7 @@ class ChatBubble extends StatelessWidget {
             ),
           ),
           Text(
-            DateFormat.yMd().add_Hm().format(DateTime.parse(timestamp)),
+            DateFormat.yMd().add_Hm().format(localDateTime),
             style: TextStyle(
               color: Colors.grey[200],
             ),

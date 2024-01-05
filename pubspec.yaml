@@ -43,8 +43,10 @@ dependencies:
   url_launcher: ^6.2.1
   flutter_spinkit: ^5.2.0
   country_state_city_pro: ^0.0.6
-  intl: ^0.19.0
-  timeago: ^3.2.2
+  intl: ^0.18.1
+  zego_uikit_prebuilt_call: ^3.19.0
+  zego_uikit_signaling_plugin: ^2.7.2
+  flutter_styled_toast: ^2.2.1
 
 dev_dependencies:
   flutter_test:
