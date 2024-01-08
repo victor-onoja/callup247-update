@@ -146,7 +146,8 @@ class _ChatHistoryState extends State<ChatHistory> {
                                     trailing: Text(DateFormat.yMd()
                                         .add_Hm()
                                         .format(DateTime.parse(
-                                            message['created_at']))),
+                                                message['created_at'])
+                                            .toLocal())),
                                   ),
                                   const Divider(
                                     color: Color(0xFF039fdc),

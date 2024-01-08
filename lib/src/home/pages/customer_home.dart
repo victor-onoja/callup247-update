@@ -40,11 +40,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       final userPfp = userProfileMap['displaypicture'];
       final userCity = userProfileMap['city'];
       final userState = userProfileMap['state'];
+      final userCountry = userProfileMap['country'];
       setState(() {
         fullname = userFullName;
         pfp = userPfp;
         city = userCity;
         state = userState;
+        country = userCountry;
       });
       // You can now use fullName and emailAddress as needed.
     } else {
@@ -149,6 +151,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       setState(() {
         city = newcity;
         state = newstate;
+        country = newcountry;
       });
     } else {}
   }
@@ -441,6 +444,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   String pfp = '';
   String? city = '';
   String state = '';
+  String country = '';
   File? _image;
   bool pfpChange = false;
   final _countryValue = TextEditingController();
@@ -811,7 +815,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       {String? city, String? state}) async {
     try {
       // Check if city or state is provided, and build the query accordingly
-      final query = city != null || city == ''
+      final query = (city != null && city.isNotEmpty)
           ? supabase.from('profiles').select('id').eq('city', city)
           : state != null
               ? supabase.from('profiles').select('id').eq('state', state)
@@ -1217,12 +1221,29 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                             );
                                           });
                                     } else if (value == 'editLocation') {
+                                      _countryValue.text = country;
+                                      _stateValue.text = state;
+                                      _cityValue.text = city!;
                                       showDialog(
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title: const Text(
-                                                  'Set your new Location'),
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                      'Set your new Location'),
+                                                  Text(
+                                                    'reset from country, city then state for best performance 🤚',
+                                                    style: responsiveTextStyle(
+                                                        context,
+                                                        8,
+                                                        Colors.blueGrey,
+                                                        null),
+                                                  ),
+                                                ],
+                                              ),
                                               content: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
@@ -1371,7 +1392,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                       });
                                       List<dynamic> profileIds;
 
-                                      if (city != null || city == '') {
+                                      if (city != null && city != '') {
                                         profileIds = await _queryProfilesTable(
                                             city: city);
                                       } else {
