@@ -24,7 +24,7 @@ class ServiceProviderHomePage extends StatefulWidget {
 }
 
 class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   // 01 - use case initialize data
 
   Future<void> _initializeData() async {
@@ -80,6 +80,36 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       } catch (e) {
         //
       }
+    }
+    _online();
+  }
+
+  // ?? - use case online
+
+  Future<void> _online() async {
+    try {
+      await supabase
+          .from('online')
+          .insert({'user_id': supabase.auth.currentUser!.id});
+    } on PostgrestException catch (error) {
+      //
+    } catch (error) {
+      //
+    }
+  }
+
+  // ?? - use case offline
+
+  Future<void> _offline() async {
+    try {
+      await supabase
+          .from('online')
+          .delete()
+          .match({'user_id': supabase.auth.currentUser!.id});
+    } on PostgrestException catch (error) {
+      //
+    } catch (error) {
+      //
     }
   }
 
@@ -416,6 +446,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeData();
   }
 
@@ -428,7 +459,29 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     _countryValue.dispose();
     _stateValue.dispose();
     _cityValue.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  // lifecycle
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _online();
+        break;
+      case AppLifecycleState.paused:
+        _offline();
+        break;
+      case AppLifecycleState.detached:
+        _offline();
+        break;
+      default:
+        break;
+    }
   }
 
   // variables
