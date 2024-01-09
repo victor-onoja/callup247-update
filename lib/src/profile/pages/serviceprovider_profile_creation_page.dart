@@ -1211,7 +1211,8 @@ class _ServiceProviderProfileCreationState
                                 loading = true;
                               });
                               // prevent unregistered services
-                              if (isTyping) {
+                              if (isTyping ||
+                                  _serviceProvidedController.text.isEmpty) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text(

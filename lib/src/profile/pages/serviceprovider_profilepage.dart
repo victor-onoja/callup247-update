@@ -695,6 +695,18 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         ),
                         Row(
                           children: [
+                            Text('Availability :- ', // Label
+                                style: responsiveTextStyle(context, 16,
+                                    Colors.black, FontWeight.bold)),
+                            Flexible(
+                              child: Text(availability, // Information
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.white, FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Text('Special Offers :- ', // Label
                                 style: responsiveTextStyle(context, 16,
                                     Colors.black, FontWeight.bold)),
