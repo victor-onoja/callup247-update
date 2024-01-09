@@ -858,7 +858,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       final response = await supabase
           .from('serviceproviders_profile')
           .select()
-          .in_('id', profileIds); // Use 'in_' to filter by multiple IDs
+          .inFilter('id', profileIds); // Use 'in_' to filter by multiple IDs
 
       return response;
     } on PostgrestException catch (error) {
