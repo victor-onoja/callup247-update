@@ -18,13 +18,12 @@ class _ChatHistoryState extends State<ChatHistory> {
   Future<Map<String, dynamic>> _getSenderProfile(String senderId) async {
     final data =
         await supabase.from('profiles').select().eq('id', senderId).single();
-    return data as Map<String, dynamic>;
+    return data;
   }
-
-  @override
 
   // build method
 
+  @override
   Widget build(BuildContext context) {
 // variables
 

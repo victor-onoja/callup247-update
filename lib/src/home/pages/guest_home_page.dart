@@ -629,7 +629,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                                     ),
                                   );
                                 },
-                                isOnline: true,
+                                isOnline: const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      color: Colors.green,
+                                      size: 12,
+                                    ),
+                                  ],
+                                ),
                                 onPressedButton2: () {},
                                 guest: true,
                                 img: '',
@@ -652,7 +660,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                                       ),
                                     );
                                   },
-                                  isOnline: false,
+                                  isOnline: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        color: Colors.green,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
                                   onPressedButton2: () {},
                                   guest: true,
                                   img: ''),
@@ -708,8 +724,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                                         filteredServices = [];
                                       });
                                     },
-                                    isOnline:
-                                        true, // Set whether the service provider is online or offline.
+                                    isOnline: const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                          size: 12,
+                                        ),
+                                      ],
+                                    ), // Set whether the service provider is online or offline.
                                     guest: true,
                                     img: ''),
                                 SizedBox(
@@ -744,8 +767,15 @@ class _GuestHomePageState extends State<GuestHomePage>
                                         filteredServices = [];
                                       });
                                     },
-                                    isOnline:
-                                        false, // Set whether the service provider is online or offline.
+                                    isOnline: const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.circle,
+                                          color: Colors.green,
+                                          size: 12,
+                                        ),
+                                      ],
+                                    ), // Set whether the service provider is online or offline.
                                     guest: true,
                                     img: ''),
                               ],

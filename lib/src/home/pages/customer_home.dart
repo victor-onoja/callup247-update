@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
+import 'package:callup247/src/online.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -958,7 +959,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
             ),
           );
         },
-        isOnline: true,
+        isOnline: Online(userId: savedSearchProviderData['id']),
         saved: true,
         onPressedButton2: () {
           final userid = supabase.auth.currentUser!.id;
@@ -1717,7 +1718,10 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                     _createSavedSearch(userid,
                                                         serviceproviderid);
                                                   },
-                                                  isOnline: true,
+                                                  isOnline: Online(
+                                                      userId:
+                                                          serviceProviderData[
+                                                              'id']),
                                                   guest: false,
                                                   img: serviceProviderData[
                                                       'media_url1'],

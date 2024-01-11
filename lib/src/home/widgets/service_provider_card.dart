@@ -8,7 +8,7 @@ class ServiceProviderCard extends StatelessWidget {
   final String img;
   final Function() onPressedButton1;
   final Function() onPressedButton2;
-  final bool isOnline;
+  final Widget isOnline;
   final bool saved;
   final bool guest;
 
@@ -47,15 +47,7 @@ class ServiceProviderCard extends StatelessWidget {
                 Text(name,
                     style:
                         responsiveTextStyle(context, 18, Colors.white, null)),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      color: isOnline ? Colors.green : Colors.black,
-                      size: 12,
-                    ),
-                  ],
-                ),
+                isOnline
               ],
             ),
             const SizedBox(height: 2),

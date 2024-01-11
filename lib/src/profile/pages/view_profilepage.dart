@@ -1,5 +1,6 @@
 import 'package:callup247/main.dart';
 import 'package:callup247/src/chat/pages/chat_page.dart';
+import 'package:callup247/src/online.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -111,7 +112,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
   // variable
 
-  bool isOnline = true;
+  // bool isOnline = true;
 
   // build method
 
@@ -156,34 +157,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             ),
                             Row(
                               children: [
-                                Column(
-                                  children: [
-                                    isOnline
-                                        ? Text(
-                                            'online',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                12,
-                                                Colors.white,
-                                                FontWeight.bold),
-                                          )
-                                        : Text(
-                                            'offline',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                12,
-                                                Colors.white,
-                                                FontWeight.bold),
-                                          ),
-                                    Icon(
-                                      Icons.circle,
-                                      color: isOnline
-                                          ? Colors.green
-                                          : Colors.black,
-                                      size: 12,
-                                    ),
-                                  ],
-                                ),
+                                Online(userId: widget.id),
                                 const SizedBox(
                                   width: 10,
                                 ),

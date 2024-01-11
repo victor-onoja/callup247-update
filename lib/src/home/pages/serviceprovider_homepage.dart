@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:callup247/src/online.dart';
 import 'package:callup247/src/profile/pages/edit_servicepovider_profile_page.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profilepage.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
@@ -1601,7 +1602,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                 ),
                                                               );
                                                             },
-                                                            isOnline: true,
+                                                            isOnline: Online(
+                                                                userId:
+                                                                    savedSearchProviderData[
+                                                                        'id']),
                                                             saved: true,
                                                             onPressedButton2:
                                                                 () {
@@ -1832,7 +1836,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                     _createSavedSearch(userid,
                                                         serviceproviderid);
                                                   },
-                                                  isOnline: true,
+                                                  isOnline: Online(
+                                                      userId:
+                                                          serviceProviderData[
+                                                              'id']),
                                                   guest: false,
                                                   img: serviceProviderData[
                                                       'media_url1'],
