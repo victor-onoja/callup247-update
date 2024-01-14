@@ -21,6 +21,15 @@ class _ChatHistoryState extends State<ChatHistory> {
     return data;
   }
 
+// init
+
+  @override
+  void initState() {
+    super.initState();
+    // Reset the new message counter when ChatHistory is initialized
+    newMessageCounter.value = 0;
+  }
+
   // build method
 
   @override
@@ -70,6 +79,8 @@ class _ChatHistoryState extends State<ChatHistory> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;
+                  print('new message created');
+                  newMessageCounter.value++;
 
                   // Iterate through the messages to find the latest for each chatid
 

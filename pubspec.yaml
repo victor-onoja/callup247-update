@@ -44,6 +44,7 @@ dependencies:
   flutter_spinkit: ^5.2.0
   country_state_city_pro: ^0.0.6
   intl: ^0.19.0
+  signals: ^2.1.10
 
 dev_dependencies:
   flutter_test:
