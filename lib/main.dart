@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:signals/signals.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/splash_screen.dart';
 
@@ -17,7 +16,6 @@ void main() async {
 // global variables
 
 final supabase = Supabase.instance.client;
-final newMessageCounter = signal(0);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

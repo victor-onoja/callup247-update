@@ -85,6 +85,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       }
     }
     _online();
+    loadLastCheckedMessageId();
   }
 
   // ?? - use case online
@@ -451,7 +452,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initializeData();
-    print(newMessageCounter.value);
   }
 
   // dispose
@@ -510,7 +510,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   final _countryValue = TextEditingController();
   final _stateValue = TextEditingController();
   final _cityValue = TextEditingController();
-  bool hasNewMessage = newMessageCounter.value > 0;
+  bool hasNewMessage = false;
+  String? lastCheckedMessageId;
 
   // services list
 
@@ -982,10 +983,50 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
+  // 13 - use case save last messageid
+
+  Future<void> saveLastCheckedMessageId(String messageId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lastCheckedMessageId', messageId);
+  }
+
+  // 14 - use case load messageid
+
+  Future<void> loadLastCheckedMessageId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      lastCheckedMessageId = prefs.getString('lastCheckedMessageId') ?? '';
+    });
+  }
+
+  // 15 - use case handle new message
+
+  void handleNewMessage(String latestMessageId) {
+    if (latestMessageId != lastCheckedMessageId) {
+      setState(() {
+        hasNewMessage = true;
+      });
+
+      // Update the last checked message ID
+      lastCheckedMessageId = latestMessageId;
+
+      // Store lastCheckedMessageId in shared preferences
+      saveLastCheckedMessageId(lastCheckedMessageId!);
+    }
+  }
+
   // build method
 
   @override
   Widget build(BuildContext context) {
+    final notificationUserId = supabase.auth.currentUser!.id;
+    final stream = supabase
+        .from('chat_messages')
+        .stream(primaryKey: ['id'])
+        .eq('receiverid', notificationUserId)
+        .order('created_at', ascending: false)
+        .map((maps) => maps.toList());
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -1003,22 +1044,38 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
           ),
           child: ListView(
             children: [
-              // if (hasNewMessage)
-              if (hasNewMessage)
-                NewMessageNotification(
-                  onTap: () {
-                    // Handle tap to open chat history page
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ChatHistory()));
-                    newMessageCounter.value = 0;
-                    // setState(() {
-                    //   // hasNewMessage = false;
+              StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      // get the latest message id if it's different than the last on this gets triggered
+                      String latestMessageId = (snapshot.data!.first)['id'];
 
-                    // });
-                  },
-                ),
+                      Future.delayed(Duration.zero, () {
+                        handleNewMessage(latestMessageId);
+                      });
+
+                      // Return the notification widget
+                      return Visibility(
+                        visible: hasNewMessage,
+                        child: NewMessageNotification(
+                          onTap: () {
+                            setState(() {
+                              hasNewMessage = false;
+                            });
+                            // Handle tap to open chat history page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ChatHistory(),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
               SingleChildScrollView(
                 child: Padding(
                   padding:
@@ -1035,7 +1092,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                               turns: Tween(begin: 0.0, end: 1.0)
                                   .animate(_acontroller),
                               child: GestureDetector(
-                                onTap: () => print(newMessageCounter.value),
                                 child: Image.asset(
                                   'assets/logo_t.png',
                                   height: 75,
