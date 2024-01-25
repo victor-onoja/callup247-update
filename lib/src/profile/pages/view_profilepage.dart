@@ -110,10 +110,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     );
   }
 
-  // variable
-
-  // bool isOnline = true;
-
   // build method
 
   @override

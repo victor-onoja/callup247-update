@@ -85,10 +85,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       }
     }
     _online();
-    loadLastCheckedMessageId();
+    _loadLastCheckedMessageId();
   }
 
-  // ?? - use case online
+  // 02 - use case online
 
   Future<void> _online() async {
     try {
@@ -102,7 +102,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // ?? - use case offline
+  // 03 - use case offline
 
   Future<void> _offline() async {
     try {
@@ -117,7 +117,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 02 - use case update user information online and locally (location change)
+  // 04 - use case update user information online and locally (location change)
 
   Future<void> _updateUserLocation() async {
     final newcountry = _countryValue.text;
@@ -193,7 +193,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     } else {}
   }
 
-  // 03 - use case check valid image
+  // 05 - use case check valid image
 
   Future<bool> checkPfpValidity() async {
     try {
@@ -204,7 +204,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 04 - use case display userpfp
+  // 06 - use case display userpfp
 
   Future<ImageProvider> _pfpImageProvider(String imageUrl) async {
     // Check if the image URL is valid
@@ -219,7 +219,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 05 - use case pick image
+  // 07 - use case pick image
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -231,7 +231,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 06 - use case upload image
+  // 08 - use case upload image
 
   Future<void> _uploadImage() async {
     final filename = fullname;
@@ -261,7 +261,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 07 - use case sign out
+  // 09 - use case sign out
 
   Future<void> _signOut() async {
     try {
@@ -294,7 +294,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 08 - use case create saved search
+  // 10 - use case create saved search
 
   Future<void> _createSavedSearch(userid, serviceproviderid) async {
     try {
@@ -367,7 +367,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-// 09 - use case delete saved search
+// 11 - use case delete saved search
 
   Future<void> _deleteSavedSearch(userid, serviceproviderid) async {
     try {
@@ -512,6 +512,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   final _cityValue = TextEditingController();
   bool hasNewMessage = false;
   String? lastCheckedMessageId;
+  bool isCustomer = false;
 
   // services list
 
@@ -868,7 +869,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   ];
   // end of list of services
 
-  // 10 - use case get ids of users within searchers city
+  // 12 - use case get ids of users within searchers city
 
   Future<List<dynamic>> _queryProfilesTable(
       {String? city, String? state}) async {
@@ -909,7 +910,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     return [];
   }
 
-// 11 use case - get service provider profiles within searchers city
+// 13 use case - get service provider profiles within searchers city
 
   Future<List<dynamic>> _queryServiceProvidersTable(
       List<dynamic> profileIds) async {
@@ -946,7 +947,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 12 - use case query profiles table
+  // 14 - use case query profiles table
 
   Future<dynamic> _getProfileData(String profileId) async {
     try {
@@ -983,25 +984,25 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     }
   }
 
-  // 13 - use case save last messageid
+  // 15 - use case save last messageid
 
-  Future<void> saveLastCheckedMessageId(String messageId) async {
+  Future<void> _saveLastCheckedMessageId(String messageId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lastCheckedMessageId', messageId);
   }
 
-  // 14 - use case load messageid
+  // 16 - use case load messageid
 
-  Future<void> loadLastCheckedMessageId() async {
+  Future<void> _loadLastCheckedMessageId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       lastCheckedMessageId = prefs.getString('lastCheckedMessageId') ?? '';
     });
   }
 
-  // 15 - use case handle new message
+  // 17 - use case handle new message
 
-  void handleNewMessage(String latestMessageId) {
+  void _handleNewMessage(String latestMessageId) {
     if (latestMessageId != lastCheckedMessageId) {
       setState(() {
         hasNewMessage = true;
@@ -1011,7 +1012,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
       lastCheckedMessageId = latestMessageId;
 
       // Store lastCheckedMessageId in shared preferences
-      saveLastCheckedMessageId(lastCheckedMessageId!);
+      _saveLastCheckedMessageId(lastCheckedMessageId!);
     }
   }
 
@@ -1052,7 +1053,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                       String latestMessageId = (snapshot.data!.first)['id'];
 
                       Future.delayed(Duration.zero, () {
-                        handleNewMessage(latestMessageId);
+                        _handleNewMessage(latestMessageId);
                       });
 
                       // Return the notification widget
@@ -1067,7 +1068,9 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ChatHistory(),
+                                builder: (context) => ChatHistory(
+                                  isCustomer: isCustomer,
+                                ),
                               ),
                             );
                           },

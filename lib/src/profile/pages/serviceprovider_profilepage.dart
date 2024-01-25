@@ -147,10 +147,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String maillink = '';
   String fullname = '';
   String experience = '';
-
   String availability = '';
-
   String specialoffers = '';
+  bool isCustomer = false;
 
   // build method
 
@@ -770,8 +769,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const ChatHistory()),
+                                builder: (BuildContext context) => ChatHistory(
+                                      isCustomer: isCustomer,
+                                    )),
                           );
                         },
                         icon: const Icon(

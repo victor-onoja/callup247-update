@@ -14,7 +14,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with SingleTickerProviderStateMixin {
-  // 05 - use case check network
+  // 01 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -25,7 +25,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     }
   }
 
-  // use case change user's password
+  // 02 - use case change user's password
 
   Future<void> _changePassword() async {
     final newpassword = _passwordController.text.trim();
@@ -110,6 +110,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   var loading = false;
 
   @override
+  // build method
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

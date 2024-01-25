@@ -6,13 +6,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class ChatHistory extends StatefulWidget {
-  const ChatHistory({super.key});
+  final bool isCustomer;
+  const ChatHistory({super.key, required this.isCustomer});
 
   @override
-  State<ChatHistory> createState() => _ChatHistoryState();
+  State<ChatHistory> createState() => _ChatHistoryState(isCustomer);
 }
 
 class _ChatHistoryState extends State<ChatHistory> {
+  bool isCustomer;
+
+  _ChatHistoryState(this.isCustomer);
   // 01 - use case get sender's profile
 
   Future<Map<String, dynamic>> _getSenderProfile(String senderId) async {
@@ -26,8 +30,6 @@ class _ChatHistoryState extends State<ChatHistory> {
   @override
   void initState() {
     super.initState();
-    // Reset the new message counter when ChatHistory is initialized
-    // newMessageCounter.value = 0;
   }
 
   // build method
@@ -79,8 +81,6 @@ class _ChatHistoryState extends State<ChatHistory> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;
-                  // print('new message created');
-                  // newMessageCounter.value++;
 
                   // Iterate through the messages to find the latest for each chatid
 
@@ -130,15 +130,28 @@ class _ChatHistoryState extends State<ChatHistory> {
                                 children: [
                                   ListTile(
                                     onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                ChatPage(
-                                                  serviceproviderid: supabase
-                                                      .auth.currentUser!.id,
-                                                  userid: senderProfile['id'],
-                                                )),
-                                      );
+                                      if (isCustomer) {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ChatPage(
+                                                    serviceproviderid:
+                                                        senderProfile['id'],
+                                                    userid: supabase
+                                                        .auth.currentUser!.id,
+                                                  )),
+                                        );
+                                      } else {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ChatPage(
+                                                    serviceproviderid: supabase
+                                                        .auth.currentUser!.id,
+                                                    userid: senderProfile['id'],
+                                                  )),
+                                        );
+                                      }
                                     },
                                     titleTextStyle: responsiveTextStyle(
                                         context, 18, Colors.black, null),

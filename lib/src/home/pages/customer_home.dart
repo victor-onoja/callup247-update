@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
+import 'package:callup247/src/chat/pages/chathistory.dart';
+import 'package:callup247/src/notification.dart';
 import 'package:callup247/src/online.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
@@ -79,6 +81,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         //
       }
     }
+    _loadLastCheckedMessageId();
   }
 
   // 02 - use case update user information online and locally (location change)
@@ -451,6 +454,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   final _countryValue = TextEditingController();
   final _stateValue = TextEditingController();
   final _cityValue = TextEditingController();
+  bool isCustomer = true;
+  bool hasNewMessage = false;
+  String? lastCheckedMessageId;
 
   // todo: save services list on user's phone
   // services list
@@ -926,6 +932,38 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     }
   }
 
+  // 10 - use case save last messageid
+
+  Future<void> _saveLastCheckedMessageId(String messageId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lastCheckedMessageId', messageId);
+  }
+
+  // 11 - use case load messageid
+
+  Future<void> _loadLastCheckedMessageId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      lastCheckedMessageId = prefs.getString('lastCheckedMessageId') ?? '';
+    });
+  }
+
+  // 12 - use case handle new message
+
+  void _handleNewMessage(String latestMessageId) {
+    if (latestMessageId != lastCheckedMessageId) {
+      setState(() {
+        hasNewMessage = true;
+      });
+
+      // Update the last checked message ID
+      lastCheckedMessageId = latestMessageId;
+
+      // Store lastCheckedMessageId in shared preferences
+      _saveLastCheckedMessageId(lastCheckedMessageId!);
+    }
+  }
+
   // build saved search serviceprovider card
 
   Widget _buildSavedSearchItem(
@@ -1024,6 +1062,13 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final notificationUserId = supabase.auth.currentUser!.id;
+    final stream = supabase
+        .from('chat_messages')
+        .stream(primaryKey: ['id'])
+        .eq('receiverid', notificationUserId)
+        .order('created_at', ascending: false)
+        .map((maps) => maps.toList());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -1039,718 +1084,806 @@ class _CustomerHomePageState extends State<CustomerHomePage>
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
-              child: FocusScope(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RotationTransition(
-                          turns:
-                              Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                          child: Image.asset(
-                            'assets/logo_t.png',
-                            height: 75,
+          child: ListView(children: [
+            StreamBuilder<List<Map<String, dynamic>>>(
+                stream: stream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    String latestMessageId = (snapshot.data!.first)['id'];
+                    Future.delayed(Duration.zero, () {
+                      _handleNewMessage(latestMessageId);
+                    });
+                    return Visibility(
+                      visible: hasNewMessage,
+                      child: NewMessageNotification(
+                        onTap: () {
+                          setState(() {
+                            hasNewMessage = false;
+                          });
+                          // Handle tap to open chat history page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatHistory(
+                                isCustomer: isCustomer,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return Container();
+                }),
+            SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 64, horizontal: 32),
+                child: FocusScope(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RotationTransition(
+                            turns: Tween(begin: 0.0, end: 1.0)
+                                .animate(_acontroller),
+                            child: Image.asset(
+                              'assets/logo_t.png',
+                              height: 75,
+                            ),
                           ),
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                // customer pfp
-                                pfpChange
-                                    ? CircleAvatar(
-                                        backgroundImage: FileImage(_image!),
-                                        radius: 30,
-                                      )
-                                    :
-                                    // Wrap your CircleAvatar with a FutureBuilder
-                                    // todo: cache the image
-                                    FutureBuilder<ImageProvider>(
-                                        future: _pfpImageProvider(pfp),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            // If the future is complete, you can use the ImageProvider
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  // customer pfp
+                                  pfpChange
+                                      ? CircleAvatar(
+                                          backgroundImage: FileImage(_image!),
+                                          radius: 30,
+                                        )
+                                      :
+                                      // Wrap your CircleAvatar with a FutureBuilder
+                                      // todo: cache the image
+                                      FutureBuilder<ImageProvider>(
+                                          future: _pfpImageProvider(pfp),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.done) {
+                                              // If the future is complete, you can use the ImageProvider
 
-                                            return CircleAvatar(
-                                              backgroundImage: snapshot.data,
-                                              radius: 30,
-                                            );
-                                          } else {
-                                            // While the future is loading, you can show a placeholder or loading indicator
+                                              return CircleAvatar(
+                                                backgroundImage: snapshot.data,
+                                                radius: 30,
+                                              );
+                                            } else {
+                                              // While the future is loading, you can show a placeholder or loading indicator
 
-                                            return const SpinKitPianoWave(
-                                              size: 30,
-                                              color: Color(0xFF13CAF1),
-                                              itemCount: 4,
-                                            );
-                                          }
-                                        },
-                                      ),
+                                              return const SpinKitPianoWave(
+                                                size: 30,
+                                                color: Color(0xFF13CAF1),
+                                                itemCount: 4,
+                                              );
+                                            }
+                                          },
+                                        ),
 
-                                // end of customer pfp
-                                PopupMenuButton(
-                                  itemBuilder: (BuildContext context) {
-                                    return [
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'changeDisplayPicture',
-                                        child: const Text(
-                                          'Change Display Picture',
+                                  // end of customer pfp
+                                  PopupMenuButton(
+                                    itemBuilder: (BuildContext context) {
+                                      return [
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'changeDisplayPicture',
+                                          child: const Text(
+                                            'Change Display Picture',
+                                          ),
                                         ),
-                                      ),
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'editLocation',
-                                        child: const Text(
-                                          'Edit Location',
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'editLocation',
+                                          child: const Text(
+                                            'Edit Location',
+                                          ),
                                         ),
-                                      ),
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'becomeAServiceProvider',
-                                        child: const Text(
-                                          'Become a Service Provider',
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'becomeAServiceProvider',
+                                          child: const Text(
+                                            'Become a Service Provider',
+                                          ),
                                         ),
-                                      ),
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'customerCare',
-                                        child: const Text('Customer Care'),
-                                      ),
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'termsAndConditions',
-                                        child:
-                                            const Text('Terms and Conditions'),
-                                      ),
-                                      PopupMenuItem(
-                                        textStyle: responsiveTextStyle(context,
-                                            16, Colors.black, FontWeight.bold),
-                                        value: 'signOut',
-                                        child: const Text('Sign Out'),
-                                      ),
-                                    ];
-                                  },
-                                  onSelected: (value) {
-                                    // Handle the selected menu item (navigate to the corresponding screen)
-                                    if (value == 'changeDisplayPicture') {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: const Text(
-                                                  'Please Pick a new Image'),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        pfpChange = false;
-                                                      });
-                                                      _pickImage();
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.camera_alt,
-                                                      size: 100,
-                                                      color: Colors.black54,
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'chatHistory',
+                                          child: const Text(
+                                            'Chat History',
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'customerCare',
+                                          child: const Text('Customer Care'),
+                                        ),
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'termsAndConditions',
+                                          child: const Text(
+                                              'Terms and Conditions'),
+                                        ),
+                                        PopupMenuItem(
+                                          textStyle: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                          value: 'signOut',
+                                          child: const Text('Sign Out'),
+                                        ),
+                                      ];
+                                    },
+                                    onSelected: (value) {
+                                      // Handle the selected menu item (navigate to the corresponding screen)
+                                      if (value == 'changeDisplayPicture') {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                    'Please Pick a new Image'),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          pfpChange = false;
+                                                        });
+                                                        _pickImage();
+                                                      },
+                                                      child: const Icon(
+                                                        Icons.camera_alt,
+                                                        size: 100,
+                                                        color: Colors.black54,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const Text(
-                                                      '1) Tap the camera icon to pick an image\n2) Tap the refresh button to confirm your image before uploading :)')
-                                                ],
-                                              ),
-                                              actions: [
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      if (_image != null) {
-                                                        Navigator.pop(context);
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                title: const Text(
-                                                                    'Here\'s your image :)'),
-                                                                content:
-                                                                    Image.file(
-                                                                        _image!),
-                                                                actions: [
-                                                                  ElevatedButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      _uploadImage();
-
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    },
-                                                                    child: const Text(
-                                                                        'Upload'),
-                                                                  ),
-                                                                  ElevatedButton(
+                                                    const Text(
+                                                        '1) Tap the camera icon to pick an image\n2) Tap the refresh button to confirm your image before uploading :)')
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        if (_image != null) {
+                                                          Navigator.pop(
+                                                              context);
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return AlertDialog(
+                                                                  title: const Text(
+                                                                      'Here\'s your image :)'),
+                                                                  content: Image
+                                                                      .file(
+                                                                          _image!),
+                                                                  actions: [
+                                                                    ElevatedButton(
                                                                       onPressed:
                                                                           () {
+                                                                        _uploadImage();
+
                                                                         Navigator.pop(
                                                                             context);
                                                                       },
                                                                       child: const Text(
-                                                                          'Cancel'))
-                                                                ],
-                                                              );
-                                                            });
-                                                      }
-                                                    },
-                                                    child:
-                                                        const Text('Refresh')),
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'))
-                                              ],
-                                            );
-                                          });
-                                    } else if (value == 'editLocation') {
-                                      _countryValue.text = country;
-                                      _stateValue.text = state;
-                                      _cityValue.text = city!;
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text(
-                                                      'Set your new Location'),
-                                                  Text(
-                                                    'reset from country, city then state for best performance 🤚',
-                                                    style: responsiveTextStyle(
-                                                        context,
-                                                        8,
-                                                        Colors.blueGrey,
-                                                        null),
-                                                  ),
+                                                                          'Upload'),
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: const Text(
+                                                                            'Cancel'))
+                                                                  ],
+                                                                );
+                                                              });
+                                                        }
+                                                      },
+                                                      child: const Text(
+                                                          'Refresh')),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel'))
                                                 ],
-                                              ),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  CountryStateCityPicker(
-                                                      country: _countryValue,
-                                                      state: _stateValue,
-                                                      city: _cityValue),
+                                              );
+                                            });
+                                      } else if (value == 'editLocation') {
+                                        _countryValue.text = country;
+                                        _stateValue.text = state;
+                                        _cityValue.text = city!;
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text(
+                                                        'Set your new Location'),
+                                                    Text(
+                                                      'reset from country, city then state for best performance 🤚',
+                                                      style:
+                                                          responsiveTextStyle(
+                                                              context,
+                                                              8,
+                                                              Colors.blueGrey,
+                                                              null),
+                                                    ),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    CountryStateCityPicker(
+                                                        country: _countryValue,
+                                                        state: _stateValue,
+                                                        city: _cityValue),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        _updateUserLocation();
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                          'Confirm')),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel'))
                                                 ],
-                                              ),
-                                              actions: [
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      _updateUserLocation();
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child:
-                                                        const Text('Confirm')),
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'))
-                                              ],
-                                            );
-                                          });
-                                    } else if (value == 'signOut') {
-                                      _signOut();
-                                    } else if (value ==
-                                        'becomeAServiceProvider') {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const ServiceProviderProfileCreation()),
-                                      );
-                                    } else if (value == 'customerCare') {}
-                                    // Add more cases for other menu items
-                                  },
-                                ),
-                              ],
-                            ),
-                            // customer name
-                            Text(
-                              fullname,
+                                              );
+                                            });
+                                      } else if (value == 'chatHistory') {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ChatHistory(
+                                                    isCustomer: isCustomer,
+                                                  )),
+                                        );
+                                      } else if (value == 'signOut') {
+                                        _signOut();
+                                      } else if (value ==
+                                          'becomeAServiceProvider') {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const ServiceProviderProfileCreation()),
+                                        );
+                                      } else if (value == 'customerCare') {}
+                                      // Add more cases for other menu items
+                                    },
+                                  ),
+                                ],
+                              ),
+                              // customer name
+                              Text(
+                                fullname,
+                                style: responsiveTextStyle(
+                                    context, 16, Colors.white, FontWeight.bold),
+                              ),
+                              // end of customer name
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.15),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _controller,
+                              focusNode: searchFocusNode,
+                              showCursor: false,
                               style: responsiveTextStyle(
                                   context, 16, Colors.white, FontWeight.bold),
-                            ),
-                            // end of customer name
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _controller,
-                            focusNode: searchFocusNode,
-                            showCursor: false,
-                            style: responsiveTextStyle(
-                                context, 16, Colors.white, FontWeight.bold),
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
-                              suffixIcon: InkWell(
-                                  radius: 50,
-                                  splashColor: Colors.greenAccent,
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      isSearching = false;
-                                      // When suffix icon is tapped, set isTyping to false
-                                      isTyping = false;
-                                      // You can also clear the text field if needed
-                                      _controller.clear();
-                                      // Update the filtered services here as well
-                                      filteredServices = [];
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.cancel,
-                                    color: Colors.black54,
-                                  )),
-                              hintText: 'Search...',
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                // Filter services here and update UI.
-                                filteredServices = servicesList
-                                    .where((service) => service
-                                        .toLowerCase()
-                                        .startsWith(value.toLowerCase()))
-                                    .toList();
-                                if (value.isNotEmpty) {
-                                  isTyping =
-                                      true; // User is typing, hide the content above
-                                } else {
-                                  isTyping =
-                                      false; // User has stopped typing, show the content above
-                                }
-                                isSearching = false;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Visibility(
-                      visible: isTyping, // Content is visible when typing
-                      child: Container(
-                        color: Colors.white,
-                        height: MediaQuery.sizeOf(context).height * 0.7,
-                        child: filteredServices.isEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Sorry, we don't have this service currently. Please pick a registered service.",
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.black, FontWeight.bold),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
                                 ),
-                              )
-                            : ListView.builder(
-                                itemCount: filteredServices.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(
-                                      filteredServices[index],
-                                      style: responsiveTextStyle(context, 16,
-                                          Colors.black, FontWeight.bold),
-                                    ),
-                                    onTap: () async {
-                                      // Handle user selection here.
+                                suffixIcon: InkWell(
+                                    radius: 50,
+                                    splashColor: Colors.greenAccent,
+                                    onTap: () {
                                       FocusScope.of(context).unfocus();
                                       setState(() {
-                                        isSearching = true;
-                                        // When tile is tapped, set isTyping to false
+                                        isSearching = false;
+                                        // When suffix icon is tapped, set isTyping to false
                                         isTyping = false;
-                                        searchchoice = filteredServices[index];
-                                        _controller.text =
-                                            filteredServices[index];
-
+                                        // You can also clear the text field if needed
+                                        _controller.clear();
                                         // Update the filtered services here as well
                                         filteredServices = [];
                                       });
-                                      List<dynamic> profileIds;
-
-                                      if (city != null && city != '') {
-                                        profileIds = await _queryProfilesTable(
-                                            city: city);
-                                      } else {
-                                        profileIds = await _queryProfilesTable(
-                                            state: state);
-                                      }
-
-                                      List<dynamic> serviceProviders =
-                                          await _queryServiceProvidersTable(
-                                              profileIds);
-                                      List<dynamic> filteredServiceProviders =
-                                          serviceProviders
-                                              .where((provider) =>
-                                                  provider[
-                                                      'service_provided'] ==
-                                                  searchchoice)
-                                              .toList();
-
-                                      setState(() {
-                                        appFilteredServiceProviders =
-                                            filteredServiceProviders;
-                                      });
                                     },
-                                  );
-                                },
+                                    child: const Icon(
+                                      Icons.cancel,
+                                      color: Colors.black54,
+                                    )),
+                                hintText: 'Search...',
                               ),
-                      ),
-                    ),
-                    // saved searches
-                    Stack(children: [
-                      Visibility(
-                          visible: isSearching
-                              ? isTyping
-                              : !isTyping, // Content is visible when not typing
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.15),
-                              Text(
-                                'Saved Searches',
-                                style: responsiveTextStyle(
-                                    context, 20, null, FontWeight.bold),
-                              ),
-                              SizedBox(
-                                  height: MediaQuery.sizeOf(context).height *
-                                      0.0125),
-                              FutureBuilder(
-                                future:
-                                    _queryServiceProvidersTable(savedSearches),
-                                builder: (context,
-                                    AsyncSnapshot<List<dynamic>> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const SpinKitPianoWave(
-                                      size: 30,
-                                      color: Color(0xFF13CAF1),
-                                      itemCount: 4,
-                                    ); // or any loading indicator
-                                  } else if (snapshot.hasError) {
-                                    return Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          'assets/logo_t.png',
-                                          height: 75,
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              0.15,
-                                        ),
-                                        Text(
-                                          'Error loading saved searches. Please try again.',
-                                          style: responsiveTextStyle(context,
-                                              16, Colors.red, FontWeight.bold),
-                                        ),
-                                      ],
-                                    );
+                              onChanged: (value) {
+                                setState(() {
+                                  // Filter services here and update UI.
+                                  filteredServices = servicesList
+                                      .where((service) => service
+                                          .toLowerCase()
+                                          .startsWith(value.toLowerCase()))
+                                      .toList();
+                                  if (value.isNotEmpty) {
+                                    isTyping =
+                                        true; // User is typing, hide the content above
                                   } else {
-                                    List<dynamic>? savedSearchProviders =
-                                        snapshot.data;
-
-                                    // // Check if the future is complete and savedSearchProviders is still empty
-                                    if (snapshot.connectionState ==
-                                            ConnectionState.done &&
-                                        savedSearchProviders!.isEmpty) {
-                                      // Display a message when there are no saved searches
-                                      return Column(
-                                        children: [
-                                          Image.asset('assets/search.png'),
-                                          SizedBox(
-                                            height: MediaQuery.sizeOf(context)
-                                                    .height *
-                                                0.0125,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'No saved searches yet?\nStart searching now',
-                                                style: responsiveTextStyle(
-                                                    context,
-                                                    16,
-                                                    Colors.black,
-                                                    null),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    }
-
-                                    return _buildSavedSearchList(
-                                        savedSearchProviders!);
+                                    isTyping =
+                                        false; // User has stopped typing, show the content above
                                   }
-                                },
-                              )
-
-                              // end of saved search
-                            ],
-                          )),
+                                  isSearching = false;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                       Visibility(
-                        visible:
-                            isSearching, // Content is visible when typing searching
-                        child: Positioned(
-                          child: Container(
-                            height: MediaQuery.sizeOf(context).height * 0.95,
-                            color: Colors.transparent,
+                        visible: isTyping, // Content is visible when typing
+                        child: Container(
+                          color: Colors.white,
+                          height: MediaQuery.sizeOf(context).height * 0.7,
+                          child: filteredServices.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "Sorry, we don't have this service currently. Please pick a registered service.",
+                                    style: responsiveTextStyle(context, 16,
+                                        Colors.black, FontWeight.bold),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: filteredServices.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(
+                                        filteredServices[index],
+                                        style: responsiveTextStyle(context, 16,
+                                            Colors.black, FontWeight.bold),
+                                      ),
+                                      onTap: () async {
+                                        // Handle user selection here.
+                                        FocusScope.of(context).unfocus();
+                                        setState(() {
+                                          isSearching = true;
+                                          // When tile is tapped, set isTyping to false
+                                          isTyping = false;
+                                          searchchoice =
+                                              filteredServices[index];
+                                          _controller.text =
+                                              filteredServices[index];
+
+                                          // Update the filtered services here as well
+                                          filteredServices = [];
+                                        });
+                                        List<dynamic> profileIds;
+
+                                        if (city != null && city != '') {
+                                          profileIds =
+                                              await _queryProfilesTable(
+                                                  city: city);
+                                        } else {
+                                          profileIds =
+                                              await _queryProfilesTable(
+                                                  state: state);
+                                        }
+
+                                        List<dynamic> serviceProviders =
+                                            await _queryServiceProvidersTable(
+                                                profileIds);
+                                        List<dynamic> filteredServiceProviders =
+                                            serviceProviders
+                                                .where((provider) =>
+                                                    provider[
+                                                        'service_provided'] ==
+                                                    searchchoice)
+                                                .toList();
+
+                                        setState(() {
+                                          appFilteredServiceProviders =
+                                              filteredServiceProviders;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                        ),
+                      ),
+                      // saved searches
+                      Stack(children: [
+                        Visibility(
+                            visible: isSearching
+                                ? isTyping
+                                : !isTyping, // Content is visible when not typing
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
                                     height: MediaQuery.sizeOf(context).height *
-                                        0.05),
+                                        0.15),
                                 Text(
-                                  // todo: provide support for other pronouns
-                                  '$searchchoice(s)',
+                                  'Saved Searches',
                                   style: responsiveTextStyle(
                                       context, 20, null, FontWeight.bold),
                                 ),
                                 SizedBox(
                                     height: MediaQuery.sizeOf(context).height *
                                         0.0125),
-                                Expanded(
-                                  child: FutureBuilder(
-                                    future: Future.wait(
-                                        appFilteredServiceProviders.map(
-                                            (serviceProviderData) =>
-                                                _getProfileData(
-                                                    serviceProviderData[
-                                                        'id']))),
-                                    builder: (context,
-                                        AsyncSnapshot<List<dynamic>> snapshot) {
+                                FutureBuilder(
+                                  future: _queryServiceProvidersTable(
+                                      savedSearches),
+                                  builder: (context,
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SpinKitPianoWave(
+                                        size: 30,
+                                        color: Color(0xFF13CAF1),
+                                        itemCount: 4,
+                                      ); // or any loading indicator
+                                    } else if (snapshot.hasError) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/logo_t.png',
+                                            height: 75,
+                                          ),
+                                          SizedBox(
+                                            height: MediaQuery.sizeOf(context)
+                                                    .height *
+                                                0.15,
+                                          ),
+                                          Text(
+                                            'Error loading saved searches. Please try again.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.red,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      List<dynamic>? savedSearchProviders =
+                                          snapshot.data;
+
+                                      // // Check if the future is complete and savedSearchProviders is still empty
                                       if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const SpinKitPianoWave(
-                                          size: 30,
-                                          color: Color(0xFF13CAF1),
-                                          itemCount: 4,
-                                        ); // or any loading indicator
-                                      } else if (snapshot.hasError) {
+                                              ConnectionState.done &&
+                                          savedSearchProviders!.isEmpty) {
+                                        // Display a message when there are no saved searches
                                         return Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
                                           children: [
-                                            Image.asset(
-                                              'assets/logo_t.png',
-                                              height: 75,
-                                            ),
+                                            Image.asset('assets/search.png'),
                                             SizedBox(
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.15),
-                                            Text(
-                                              'Error loading data. Please try again.',
-                                              style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.red,
-                                                  FontWeight.bold),
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height *
+                                                  0.0125,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'No saved searches yet?\nStart searching now',
+                                                  style: responsiveTextStyle(
+                                                      context,
+                                                      16,
+                                                      Colors.black,
+                                                      null),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         );
-                                      } else {
-                                        List<dynamic>?
-                                            additionalProfileDataList =
-                                            snapshot.data;
+                                      }
 
-                                        // Check if the future is complete and app_filteredServiceProviders is still empty
+                                      return _buildSavedSearchList(
+                                          savedSearchProviders!);
+                                    }
+                                  },
+                                )
+
+                                // end of saved search
+                              ],
+                            )),
+                        Visibility(
+                          visible:
+                              isSearching, // Content is visible when typing searching
+                          child: Positioned(
+                            child: Container(
+                              height: MediaQuery.sizeOf(context).height * 0.95,
+                              color: Colors.transparent,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              0.05),
+                                  Text(
+                                    // todo: provide support for other pronouns
+                                    '$searchchoice(s)',
+                                    style: responsiveTextStyle(
+                                        context, 20, null, FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              0.0125),
+                                  Expanded(
+                                    child: FutureBuilder(
+                                      future: Future.wait(
+                                          appFilteredServiceProviders.map(
+                                              (serviceProviderData) =>
+                                                  _getProfileData(
+                                                      serviceProviderData[
+                                                          'id']))),
+                                      builder: (context,
+                                          AsyncSnapshot<List<dynamic>>
+                                              snapshot) {
                                         if (snapshot.connectionState ==
-                                                ConnectionState.done &&
-                                            appFilteredServiceProviders
-                                                .isEmpty) {
-                                          // Display a message when there are no service providers
+                                            ConnectionState.waiting) {
+                                          return const SpinKitPianoWave(
+                                            size: 30,
+                                            color: Color(0xFF13CAF1),
+                                            itemCount: 4,
+                                          ); // or any loading indicator
+                                        } else if (snapshot.hasError) {
                                           return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                'Sorry, We don\'t have any service providers offering this service in your city.',
-                                                style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.black,
-                                                  FontWeight.bold,
-                                                ),
+                                              Image.asset(
+                                                'assets/logo_t.png',
+                                                height: 75,
                                               ),
                                               SizedBox(
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.025,
-                                              ),
+                                                  height:
+                                                      MediaQuery.sizeOf(context)
+                                                              .height *
+                                                          0.15),
                                               Text(
-                                                'Share this link to invite them:',
+                                                'Error loading data. Please try again.',
                                                 style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.black,
-                                                  FontWeight.bold,
-                                                ),
+                                                    context,
+                                                    16,
+                                                    Colors.red,
+                                                    FontWeight.bold),
                                               ),
-                                              // todo:
-                                              // Add your shareable link widget here
-                                              // For example, you can use a TextFormField to display and copy the link
                                             ],
                                           );
-                                        }
+                                        } else {
+                                          List<dynamic>?
+                                              additionalProfileDataList =
+                                              snapshot.data;
 
-                                        return ListView.builder(
-                                          itemCount: appFilteredServiceProviders
-                                              .length,
-                                          itemBuilder: (context, index) {
-                                            dynamic serviceProviderData =
-                                                appFilteredServiceProviders[
-                                                    index];
-                                            dynamic additionalProfileData =
-                                                additionalProfileDataList![
-                                                    index];
-
+                                          // Check if the future is complete and app_filteredServiceProviders is still empty
+                                          if (snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              appFilteredServiceProviders
+                                                  .isEmpty) {
+                                            // Display a message when there are no service providers
                                             return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                ServiceProviderCard(
-                                                  saved: false,
-                                                  name: additionalProfileData[
-                                                      'full_name'],
-                                                  bio: serviceProviderData[
-                                                      'bio'],
-                                                  // view profile
-                                                  onPressedButton1: () {
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            ViewProfilePage(
-                                                          availability:
-                                                              serviceProviderData[
-                                                                  'availability'],
-                                                          experience:
-                                                              serviceProviderData[
-                                                                  'experience'],
-                                                          fbLink:
-                                                              serviceProviderData[
-                                                                  'fb_url'],
-                                                          fullname:
-                                                              additionalProfileData[
-                                                                  'full_name'],
-                                                          igLink:
-                                                              serviceProviderData[
-                                                                  'ig_url'],
-                                                          mailLink:
-                                                              serviceProviderData[
-                                                                  'gmail_link'],
-                                                          media1:
-                                                              serviceProviderData[
-                                                                  'media_url1'],
-                                                          media2:
-                                                              serviceProviderData[
-                                                                  'media_url2'],
-                                                          media3:
-                                                              serviceProviderData[
-                                                                  'media_url3'],
-                                                          pfp:
-                                                              additionalProfileData[
-                                                                  'avatar_url'],
-                                                          specialoffers:
-                                                              serviceProviderData[
-                                                                  'special_offers'],
-                                                          webLink:
-                                                              serviceProviderData[
-                                                                  'web_link'],
-                                                          xLink:
-                                                              serviceProviderData[
-                                                                  'x_url'],
-                                                          id: serviceProviderData[
-                                                              'id'],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  // add to saved
-                                                  onPressedButton2: () {
-                                                    FocusScope.of(context)
-                                                        .unfocus();
-                                                    setState(() {
-                                                      isSearching = false;
-                                                      isTyping = false;
-                                                      _controller.clear();
-                                                      filteredServices = [];
-                                                    });
-                                                    final userid = supabase
-                                                        .auth.currentUser!.id;
-                                                    final serviceproviderid =
-                                                        additionalProfileData[
-                                                            'id'];
-                                                    _createSavedSearch(userid,
-                                                        serviceproviderid);
-                                                  },
-                                                  isOnline: Online(
-                                                      userId:
-                                                          serviceProviderData[
-                                                              'id']),
-                                                  guest: false,
-                                                  img: serviceProviderData[
-                                                      'media_url1'],
+                                                Text(
+                                                  'Sorry, We don\'t have any service providers offering this service in your city.',
+                                                  style: responsiveTextStyle(
+                                                    context,
+                                                    16,
+                                                    Colors.black,
+                                                    FontWeight.bold,
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height:
                                                       MediaQuery.sizeOf(context)
                                                               .height *
-                                                          0.0125,
-                                                )
+                                                          0.025,
+                                                ),
+                                                Text(
+                                                  'Share this link to invite them:',
+                                                  style: responsiveTextStyle(
+                                                    context,
+                                                    16,
+                                                    Colors.black,
+                                                    FontWeight.bold,
+                                                  ),
+                                                ),
+                                                // todo:
+                                                // Add your shareable link widget here
+                                                // For example, you can use a TextFormField to display and copy the link
                                               ],
                                             );
-                                          },
-                                        );
-                                      }
-                                    },
+                                          }
+
+                                          return ListView.builder(
+                                            itemCount:
+                                                appFilteredServiceProviders
+                                                    .length,
+                                            itemBuilder: (context, index) {
+                                              dynamic serviceProviderData =
+                                                  appFilteredServiceProviders[
+                                                      index];
+                                              dynamic additionalProfileData =
+                                                  additionalProfileDataList![
+                                                      index];
+
+                                              return Column(
+                                                children: [
+                                                  ServiceProviderCard(
+                                                    saved: false,
+                                                    name: additionalProfileData[
+                                                        'full_name'],
+                                                    bio: serviceProviderData[
+                                                        'bio'],
+                                                    // view profile
+                                                    onPressedButton1: () {
+                                                      Navigator.of(context)
+                                                          .push(
+                                                        MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              ViewProfilePage(
+                                                            availability:
+                                                                serviceProviderData[
+                                                                    'availability'],
+                                                            experience:
+                                                                serviceProviderData[
+                                                                    'experience'],
+                                                            fbLink:
+                                                                serviceProviderData[
+                                                                    'fb_url'],
+                                                            fullname:
+                                                                additionalProfileData[
+                                                                    'full_name'],
+                                                            igLink:
+                                                                serviceProviderData[
+                                                                    'ig_url'],
+                                                            mailLink:
+                                                                serviceProviderData[
+                                                                    'gmail_link'],
+                                                            media1:
+                                                                serviceProviderData[
+                                                                    'media_url1'],
+                                                            media2:
+                                                                serviceProviderData[
+                                                                    'media_url2'],
+                                                            media3:
+                                                                serviceProviderData[
+                                                                    'media_url3'],
+                                                            pfp: additionalProfileData[
+                                                                'avatar_url'],
+                                                            specialoffers:
+                                                                serviceProviderData[
+                                                                    'special_offers'],
+                                                            webLink:
+                                                                serviceProviderData[
+                                                                    'web_link'],
+                                                            xLink:
+                                                                serviceProviderData[
+                                                                    'x_url'],
+                                                            id: serviceProviderData[
+                                                                'id'],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    // add to saved
+                                                    onPressedButton2: () {
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                      setState(() {
+                                                        isSearching = false;
+                                                        isTyping = false;
+                                                        _controller.clear();
+                                                        filteredServices = [];
+                                                      });
+                                                      final userid = supabase
+                                                          .auth.currentUser!.id;
+                                                      final serviceproviderid =
+                                                          additionalProfileData[
+                                                              'id'];
+                                                      _createSavedSearch(userid,
+                                                          serviceproviderid);
+                                                    },
+                                                    isOnline: Online(
+                                                        userId:
+                                                            serviceProviderData[
+                                                                'id']),
+                                                    guest: false,
+                                                    img: serviceProviderData[
+                                                        'media_url1'],
+                                                  ),
+                                                  SizedBox(
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.0125,
+                                                  )
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ]),
-                  ],
+                      ]),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+          ]),
         ),
       ),
     );
