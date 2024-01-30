@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/src/chat/pages/chathistory.dart';
@@ -84,7 +85,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
         //
       }
     }
-    _online();
     _loadLastCheckedMessageId();
   }
 
@@ -92,24 +92,11 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
   Future<void> _online() async {
     try {
-      await supabase
-          .from('online')
-          .insert({'user_id': supabase.auth.currentUser!.id});
-    } on PostgrestException catch (error) {
-      //
-    } catch (error) {
-      //
-    }
-  }
-
-  // 03 - use case offline
-
-  Future<void> _offline() async {
-    try {
-      await supabase
-          .from('online')
-          .delete()
-          .match({'user_id': supabase.auth.currentUser!.id});
+      await supabase.from('online').upsert({
+        'user_id': supabase.auth.currentUser!.id,
+        'last_seen': DateTime.now().toString()
+      });
+      if (mounted) {}
     } on PostgrestException catch (error) {
       //
     } catch (error) {
@@ -450,8 +437,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _initializeData();
+    _lastSeenTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      _online();
+    });
   }
 
   // dispose
@@ -463,29 +452,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
     _countryValue.dispose();
     _stateValue.dispose();
     _cityValue.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    _lastSeenTimer.cancel();
     super.dispose();
-  }
-
-  // lifecycle
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _online();
-        break;
-      case AppLifecycleState.paused:
-        _offline();
-        break;
-      case AppLifecycleState.detached:
-        _offline();
-        break;
-      default:
-        break;
-    }
   }
 
   // variables
@@ -513,6 +481,7 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
   bool hasNewMessage = false;
   String? lastCheckedMessageId;
   bool isCustomer = false;
+  late Timer _lastSeenTimer;
 
   // services list
 
@@ -1385,15 +1354,6 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                         ),
                         SizedBox(
                             height: MediaQuery.sizeOf(context).height * 0.15),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     // Simulate receiving a new message
-                        //     setState(() {
-                        //       hasNewMessage = true;
-                        //     });
-                        //   },
-                        //   child: const Text('Simulate New Message'),
-                        // ),
                         Row(
                           children: [
                             Expanded(

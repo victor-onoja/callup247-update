@@ -1132,6 +1132,7 @@ class _ServiceProviderProfileCreationState
                       SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                       Flexible(
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: _bioController,
                           style: responsiveTextStyle(
                               context, 16, Colors.white, null),
@@ -1175,6 +1176,18 @@ class _ServiceProviderProfileCreationState
                           decoration: const InputDecoration(
                             hintText: 'E.g 9am - 5pm, Mon - Sat',
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'hint: you can let customers know if you\'re available or not by tapping available on your profile :)',
+                          style: responsiveTextStyle(
+                              context, 12, Colors.black45, null),
                         ),
                       ),
                     ],

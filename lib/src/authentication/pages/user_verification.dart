@@ -207,6 +207,7 @@ class _VerificationScreenState extends State<VerificationScreen>
           ),
           backgroundColor: Colors.red,
         ));
+        print(tError);
         Navigator.pop(context);
       } catch (e) {
         if (!context.mounted) return;

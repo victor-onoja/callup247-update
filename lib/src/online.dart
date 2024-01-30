@@ -1,6 +1,5 @@
 import 'package:callup247/main.dart';
 import 'package:flutter/material.dart';
-
 import 'responsive_text_styles.dart';
 
 class Online extends StatefulWidget {
@@ -29,9 +28,20 @@ class _OnlineState extends State<Online> {
           AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.hasData) {
           final onlineUsers = snapshot.data!;
-          final isUserOnline = onlineUsers.any(
+          final userStatus = onlineUsers.firstWhere(
             (user) => user['user_id'] == widget.userId,
+            orElse: () => {
+              'last_seen': '2024-01-01 18:04:11'
+            }, // Default if user not found
           );
+
+          final lastSeenTimestamp = userStatus['last_seen'] as String;
+          final formattedTimestamp = lastSeenTimestamp.split('.')[0];
+          final lastSeenDateTime = DateTime.parse(formattedTimestamp);
+          final currentTime = DateTime.now();
+          final timeDifference = currentTime.difference(lastSeenDateTime);
+
+          final isUserOnline = timeDifference.inMinutes <= 2;
 
           return Row(
             children: [

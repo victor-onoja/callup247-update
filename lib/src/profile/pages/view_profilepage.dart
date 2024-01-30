@@ -110,10 +110,27 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     );
   }
 
+  // 02 - use case check availability
+
+  bool _isAvailable(Map<String, dynamic> userData) {
+    final lastSeenTimestamp = userData['last_seen'] as String;
+    final availability = userData['availability'] as String;
+
+    // Check if the user's last seen is within the last 24 hours
+    final formattedTimestamp = lastSeenTimestamp.split('.')[0];
+    final lastSeenDateTime = DateTime.parse(formattedTimestamp);
+    final isLastSeenWithin24Hours =
+        DateTime.now().difference(lastSeenDateTime).inHours < 24;
+
+    // Check both availability and last seen timestamp
+    return availability.toLowerCase() == 'true' && isLastSeenWithin24Hours;
+  }
+
   // build method
 
   @override
   Widget build(BuildContext context) {
+    final stream = supabase.from('online').stream(primaryKey: ['user_id']);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -136,11 +153,70 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         left: 16.0,
                         right: 16,
                         bottom: 16,
-                        top: MediaQuery.sizeOf(context).height * 0.05),
+                        top: MediaQuery.sizeOf(context).height * 0.01),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: stream,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.hasData) {
+                              final onlineUsers = snapshot.data!;
+                              final userData = onlineUsers.firstWhere(
+                                (user) => user['user_id'] == widget.id,
+                                orElse: () => {},
+                              );
+
+                              if (userData.isNotEmpty) {
+                                final isUserAvailable = _isAvailable(userData);
+
+                                return isUserAvailable
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Available!',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.green,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'UnAvailable :( \n Please check my details for more info',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                const Color(0xFF039fdc),
+                                                FontWeight.bold),
+                                          ),
+                                        ],
+                                      );
+                              }
+                            }
+                            // Handle loading or error state
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'UnAvailable :(',
+                                  style: responsiveTextStyle(context, 16,
+                                      const Color(0xFF039fdc), FontWeight.bold),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,

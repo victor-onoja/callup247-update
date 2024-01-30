@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:callup247/main.dart';
 import 'package:callup247/src/chat/pages/chathistory.dart';
+import 'package:callup247/src/profile/widgets/availability_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../responsive_text_styles.dart';
 import '../widgets/profile_page_action_button.dart';
@@ -22,7 +26,22 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   @override
   void initState() {
     super.initState();
+    _initavailability();
     _initializeData();
+  }
+
+  Future<void> _initavailability() async {
+    final prefs = await SharedPreferences.getInstance();
+    final availablecurrent = prefs.getBool('isAvailable');
+    if (availablecurrent != null) {
+      setState(() {
+        isAvailable = availablecurrent;
+      });
+    } else {
+      setState(() {
+        isAvailable = false;
+      });
+    }
   }
 
   // 01 - use case initialize data
@@ -133,6 +152,42 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
     );
   }
 
+  // 05 - use case toggle availability
+
+  void _toggleAvailability() {
+    setState(() {
+      isAvailable = !isAvailable;
+      storeAvailabilityStatus(isAvailable);
+      _available(isAvailable);
+    });
+  }
+
+// store availability locally
+
+  Future<void> storeAvailabilityStatus(bool isAvailable) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isAvailable', isAvailable);
+  }
+
+// 06 - use case online
+
+  Future<void> _available(bool isAvailable) async {
+    try {
+      await supabase.from('online').upsert({
+        'user_id': supabase.auth.currentUser!.id,
+        'last_seen': DateTime.now().toString(),
+        'availability': isAvailable.toString(),
+      });
+      if (mounted) {
+        print('profile_online');
+      }
+    } on PostgrestException catch (error) {
+      //
+    } catch (error) {
+      //
+    }
+  }
+
   // variables
 
   bool isOnline = true;
@@ -150,6 +205,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String availability = '';
   String specialoffers = '';
   bool isCustomer = false;
+  bool isAvailable = false;
 
   // build method
 
@@ -177,11 +233,19 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         left: 16.0,
                         right: 16,
                         bottom: 16,
-                        top: MediaQuery.sizeOf(context).height * 0.05),
+                        top: MediaQuery.sizeOf(context).height * 0.01),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AvailabilitySwitch(
+                                isAvailable: isAvailable,
+                                onToggle: _toggleAvailability),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,38 +258,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                             ),
                             Row(
                               children: [
-                                Column(
-                                  children: [
-                                    isOnline
-                                        ? Text(
-                                            'online',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                12,
-                                                Colors.white,
-                                                FontWeight.bold),
-                                          )
-                                        : Text(
-                                            'offline',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                12,
-                                                Colors.white,
-                                                FontWeight.bold),
-                                          ),
-                                    Icon(
-                                      Icons.circle,
-                                      color: isOnline
-                                          ? Colors.green
-                                          : Colors.black,
-                                      size: 12,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-
                                 // service provider pfp
                                 FutureBuilder<ImageProvider<Object>?>(
                                     future: _imageProvider(pfp),
