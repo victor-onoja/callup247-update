@@ -1,30 +1,47 @@
 import 'package:callup247/src/authentication/pages/customer_signup.dart';
 import 'package:callup247/src/authentication/pages/serviceprovider_signup.dart';
-import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/onboarding/widgets/onboarding_choice_gradient_container.dart';
 import 'package:callup247/src/home/pages/guest_home_page.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingChoiceScreen extends StatelessWidget {
+class OnboardingChoiceScreen extends StatefulWidget {
   const OnboardingChoiceScreen({super.key});
+
+  @override
+  State<OnboardingChoiceScreen> createState() => _OnboardingChoiceScreenState();
+}
+
+class _OnboardingChoiceScreenState extends State<OnboardingChoiceScreen>
+    with SingleTickerProviderStateMixin {
+  // init
+
+  @override
+  void initState() {
+    super.initState();
+    _acontroller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8), // Adjust the duration as needed
+    )..repeat();
+  }
+
+  // dispose
+
+  @override
+  void dispose() {
+    _acontroller.dispose();
+    super.dispose();
+  }
+  // variables
+
+  late AnimationController _acontroller;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.sizeOf(context).height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF039fdc),
-                Color(0xFF13CAF1),
-              ],
-            ),
-          ),
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -34,32 +51,13 @@ class OnboardingChoiceScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
-                        icon: const Icon(
-                          Icons.login,
-                          color: Colors.black54,
-                        ),
-                        label:
-                            const Text('Already have an account? Login here'),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const SignIn()));
-                        },
-                      ),
-                    ],
+                  RotationTransition(
+                    turns: Tween(begin: 0.0, end: 1.0).animate(_acontroller),
+                    child: Image.asset(
+                      'assets/logo_t.png',
+                      height: 75,
+                    ),
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                  Text(
-                    'Use this app as a:',
-                    style: responsiveTextStyle(context, 28, null, null),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                   InkWell(
                     onTap: () {
                       Future.delayed(const Duration(milliseconds: 300), () {
