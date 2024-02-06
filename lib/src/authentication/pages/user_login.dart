@@ -101,15 +101,11 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {
-        print('i must be tripping');
-      }
+      if (mounted) {}
     } on PostgrestException catch (error) {
       //
-      print(error);
     } catch (error) {
       //
-      print(error);
     } finally {
       if (mounted) {}
     }
@@ -308,7 +304,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   8.0), // Border radius of the square
                             ),
                             child: const Icon(
-                              Icons.email,
+                              Icons.lock,
                               color: Color(0xFF36DDFF),
                             ),
                           ),
@@ -336,7 +332,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.black54,
+                              color: const Color(0xFFE2E2E5),
                             ),
                           ),
                         ),
