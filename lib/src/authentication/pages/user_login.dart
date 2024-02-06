@@ -101,11 +101,15 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutter://signin-callback/',
       );
-      if (mounted) {}
+      if (mounted) {
+        print('i must be tripping');
+      }
     } on PostgrestException catch (error) {
       //
+      print(error);
     } catch (error) {
       //
+      print(error);
     } finally {
       if (mounted) {}
     }

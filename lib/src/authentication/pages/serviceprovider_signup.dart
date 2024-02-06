@@ -245,6 +245,7 @@ class _ServiceProviderSignUpScreenState
   var loading = false;
   final _formKey = GlobalKey<FormState>();
   bool isPasswordReset = false;
+  bool _isChecked = false;
 
 // 09 - dispose
 
@@ -265,30 +266,37 @@ class _ServiceProviderSignUpScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF13CAF1),
-        title: Text(
-          'Sign Up',
-          style:
-              responsiveTextStyle(context, 20, Colors.black, FontWeight.bold),
+        backgroundColor: const Color.fromARGB(41, 54, 222, 255),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'User Type',
+              style: responsiveTextStyle(
+                  context, 14, const Color(0xFF6E6B6B), FontWeight.w500),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              width: 2,
+              height: 25,
+              color: const Color(0xFFFFFFFF),
+            ),
+            Text(
+              'Service Provider',
+              style: responsiveTextStyle(
+                  context, 14, const Color(0xFF6E6B6B), FontWeight.w500),
+            ),
+          ],
         ),
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Color(0xFF6E6B6B)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.sizeOf(context).height,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Color(0xFF039fdc),
-                  Color(0xFF13CAF1),
-                ],
-              ),
-            ),
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Form(
@@ -299,16 +307,25 @@ class _ServiceProviderSignUpScreenState
 
                     TextFormField(
                       controller: _fullnameController,
-                      cursorColor: Colors.white,
+                      cursorColor: const Color(0xFFA6A6A6),
                       textCapitalization: TextCapitalization.words,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
+                      style: responsiveTextStyle(context, 14,
+                          const Color(0xFFA6A6A6), FontWeight.w500),
                       decoration: InputDecoration(
-                          labelText: 'First & Last Name',
-                          labelStyle: responsiveTextStyle(
-                              context, 14, Colors.black87, null),
-                          focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black87))),
+                        labelText: 'First & Last Name',
+                        labelStyle: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your first and last name';
@@ -318,21 +335,45 @@ class _ServiceProviderSignUpScreenState
                         return null;
                       },
                     ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
                     // email address
 
                     TextFormField(
                       controller: _emailaddressController,
-                      cursorColor: Colors.white,
+                      cursorColor: const Color(0xFFA6A6A6),
                       keyboardType: TextInputType.emailAddress,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
+                      style: responsiveTextStyle(context, 14,
+                          const Color(0xFFA6A6A6), FontWeight.w500),
                       decoration: InputDecoration(
-                          labelText: 'Email Address',
-                          labelStyle: responsiveTextStyle(
-                              context, 14, Colors.black87, null),
-                          focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black87))),
+                        labelText: 'Email Address',
+                        labelStyle: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        prefixIcon: Container(
+                          margin: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(25, 54, 222,
+                                255), // Background color of the square
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Border radius of the square
+                          ),
+                          child: const Icon(
+                            Icons.email,
+                            color: Color(0xFF36DDFF),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your email address';
@@ -348,11 +389,30 @@ class _ServiceProviderSignUpScreenState
                         return null;
                       },
                     ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
                     // Country Picker
 
                     CountryStateCityPicker(
+                        textFieldDecoration: InputDecoration(
+                          hintStyle: responsiveTextStyle(context, 14,
+                              const Color(0xFFA6A6A6), FontWeight.w500),
+                          isDense: true,
+                          suffixIcon: const Icon(
+                            Icons.arrow_drop_down,
+                            color: Color(0xFFE2E2E5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
                         country: _countryValue,
                         state: _stateValue,
                         city: _cityValue),
@@ -363,24 +423,34 @@ class _ServiceProviderSignUpScreenState
                         Text(
                           '-- this information is used to help find service providers close to you :)',
                           style: responsiveTextStyle(
-                              context, 8, Colors.blueGrey, null),
+                              context, 8, const Color(0xFFA6A6A6), null),
                         ),
                       ],
                     ),
+
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
                     // Password
 
                     TextFormField(
                       controller: _passwordController,
-                      cursorColor: Colors.white,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
+                      cursorColor: const Color(0xFFA6A6A6),
+                      style: responsiveTextStyle(context, 14,
+                          const Color(0xFFA6A6A6), FontWeight.w500),
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87)),
+                        labelStyle: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -391,7 +461,7 @@ class _ServiceProviderSignUpScreenState
                             isPasswordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.black54,
+                            color: const Color(0xFFE2E2E5),
                           ),
                         ),
                       ),
@@ -419,20 +489,28 @@ class _ServiceProviderSignUpScreenState
                         return null;
                       },
                     ),
-
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     // Confirm Password
 
                     TextFormField(
                       controller: _confirmpasswordController,
                       cursorColor: Colors.white,
-                      style:
-                          responsiveTextStyle(context, 16, Colors.white, null),
+                      style: responsiveTextStyle(context, 14,
+                          const Color(0xFFA6A6A6), FontWeight.w500),
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
-                        labelStyle: responsiveTextStyle(
-                            context, 14, Colors.black, null),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87)),
+                        labelStyle: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xFFE2E2E5), width: 1.5),
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -444,7 +522,7 @@ class _ServiceProviderSignUpScreenState
                             isPasswordConfirmVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.black54,
+                            color: const Color(0xFFE2E2E5),
                           ),
                         ),
                       ),
@@ -482,125 +560,192 @@ class _ServiceProviderSignUpScreenState
                             const Icon(
                               Icons.camera_alt,
                               size: 100,
-                              color: Colors.black54,
+                              color: Color(0xFFA6A6A6),
                             ),
                           Text(
                             'Add a display pictue :)',
                             style: responsiveTextStyle(
-                                context, 14, Colors.black, null),
+                                context, 14, const Color(0xFFA6A6A6), null),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
                     // todo: add terms and conditions document, agreement
+
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isChecked = value ?? false;
+                            });
+                          },
+                          activeColor: const Color(0xFF36DDFF),
+                        ),
+                        Flexible(
+                          child: Text(
+                            'I have read and agree to the terms and conditions and privacy policy',
+                            style: responsiveTextStyle(context, 14,
+                                const Color(0xFF8C8585), FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
                     // sign up button
 
                     loading
                         ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF039fdc)),
-                            onPressed: () async {
-                              final messenger = ScaffoldMessenger.of(context);
+                        : Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF36DDFF)),
+                                  onPressed: () async {
+                                    final messenger =
+                                        ScaffoldMessenger.of(context);
 
-                              // Check network connectivity
-                              bool isConnected =
-                                  await _checkInternetConnectivity();
-                              if (!isConnected) {
-                                if (!context.mounted) return;
-                                // Show a snackbar for no network
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'No internet connection. Please check your network settings.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
+                                    // Check network connectivity
+                                    bool isConnected =
+                                        await _checkInternetConnectivity();
+                                    if (!isConnected) {
+                                      if (!context.mounted) return;
+                                      // Show a snackbar for no network
+                                      messenger.showSnackBar(SnackBar(
+                                        content: Text(
+                                          'No internet connection. Please check your network settings.',
+                                          style: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                      return; // Exit the function if there's no network
+                                    }
+
+                                    if (!_isChecked) {
+                                      if (!context.mounted) return;
+                                      // Show a snackbar for no network
+                                      messenger.showSnackBar(SnackBar(
+                                        content: Text(
+                                          'Please accept the Terms and Conditions.',
+                                          style: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                      return; // Exit the function if there's no network
+                                    }
+
+                                    if (_image == null) {
+                                      if (!context.mounted) return;
+                                      messenger.showSnackBar(SnackBar(
+                                        content: Text(
+                                          'Please add a display picture :)',
+                                          style: responsiveTextStyle(
+                                              context,
+                                              16,
+                                              Colors.black,
+                                              FontWeight.bold),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ));
+                                      return;
+                                    }
+                                    // Add your sign-up logic here.
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() {
+                                        loading = true;
+                                      });
+
+                                      try {
+                                        // Run _createUser and wait for it to finish
+                                        await _createUser();
+
+                                        // Only run _uploadImage if _createUser has finished successfully
+                                        if (_image != null) {
+                                          await _uploadImage();
+                                        }
+
+                                        // Update profile locally and remotely
+                                        await _saveProfileLocally();
+
+                                        await _updateProfile();
+                                        await _signInUser();
+                                        if (!context.mounted) return;
+                                        messenger.showSnackBar(SnackBar(
+                                          content: Text(
+                                            'Welcome to callup247!!',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.green,
+                                        ));
+
+                                        // Delay and navigate
+                                        await Future.delayed(
+                                            const Duration(seconds: 1));
+                                        if (!context.mounted) return;
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                VerificationScreen(
+                                              isPasswordReset: isPasswordReset,
+                                              userEmail: _emailaddressController
+                                                  .text
+                                                  .trim(),
+                                            ),
+                                          ),
+                                        );
+                                      } catch (error) {
+                                        if (!context.mounted) return;
+                                        messenger.showSnackBar(SnackBar(
+                                          content: Text(
+                                            'An error occurred. Please try again later.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                      } finally {
+                                        setState(() {
+                                          loading = false;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    child: Text(
+                                      'Sign Up',
+                                      style: responsiveTextStyle(
+                                          context,
+                                          14,
+                                          const Color(0xFF140202),
+                                          FontWeight.bold),
+                                    ),
                                   ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return; // Exit the function if there's no network
-                              }
-
-                              if (_image == null) {
-                                if (!context.mounted) return;
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'Please add a display picture :)',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return;
-                              }
-                              // Add your sign-up logic here.
-                              if (_formKey.currentState!.validate()) {
-                                setState(() {
-                                  loading = true;
-                                });
-
-                                try {
-                                  // Run _createUser and wait for it to finish
-                                  await _createUser();
-
-                                  // Only run _uploadImage if _createUser has finished successfully
-                                  if (_image != null) {
-                                    await _uploadImage();
-                                  }
-
-                                  // Update profile locally and remotely
-                                  await _saveProfileLocally();
-
-                                  await _updateProfile();
-                                  await _signInUser();
-                                  if (!context.mounted) return;
-                                  messenger.showSnackBar(SnackBar(
-                                    content: Text(
-                                      'Welcome to callup247!!',
-                                      style: responsiveTextStyle(context, 16,
-                                          Colors.black, FontWeight.bold),
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ));
-
-                                  // Delay and navigate
-                                  await Future.delayed(
-                                      const Duration(seconds: 1));
-                                  if (!context.mounted) return;
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          VerificationScreen(
-                                        isPasswordReset: isPasswordReset,
-                                        userEmail:
-                                            _emailaddressController.text.trim(),
-                                      ),
-                                    ),
-                                  );
-                                } catch (error) {
-                                  if (!context.mounted) return;
-                                  messenger.showSnackBar(SnackBar(
-                                    content: Text(
-                                      'An error occurred. Please try again later.',
-                                      style: responsiveTextStyle(context, 16,
-                                          Colors.black, FontWeight.bold),
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ));
-                                } finally {
-                                  setState(() {
-                                    loading = false;
-                                  });
-                                }
-                              }
-                            },
-                            child: Text(
-                              'Sign Up',
-                              style: responsiveTextStyle(
-                                  context, 14, Colors.black, FontWeight.bold),
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
                   ],
                 ),
