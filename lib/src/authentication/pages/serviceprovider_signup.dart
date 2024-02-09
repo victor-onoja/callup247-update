@@ -293,115 +293,166 @@ class _ServiceProviderSignUpScreenState
         centerTitle: true,
         iconTheme: const IconThemeData(color: Color(0xFF6E6B6B)),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.sizeOf(context).height,
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    // full name
+      body: Stack(children: [
+        Positioned(
+          left: 2,
+          bottom: 2,
+          child: Image.asset(
+            'assets/resetpasset.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+        SafeArea(
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.sizeOf(context).height,
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // full name
 
-                    TextFormField(
-                      controller: _fullnameController,
-                      cursorColor: const Color(0xFFA6A6A6),
-                      textCapitalization: TextCapitalization.words,
-                      style: responsiveTextStyle(context, 14,
-                          const Color(0xFFA6A6A6), FontWeight.w500),
-                      decoration: InputDecoration(
-                        labelText: 'First & Last Name',
-                        labelStyle: responsiveTextStyle(context, 14,
+                      TextFormField(
+                        controller: _fullnameController,
+                        cursorColor: const Color(0xFFA6A6A6),
+                        textCapitalization: TextCapitalization.words,
+                        style: responsiveTextStyle(context, 14,
                             const Color(0xFFA6A6A6), FontWeight.w500),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your first and last name';
-                        } else if (value.split(' ').length < 2) {
-                          return 'Please enter both your first and last name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-
-                    // email address
-
-                    TextFormField(
-                      controller: _emailaddressController,
-                      cursorColor: const Color(0xFFA6A6A6),
-                      keyboardType: TextInputType.emailAddress,
-                      style: responsiveTextStyle(context, 14,
-                          const Color(0xFFA6A6A6), FontWeight.w500),
-                      decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        labelStyle: responsiveTextStyle(context, 14,
-                            const Color(0xFFA6A6A6), FontWeight.w500),
-                        prefixIcon: Container(
-                          margin: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(25, 54, 222,
-                                255), // Background color of the square
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Border radius of the square
-                          ),
-                          child: const Icon(
-                            Icons.email,
-                            color: Color(0xFF36DDFF),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your email address';
-                        }
-                        // Email address regex pattern for basic validation
-                        const emailPattern =
-                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                        final regExp = RegExp(emailPattern);
-                        if (!regExp.hasMatch(value)) {
-                          return 'Please enter a valid email address';
-                        }
-                        // You can add email validation logic here.
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-
-                    // Country Picker
-
-                    CountryStateCityPicker(
-                        textFieldDecoration: InputDecoration(
-                          hintStyle: responsiveTextStyle(context, 14,
+                        decoration: InputDecoration(
+                          labelText: 'First & Last Name',
+                          labelStyle: responsiveTextStyle(context, 14,
                               const Color(0xFFA6A6A6), FontWeight.w500),
-                          isDense: true,
-                          suffixIcon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: Color(0xFFE2E2E5),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your first and last name';
+                          } else if (value.split(' ').length < 2) {
+                            return 'Please enter both your first and last name';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
+
+                      // email address
+
+                      TextFormField(
+                        controller: _emailaddressController,
+                        cursorColor: const Color(0xFFA6A6A6),
+                        keyboardType: TextInputType.emailAddress,
+                        style: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        decoration: InputDecoration(
+                          labelText: 'Email Address',
+                          labelStyle: responsiveTextStyle(context, 14,
+                              const Color(0xFFA6A6A6), FontWeight.w500),
+                          prefixIcon: Container(
+                            margin: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(25, 54, 222,
+                                  255), // Background color of the square
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Border radius of the square
+                            ),
+                            child: const Icon(
+                              Icons.email,
+                              color: Color(0xFF36DDFF),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your email address';
+                          }
+                          // Email address regex pattern for basic validation
+                          const emailPattern =
+                              r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                          final regExp = RegExp(emailPattern);
+                          if (!regExp.hasMatch(value)) {
+                            return 'Please enter a valid email address';
+                          }
+                          // You can add email validation logic here.
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
+
+                      // Country Picker
+
+                      CountryStateCityPicker(
+                          textFieldDecoration: InputDecoration(
+                            hintStyle: responsiveTextStyle(context, 14,
+                                const Color(0xFFA6A6A6), FontWeight.w500),
+                            isDense: true,
+                            suffixIcon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Color(0xFFE2E2E5),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xFFE2E2E5), width: 1.5),
+                              borderRadius: BorderRadius.circular(1.5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xFFE2E2E5), width: 1.5),
+                              borderRadius: BorderRadius.circular(1.5),
+                            ),
+                          ),
+                          country: _countryValue,
+                          state: _stateValue,
+                          city: _cityValue),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '-- this information is used to share your location with customers :)',
+                            style: responsiveTextStyle(
+                                context, 8, const Color(0xFFA6A6A6), null),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
+
+                      // Password
+
+                      TextFormField(
+                        controller: _passwordController,
+                        cursorColor: const Color(0xFFA6A6A6),
+                        style: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: responsiveTextStyle(context, 14,
+                              const Color(0xFFA6A6A6), FontWeight.w500),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Color(0xFFE2E2E5), width: 1.5),
@@ -412,310 +463,181 @@ class _ServiceProviderSignUpScreenState
                                 color: Color(0xFFE2E2E5), width: 1.5),
                             borderRadius: BorderRadius.circular(1.5),
                           ),
-                        ),
-                        country: _countryValue,
-                        state: _stateValue,
-                        city: _cityValue),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '-- this information is used to help find service providers close to you :)',
-                          style: responsiveTextStyle(
-                              context, 8, const Color(0xFFA6A6A6), null),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-
-                    // Password
-
-                    TextFormField(
-                      controller: _passwordController,
-                      cursorColor: const Color(0xFFA6A6A6),
-                      style: responsiveTextStyle(context, 14,
-                          const Color(0xFFA6A6A6), FontWeight.w500),
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: responsiveTextStyle(context, 14,
-                            const Color(0xFFA6A6A6), FontWeight.w500),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: const Color(0xFFE2E2E5),
-                          ),
-                        ),
-                      ),
-                      obscureText: !isPasswordVisible,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        // Password strength validation criteria
-                        const lengthCriteria = 8; // Minimum length requirement
-                        // final uppercaseCriteria = RegExp(r'[A-Z]');
-                        // final lowercaseCriteria = RegExp(r'[a-z]');
-                        // final digitCriteria = RegExp(r'[0-9]');
-                        // final specialCharCriteria =
-                        //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-                        if (value.length < lengthCriteria) {
-                          return 'Password must be at least $lengthCriteria characters long';
-                        }
-                        // if (!uppercaseCriteria.hasMatch(value) ||
-                        //     !lowercaseCriteria.hasMatch(value) ||
-                        //     !digitCriteria.hasMatch(value) ||
-                        //     !specialCharCriteria.hasMatch(value)) {
-                        //   return 'Password must include uppercase, lowercase, digit, and special characters';
-                        // }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-                    // Confirm Password
-
-                    TextFormField(
-                      controller: _confirmpasswordController,
-                      cursorColor: Colors.white,
-                      style: responsiveTextStyle(context, 14,
-                          const Color(0xFFA6A6A6), FontWeight.w500),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        labelStyle: responsiveTextStyle(context, 14,
-                            const Color(0xFFA6A6A6), FontWeight.w500),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Color(0xFFE2E2E5), width: 1.5),
-                          borderRadius: BorderRadius.circular(1.5),
-                        ),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordConfirmVisible =
-                                  !isPasswordConfirmVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordConfirmVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: const Color(0xFFE2E2E5),
-                          ),
-                        ),
-                      ),
-                      obscureText: !isPasswordConfirmVisible,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please re-type your password';
-                        }
-                        // todo: confiirm password validation logic
-                        if (value != _passwordController.text) {
-                          return 'passwords must match';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-
-                    // display picture
-
-                    GestureDetector(
-                      onTap: () {
-                        _pickImage();
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          if (_image != null)
-                            Image.file(
-                              _image!,
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            )
-                          else
-                            const Icon(
-                              Icons.camera_alt,
-                              size: 100,
-                              color: Color(0xFFA6A6A6),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible = !isPasswordVisible;
+                              });
+                            },
+                            child: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: const Color(0xFFE2E2E5),
                             ),
-                          Text(
-                            'Add a display pictue :)',
-                            style: responsiveTextStyle(
-                                context, 14, const Color(0xFFA6A6A6), null),
+                          ),
+                        ),
+                        obscureText: !isPasswordVisible,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          // Password strength validation criteria
+                          const lengthCriteria =
+                              8; // Minimum length requirement
+                          // final uppercaseCriteria = RegExp(r'[A-Z]');
+                          // final lowercaseCriteria = RegExp(r'[a-z]');
+                          // final digitCriteria = RegExp(r'[0-9]');
+                          // final specialCharCriteria =
+                          //     RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+                          if (value.length < lengthCriteria) {
+                            return 'Password must be at least $lengthCriteria characters long';
+                          }
+                          // if (!uppercaseCriteria.hasMatch(value) ||
+                          //     !lowercaseCriteria.hasMatch(value) ||
+                          //     !digitCriteria.hasMatch(value) ||
+                          //     !specialCharCriteria.hasMatch(value)) {
+                          //   return 'Password must include uppercase, lowercase, digit, and special characters';
+                          // }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
+                      // Confirm Password
+
+                      TextFormField(
+                        controller: _confirmpasswordController,
+                        cursorColor: Colors.white,
+                        style: responsiveTextStyle(context, 14,
+                            const Color(0xFFA6A6A6), FontWeight.w500),
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          labelStyle: responsiveTextStyle(context, 14,
+                              const Color(0xFFA6A6A6), FontWeight.w500),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 1.5),
+                            borderRadius: BorderRadius.circular(1.5),
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPasswordConfirmVisible =
+                                    !isPasswordConfirmVisible;
+                              });
+                            },
+                            child: Icon(
+                              isPasswordConfirmVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: const Color(0xFFE2E2E5),
+                            ),
+                          ),
+                        ),
+                        obscureText: !isPasswordConfirmVisible,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please re-type your password';
+                          }
+                          // todo: confiirm password validation logic
+                          if (value != _passwordController.text) {
+                            return 'passwords must match';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.01),
+
+                      // display picture
+
+                      GestureDetector(
+                        onTap: () {
+                          _pickImage();
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            if (_image != null)
+                              Image.file(
+                                _image!,
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              )
+                            else
+                              const Icon(
+                                Icons.camera_alt,
+                                size: 100,
+                                color: Color(0xFFA6A6A6),
+                              ),
+                            Text(
+                              'Add a display pictue :)',
+                              style: responsiveTextStyle(
+                                  context, 14, const Color(0xFFA6A6A6), null),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
+
+                      // todo: add terms and conditions document, agreement
+
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isChecked,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked = value ?? false;
+                              });
+                            },
+                            activeColor: const Color(0xFF36DDFF),
+                          ),
+                          Flexible(
+                            child: Text(
+                              'I have read and agree to the terms and conditions and privacy policy',
+                              style: responsiveTextStyle(context, 14,
+                                  const Color(0xFF8C8585), FontWeight.w500),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
 
-                    // todo: add terms and conditions document, agreement
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02),
 
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isChecked = value ?? false;
-                            });
-                          },
-                          activeColor: const Color(0xFF36DDFF),
-                        ),
-                        Flexible(
-                          child: Text(
-                            'I have read and agree to the terms and conditions and privacy policy',
-                            style: responsiveTextStyle(context, 14,
-                                const Color(0xFF8C8585), FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
+                      // sign up button
 
-                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+                      loading
+                          ? const CircularProgressIndicator()
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            const Color(0xFF36DDFF)),
+                                    onPressed: () async {
+                                      final messenger =
+                                          ScaffoldMessenger.of(context);
 
-                    // sign up button
-
-                    loading
-                        ? const CircularProgressIndicator()
-                        : Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF36DDFF)),
-                                  onPressed: () async {
-                                    final messenger =
-                                        ScaffoldMessenger.of(context);
-
-                                    // Check network connectivity
-                                    bool isConnected =
-                                        await _checkInternetConnectivity();
-                                    if (!isConnected) {
-                                      if (!context.mounted) return;
-                                      // Show a snackbar for no network
-                                      messenger.showSnackBar(SnackBar(
-                                        content: Text(
-                                          'No internet connection. Please check your network settings.',
-                                          style: responsiveTextStyle(
-                                              context,
-                                              16,
-                                              Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ));
-                                      return; // Exit the function if there's no network
-                                    }
-
-                                    if (!_isChecked) {
-                                      if (!context.mounted) return;
-                                      // Show a snackbar for no network
-                                      messenger.showSnackBar(SnackBar(
-                                        content: Text(
-                                          'Please accept the Terms and Conditions.',
-                                          style: responsiveTextStyle(
-                                              context,
-                                              16,
-                                              Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ));
-                                      return; // Exit the function if there's no network
-                                    }
-
-                                    if (_image == null) {
-                                      if (!context.mounted) return;
-                                      messenger.showSnackBar(SnackBar(
-                                        content: Text(
-                                          'Please add a display picture :)',
-                                          style: responsiveTextStyle(
-                                              context,
-                                              16,
-                                              Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ));
-                                      return;
-                                    }
-                                    // Add your sign-up logic here.
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() {
-                                        loading = true;
-                                      });
-
-                                      try {
-                                        // Run _createUser and wait for it to finish
-                                        await _createUser();
-
-                                        // Only run _uploadImage if _createUser has finished successfully
-                                        if (_image != null) {
-                                          await _uploadImage();
-                                        }
-
-                                        // Update profile locally and remotely
-                                        await _saveProfileLocally();
-
-                                        await _updateProfile();
-                                        await _signInUser();
+                                      // Check network connectivity
+                                      bool isConnected =
+                                          await _checkInternetConnectivity();
+                                      if (!isConnected) {
                                         if (!context.mounted) return;
+                                        // Show a snackbar for no network
                                         messenger.showSnackBar(SnackBar(
                                           content: Text(
-                                            'Welcome to callup247!!',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold),
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ));
-
-                                        // Delay and navigate
-                                        await Future.delayed(
-                                            const Duration(seconds: 1));
-                                        if (!context.mounted) return;
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                VerificationScreen(
-                                              isPasswordReset: isPasswordReset,
-                                              userEmail: _emailaddressController
-                                                  .text
-                                                  .trim(),
-                                            ),
-                                          ),
-                                        );
-                                      } catch (error) {
-                                        if (!context.mounted) return;
-                                        messenger.showSnackBar(SnackBar(
-                                          content: Text(
-                                            'An error occurred. Please try again later.',
+                                            'No internet connection. Please check your network settings.',
                                             style: responsiveTextStyle(
                                                 context,
                                                 16,
@@ -724,36 +646,134 @@ class _ServiceProviderSignUpScreenState
                                           ),
                                           backgroundColor: Colors.red,
                                         ));
-                                      } finally {
-                                        setState(() {
-                                          loading = false;
-                                        });
+                                        return; // Exit the function if there's no network
                                       }
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
-                                    child: Text(
-                                      'Sign Up',
-                                      style: responsiveTextStyle(
-                                          context,
-                                          14,
-                                          const Color(0xFF140202),
-                                          FontWeight.bold),
+
+                                      if (!_isChecked) {
+                                        if (!context.mounted) return;
+                                        // Show a snackbar for no network
+                                        messenger.showSnackBar(SnackBar(
+                                          content: Text(
+                                            'Please accept the Terms and Conditions.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return; // Exit the function if there's no network
+                                      }
+
+                                      if (_image == null) {
+                                        if (!context.mounted) return;
+                                        messenger.showSnackBar(SnackBar(
+                                          content: Text(
+                                            'Please add a display picture :)',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                        return;
+                                      }
+                                      // Add your sign-up logic here.
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() {
+                                          loading = true;
+                                        });
+
+                                        try {
+                                          // Run _createUser and wait for it to finish
+                                          await _createUser();
+
+                                          // Only run _uploadImage if _createUser has finished successfully
+                                          if (_image != null) {
+                                            await _uploadImage();
+                                          }
+
+                                          // Update profile locally and remotely
+                                          await _saveProfileLocally();
+
+                                          await _updateProfile();
+                                          await _signInUser();
+                                          if (!context.mounted) return;
+                                          messenger.showSnackBar(SnackBar(
+                                            content: Text(
+                                              'Welcome to callup247!!',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ));
+
+                                          // Delay and navigate
+                                          await Future.delayed(
+                                              const Duration(seconds: 1));
+                                          if (!context.mounted) return;
+                                          Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  VerificationScreen(
+                                                isPasswordReset:
+                                                    isPasswordReset,
+                                                userEmail:
+                                                    _emailaddressController.text
+                                                        .trim(),
+                                              ),
+                                            ),
+                                          );
+                                        } catch (error) {
+                                          if (!context.mounted) return;
+                                          messenger.showSnackBar(SnackBar(
+                                            content: Text(
+                                              'An error occurred. Please try again later.',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        } finally {
+                                          setState(() {
+                                            loading = false;
+                                          });
+                                        }
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
+                                      child: Text(
+                                        'Sign Up',
+                                        style: responsiveTextStyle(
+                                            context,
+                                            14,
+                                            const Color(0xFF140202),
+                                            FontWeight.bold),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                  ],
+                              ],
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      ]),
     );
   }
 }

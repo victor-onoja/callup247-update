@@ -332,7 +332,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: const Color(0xFFE2E2E5),
+                              color: const Color(0xFFA6A6A6),
                             ),
                           ),
                         ),

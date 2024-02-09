@@ -18,47 +18,60 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
+  // init
 
   @override
   void initState() {
     super.initState();
-    // Initialize the animation controller
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
+    // After 2 seconds, switch to blue logo
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _showGreyLogo = false;
+        _showBlueLogo = true;
+        _startBlueLogoAnimation();
+      });
+    });
+  }
 
-    // Define the scale animation
-    _scaleAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
+// 01 - use case animation a
 
-    // Define the opacity animation
-    _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    // Start the animations
-    _animationController.forward();
-
-    // After the animations, navigate to the next screen
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _redirect();
+  void _startBlueLogoAnimation() {
+    // Continuously increase the size of the blue logo until the whole background is blue
+    Future.delayed(const Duration(milliseconds: 1), () {
+      setState(() {
+        _blueLogoSize += 0.08;
+      });
+      if (_blueLogoSize < 10.0) {
+        // Adjust the maximum size as needed
+        _startBlueLogoAnimation();
+      } else {
+        // Start changing the background color to blue
+        _changeBackgroundColor();
       }
     });
   }
 
-  // 05 - use case check network
+  // 02 - use case animation b
+
+  void _changeBackgroundColor() {
+    // Change the background color gradually to blue
+    setState(() {
+      _backgroundColor =
+          const Color(0xFF36DDFF); // Set the final background color
+    });
+    // After the background color is changed, hide the blue logo
+    Future.delayed(const Duration(milliseconds: 1), () {
+      setState(() {
+        _showBlueLogo = false;
+      });
+      // After a short delay, navigate to the next screen
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        _redirect();
+      });
+    });
+  }
+
+  // 03 - use case check network
 
   Future<bool> checkInternetConnectivity() async {
     try {
@@ -69,7 +82,7 @@ class SplashScreenState extends State<SplashScreen>
     }
   }
 
-  // use case splash navigation
+  // 04 - use case splash navigation
 
   Future<void> _redirect() async {
     final prefs = await SharedPreferences.getInstance();
@@ -134,34 +147,48 @@ class SplashScreenState extends State<SplashScreen>
 // variables
 
   String serviceprovider = '';
+  bool _showGreyLogo = true;
+  bool _showBlueLogo = false;
+  double _blueLogoSize = 1.0;
+  Color _backgroundColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.5,
-            heightFactor: 0.2,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: FadeTransition(
-                opacity: _opacityAnimation,
+      backgroundColor: _backgroundColor, // Set background color dynamically
+      body: Center(
+        child: Stack(
+          children: [
+            AnimatedOpacity(
+              opacity: _showGreyLogo ? 1.0 : 0.0,
+              duration:
+                  const Duration(seconds: 2), // Adjust the duration as needed
+              child: Image.asset(
+                'assets/splashlogo1.png', // Replace 'assets/grey_logo.png' with your grey logo asset path
+                fit: BoxFit.contain,
+              ),
+            ),
+            AnimatedOpacity(
+              opacity: _showBlueLogo ? 1.0 : 0.0,
+              duration:
+                  const Duration(seconds: 2), // Adjust the duration as needed
+              child: Transform.scale(
+                scale: _blueLogoSize,
                 child: Image.asset(
-                  'assets/logo_t.png',
+                  'assets/splashlogo.png', // Replace 'assets/blue_logo.png' with your blue logo asset path
                   fit: BoxFit.contain,
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _animationController.dispose();
+  //   super.dispose();
+  // }
 }

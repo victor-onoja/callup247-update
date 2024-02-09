@@ -47,7 +47,7 @@ class _OnboardingAnimationScreenState extends State<OnboardingAnimationScreen>
       // Check if it's not the last page
       _pageController.animateToPage(
         _currentPage + 1,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.ease,
       );
     } else {

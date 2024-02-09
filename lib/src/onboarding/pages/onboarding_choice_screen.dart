@@ -111,61 +111,71 @@ class _OnboardingChoiceScreenState extends State<OnboardingChoiceScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.sizeOf(context).height,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 32.0,
-                  vertical: MediaQuery.sizeOf(context).height * 0.05),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RotationTransition(
-                    turns: Tween(begin: 0.0, end: 1.0).animate(_acontroller),
-                    child: Image.asset(
-                      'assets/logo_t.png',
-                      height: 75,
+      body: Stack(children: [
+        Positioned(
+          left: 2,
+          bottom: 2,
+          child: Image.asset(
+            'assets/resetpasset.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+        SafeArea(
+          child: SizedBox(
+            height: MediaQuery.sizeOf(context).height,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 32.0,
+                    vertical: MediaQuery.sizeOf(context).height * 0.05),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RotationTransition(
+                      turns: Tween(begin: 0.0, end: 1.0).animate(_acontroller),
+                      child: Image.asset(
+                        'assets/logo_t.png',
+                        height: 75,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.01,
-                  ),
-                  Text(
-                    'Select User Type',
-                    style: responsiveTextStyle(
-                        context, 24, const Color(0xFF333333), FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.1,
-                  ),
-                  _buildAnimatedContainer(
-                    _fadeController1,
-                    _fadeAnimation1,
-                    'Customer',
-                    const CustomerSignUpScreen(),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                  _buildAnimatedContainer(
-                    _fadeController2,
-                    _fadeAnimation2,
-                    'Service Provider',
-                    const ServiceProviderSignUpScreen(),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                  _buildAnimatedContainer(
-                    _fadeController3,
-                    _fadeAnimation3,
-                    'Guest',
-                    const GuestHomePage(),
-                  ),
-                ],
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.01,
+                    ),
+                    Text(
+                      'Select User Type',
+                      style: responsiveTextStyle(context, 24,
+                          const Color(0xFF333333), FontWeight.w600),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.1,
+                    ),
+                    _buildAnimatedContainer(
+                      _fadeController1,
+                      _fadeAnimation1,
+                      'Customer',
+                      const CustomerSignUpScreen(),
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+                    _buildAnimatedContainer(
+                      _fadeController2,
+                      _fadeAnimation2,
+                      'Service Provider',
+                      const ServiceProviderSignUpScreen(),
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+                    _buildAnimatedContainer(
+                      _fadeController3,
+                      _fadeAnimation3,
+                      'Guest',
+                      const GuestHomePage(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ]),
     );
   }
 }
