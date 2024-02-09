@@ -24,7 +24,7 @@ class SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     // After 2 seconds, switch to blue logo
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _showGreyLogo = false;
         _showBlueLogo = true;
@@ -37,7 +37,7 @@ class SplashScreenState extends State<SplashScreen>
 
   void _startBlueLogoAnimation() {
     // Continuously increase the size of the blue logo until the whole background is blue
-    Future.delayed(const Duration(milliseconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 2), () {
       setState(() {
         _blueLogoSize += 0.08;
       });
@@ -105,7 +105,7 @@ class SplashScreenState extends State<SplashScreen>
       if (!context.mounted) return;
       // Show a snackbar for no network
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: const Duration(seconds: 10),
+        duration: const Duration(seconds: 30),
         content: Text(
           'No internet connection. Please check your network settings.',
           style:

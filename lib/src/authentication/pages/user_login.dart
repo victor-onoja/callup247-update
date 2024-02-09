@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:callup247/main.dart';
+import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:callup247/src/onboarding/pages/onboarding_choice_screen.dart';
+import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -139,6 +141,13 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     }
   }
 
+  // 05 - use case save remember me
+
+  Future<void> storeRemembermeStatus(bool rememberme) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('rememberme', rememberme);
+  }
+
   // init
 
   @override
@@ -149,7 +158,24 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       duration: const Duration(seconds: 8), // Adjust the duration as needed
     )..repeat();
     _initialize();
+    _initrememberme();
   }
+
+  Future<void> _initrememberme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isremember = prefs.getBool('rememberme');
+    if (isremember != null) {
+      setState(() {
+        rememberme = isremember;
+      });
+    } else {
+      setState(() {
+        rememberme = false;
+      });
+    }
+  }
+
+//  initialize
 
   Future<void> _initialize() async {
     final prefs = await SharedPreferences.getInstance();
@@ -405,6 +431,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                 value: rememberme,
                                 onChanged: (_) => setState(() {
                                   rememberme = !rememberme;
+                                  storeRemembermeStatus(rememberme);
                                 }),
                                 activeColor: const Color(0xFF44C5E1),
                               )

@@ -178,9 +178,6 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
         'last_seen': DateTime.now().toString(),
         'availability': isAvailable.toString(),
       });
-      if (mounted) {
-        print('profile_online');
-      }
     } on PostgrestException catch (error) {
       //
     } catch (error) {
