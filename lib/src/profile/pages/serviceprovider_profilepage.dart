@@ -65,6 +65,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
 
       final useriglink = serviceProviderMap['ig_url'];
       final userxlink = serviceProviderMap['x_url'];
+      final userlinkedinlink = serviceProviderMap['linkedin_url'];
       final userfblink = serviceProviderMap['fb_url'];
       final userweblink = serviceProviderMap['web_link'];
 
@@ -81,6 +82,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
         media3 = userMedia3;
         iglink = useriglink;
         xlink = userxlink;
+        linkedinlink = userlinkedinlink;
         fblink = userfblink;
         weblink = userweblink;
         experience = userExperience;
@@ -194,6 +196,7 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String media3 = '';
   String iglink = '';
   String xlink = '';
+  String linkedinlink = '';
   String fblink = '';
   String weblink = '';
   String maillink = '';
@@ -332,6 +335,84 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final linkedin = linkedinlink;
+                                  if (linkedin.isNotEmpty) {
+                                    final Uri url = Uri.parse(linkedin);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The LinkedIn link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(linkedin),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: linkedin));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where iglink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'No LinkedIn Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide a LinkedIn link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/linkedin-icon.png',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(

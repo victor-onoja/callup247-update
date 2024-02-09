@@ -1294,6 +1294,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                 fbLink: savedSearchProviderData['fb_url'],
                 fullname: additionalProfileData['full_name'],
                 igLink: savedSearchProviderData['ig_url'],
+                linkedinLink: savedSearchProviderData['linkedin_url'],
                 mailLink: savedSearchProviderData['gmail_link'],
                 media1: savedSearchProviderData['media_url1'],
                 media2: savedSearchProviderData['media_url2'],
@@ -2113,6 +2114,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                             igLink:
                                                                 serviceProviderData[
                                                                     'ig_url'],
+                                                            linkedinLink:
+                                                                serviceProviderData[
+                                                                    'linkedin_url'],
                                                             mailLink:
                                                                 serviceProviderData[
                                                                     'gmail_link'],

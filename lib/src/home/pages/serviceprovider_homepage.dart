@@ -1989,6 +1989,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                             additionalProfileData['full_name'],
                                                                         igLink:
                                                                             savedSearchProviderData['ig_url'],
+                                                                        linkedinLink:
+                                                                            savedSearchProviderData['linkedin_url'],
                                                                         mailLink:
                                                                             savedSearchProviderData['gmail_link'],
                                                                         media1:
@@ -2203,6 +2205,9 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                               igLink:
                                                                   serviceProviderData[
                                                                       'ig_url'],
+                                                              linkedinLink:
+                                                                  serviceProviderData[
+                                                                      'linkedin_url'],
                                                               mailLink:
                                                                   serviceProviderData[
                                                                       'gmail_link'],

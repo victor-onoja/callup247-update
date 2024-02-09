@@ -28,6 +28,7 @@ class _EditServiceProviderProfileState
     _initializeData().then((_) {
       _instagramController.text = iglink;
       _xController.text = xlink;
+      _linkedinController.text = linkedinlink;
       _facebookController.text = fblink;
       _websiteController.text = weblink;
       _bioController.text = bio;
@@ -59,6 +60,7 @@ class _EditServiceProviderProfileState
       final userMedia3 = serviceProviderMap['media_url3'];
 
       final useriglink = serviceProviderMap['ig_url'];
+      final userlinkedinlink = serviceProviderMap['linkedin_url'];
       final userxlink = serviceProviderMap['x_url'];
       final userfblink = serviceProviderMap['fb_url'];
       final userweblink = serviceProviderMap['web_link'];
@@ -74,6 +76,7 @@ class _EditServiceProviderProfileState
         media3 = userMedia3;
 
         iglink = useriglink;
+        linkedinlink = userlinkedinlink;
         xlink = userxlink;
         fblink = userfblink;
         weblink = userweblink;
@@ -302,6 +305,7 @@ class _EditServiceProviderProfileState
   Future<void> _updateServiceProviderProfile() async {
     final ig = _instagramController.text.trim();
     final x = _xController.text.trim();
+    final linkedin = _linkedinController.text.trim();
     final fb = _facebookController.text.trim();
     final web = _websiteController.text.trim();
     final bio = _bioController.text.trim();
@@ -315,6 +319,7 @@ class _EditServiceProviderProfileState
       'created_at': DateTime.now().toIso8601String(),
       'ig_url': ig,
       'x_url': x,
+      'linkedin_url': linkedin,
       'fb_url': fb,
       'web_link': web,
       'bio': bio,
@@ -378,6 +383,7 @@ class _EditServiceProviderProfileState
     if (serviceProviderJson != null) {
       final serviceProviderMap = json.decode(serviceProviderJson);
       serviceProviderMap['ig_url'] = _instagramController.text.trim();
+      serviceProviderMap['linkedin_url'] = _linkedinController.text.trim();
       serviceProviderMap['x_url'] = _xController.text.trim();
       serviceProviderMap['fb_url'] = _facebookController.text.trim();
       serviceProviderMap['web_link'] = _websiteController.text.trim();
@@ -406,6 +412,7 @@ class _EditServiceProviderProfileState
 
   String iglink = '';
   String xlink = '';
+  String linkedinlink = '';
   String fblink = '';
   String weblink = '';
   String bio = '';
@@ -417,6 +424,8 @@ class _EditServiceProviderProfileState
   String fullname = '';
   var loading = false;
   late final TextEditingController _instagramController =
+      TextEditingController();
+  late final TextEditingController _linkedinController =
       TextEditingController();
   late final TextEditingController _xController = TextEditingController();
   late final TextEditingController _facebookController =
@@ -436,6 +445,7 @@ class _EditServiceProviderProfileState
   void dispose() {
     _instagramController.dispose();
     _xController.dispose();
+    _linkedinController.dispose();
     _facebookController.dispose();
     _websiteController.dispose();
     _bioController.dispose();
@@ -577,6 +587,37 @@ class _EditServiceProviderProfileState
                           context, 12, Colors.black45, null)),
                   Column(
                     children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.linkedin.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/linkedin-icon.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('LinkedIn :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _instagramController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           GestureDetector(

@@ -773,6 +773,7 @@ class _ServiceProviderProfileCreationState
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
   final TextEditingController _instagramController = TextEditingController();
+  final TextEditingController _linkedinController = TextEditingController();
   final TextEditingController _xController = TextEditingController();
   final TextEditingController _facebookController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
@@ -792,6 +793,7 @@ class _ServiceProviderProfileCreationState
   void dispose() {
     _instagramController.dispose();
     _xController.dispose();
+    _linkedinController.dispose();
     _facebookController.dispose();
     _websiteController.dispose();
     _gmailController.dispose();
@@ -900,6 +902,7 @@ class _ServiceProviderProfileCreationState
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
     final ig = _instagramController.text.trim();
     final x = _xController.text.trim();
+    final linkedin = _linkedinController.text.trim();
     final fb = _facebookController.text.trim();
     final web = _websiteController.text.trim();
     final gmail = emailaddress;
@@ -919,6 +922,7 @@ class _ServiceProviderProfileCreationState
       'media_url3': media3,
       'ig_url': ig,
       'x_url': x,
+      'linkedin_url': linkedin,
       'fb_url': fb,
       'web_link': web,
       'gmail_link': gmail,
@@ -984,6 +988,7 @@ class _ServiceProviderProfileCreationState
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
     final ig = _instagramController.text.trim();
     final x = _xController.text.trim();
+    final linkedin = _linkedinController.text.trim();
     final fb = _facebookController.text.trim();
     final web = _websiteController.text.trim();
     final gmail = emailaddress;
@@ -999,6 +1004,7 @@ class _ServiceProviderProfileCreationState
       'media_url3': media3,
       'ig_url': ig,
       'x_url': x,
+      'linkedin_url': linkedin,
       'fb_url': fb,
       'web_link': web,
       'gmail_link': gmail,
@@ -1294,6 +1300,37 @@ class _ServiceProviderProfileCreationState
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                   Column(
                     children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri url =
+                                  Uri.parse('https://www.linkedin.com/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {}
+                            },
+                            child: Image.asset(
+                              'assets/linkedin-icon.png',
+                              width: 25,
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Text('LinkedIn :',
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, null)),
+                          SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02),
+                          Flexible(
+                            child: TextField(
+                              controller: _linkedinController,
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.white, null),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           GestureDetector(

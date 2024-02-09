@@ -148,6 +148,13 @@ class _GuestProfilePageState extends State<GuestProfilePage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
+                                'assets/linkedin-icon.png',
+                                width: 45,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
                                 'assets/ig-icon.png',
                                 width: 45,
                               ),

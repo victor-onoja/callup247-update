@@ -17,6 +17,7 @@ class ViewProfilePage extends StatefulWidget {
       required this.media2,
       required this.media3,
       required this.igLink,
+      required this.linkedinLink,
       required this.xLink,
       required this.fbLink,
       required this.webLink,
@@ -32,6 +33,7 @@ class ViewProfilePage extends StatefulWidget {
       media2,
       media3,
       igLink,
+      linkedinLink,
       xLink,
       fbLink,
       webLink,
@@ -335,6 +337,84 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final linkedin = widget.linkedinLink;
+                                  if (linkedin.isNotEmpty) {
+                                    final Uri url = Uri.parse(linkedin);
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      if (!context.mounted) return;
+                                      // If the URL can't be launched, show a dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text('Cannot Open Link'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                    'The Instagram link could not be opened :('),
+                                                const Text(
+                                                    'but you can copy the link and open it in your browser:'),
+                                                SelectableText(linkedin),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Copy Link'),
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: linkedin));
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
+                                    // Handle the case where linkedinlink is an empty string (no link provided)
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'No Linkedin Link Provided'),
+                                          content: const Text(
+                                              'The user did not provide a Linkedin link.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/linkedin-icon.png',
+                                  width: 45,
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(
