@@ -507,24 +507,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF36DCFF)),
-                                onPressed: () {},
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Icon(
-                                    Icons.fingerprint,
-                                    color: Color(0xFF000000),
-                                    size: 30,
-                                  ),
-                                ))
                           ],
                         ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

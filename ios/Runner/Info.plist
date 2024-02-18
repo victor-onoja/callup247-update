@@ -34,6 +34,8 @@
 	<string>We require access to your camera for taking photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>If you want to record videos, messages or make calls we need access to your microphone.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need access to your location to calculate distance between you and other users.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

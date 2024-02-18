@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:callup247/src/home/pages/serviceprovider_homepage.dart';
+import 'package:callup247/src/location.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'onboarding/pages/onboarding_animation_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,6 +26,8 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    _locationService = LocationService(context);
+    _fetchUserLocation();
     // After 2 seconds, switch to blue logo
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
@@ -31,6 +36,62 @@ class SplashScreenState extends State<SplashScreen>
         _startBlueLogoAnimation();
       });
     });
+  }
+
+  // use case fetch user's position
+
+  Future<void> _fetchUserLocation() async {
+    try {
+      final Position position = await _locationService.getLocation();
+      // Store user's location in SharedPreferences
+      await _storeUserLocationInSharedPreferences(position);
+      // Store user's location in Supabase table
+      await _storeUserLocationInSupabase(position);
+      print(position.latitude);
+      print(position.longitude);
+    } catch (e) {
+      // Handle location fetching error
+      print('Error fetching user location: $e');
+    }
+  }
+
+// store user location in shared prefs
+
+  Future<void> _storeUserLocationInSharedPreferences(Position position) async {
+    // Store user's location in SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('userLatitude', position.latitude);
+    prefs.setDouble('userLongitude', position.longitude);
+  }
+
+  // store user location in supabase
+
+  Future<void> _storeUserLocationInSupabase(Position position) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+
+      final serviceProvider = userProfileMap['service_provider'];
+
+      if (serviceProvider == 'TRUE') {
+        // Store user's location in Supabase table
+        final double userLatitude = position.latitude;
+        final double userLongitude = position.longitude;
+
+        try {
+          await supabase.from('serviceproviders_profile').upsert({
+            'id': supabase.auth.currentUser!.id,
+            'longitude': userLongitude,
+            'latitude': userLatitude,
+          });
+        } on PostgrestException catch (error) {
+          print(error);
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
   }
 
 // 01 - use case animation a
@@ -65,7 +126,7 @@ class SplashScreenState extends State<SplashScreen>
         _showBlueLogo = false;
       });
       // After a short delay, navigate to the next screen
-      Future.delayed(const Duration(milliseconds: 1500), () {
+      Future.delayed(const Duration(milliseconds: 1200), () {
         _redirect();
       });
     });
@@ -151,6 +212,7 @@ class SplashScreenState extends State<SplashScreen>
   bool _showBlueLogo = false;
   double _blueLogoSize = 1.0;
   Color _backgroundColor = Colors.white;
+  late final LocationService _locationService;
 
   @override
   Widget build(BuildContext context) {
@@ -185,10 +247,4 @@ class SplashScreenState extends State<SplashScreen>
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   _animationController.dispose();
-  //   super.dispose();
-  // }
 }

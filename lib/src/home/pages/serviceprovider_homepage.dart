@@ -1299,11 +1299,10 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
 
   @override
   Widget build(BuildContext context) {
-    final notificationUserId = supabase.auth.currentUser!.id;
     final stream = supabase
         .from('chat_messages')
         .stream(primaryKey: ['id'])
-        .eq('receiverid', notificationUserId)
+        .eq('receiverid', supabase.auth.currentUser!.id)
         .order('created_at', ascending: false)
         .map((maps) => maps.toList());
 
