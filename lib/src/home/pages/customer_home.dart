@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:callup247/main.dart';
 import 'package:callup247/src/authentication/pages/user_login.dart';
 import 'package:callup247/src/chat/pages/chathistory.dart';
+import 'package:callup247/src/distance.dart';
 import 'package:callup247/src/notification.dart';
 import 'package:callup247/src/online.dart';
 import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
@@ -36,6 +37,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     final prefs = await SharedPreferences.getInstance();
     final userProfileJson = prefs.getString('userprofile');
     final userSavedSearches = prefs.getStringList('savedSearches');
+    final userLatitude = prefs.getDouble('userLatitude');
+    final userLongitude = prefs.getDouble('userLongitude');
     if (userProfileJson != null) {
       final userProfileMap = json.decode(userProfileJson);
       // To access specific fields like full name and email address:
@@ -80,6 +83,14 @@ class _CustomerHomePageState extends State<CustomerHomePage>
       } catch (e) {
         //
       }
+    }
+    if (userLongitude != null && userLatitude != null) {
+      setState(() {
+        latitude = userLatitude;
+        longitude = userLongitude;
+      });
+    } else {
+      // do something to make the code tighter
     }
     _loadLastCheckedMessageId();
   }
@@ -457,6 +468,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
   bool isCustomer = true;
   bool hasNewMessage = false;
   String? lastCheckedMessageId;
+  double latitude = 0.0;
+  double longitude = 0.0;
 
   // todo: save services list on user's phone
   // services list
@@ -809,7 +822,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
     'Microbiologist',
     'Midwife',
     'Mining Engineer',
-    'Model Maker',
+    'Model',
     'Motor Vehicle Technician',
     'Motorcycle Instructor',
     'Motorcycle Technician',
@@ -1278,6 +1291,39 @@ class _CustomerHomePageState extends State<CustomerHomePage>
 
   Widget _buildSavedSearchItem(
       dynamic savedSearchProviderData, dynamic additionalProfileData) {
+    // calculate the distance and convert it to estimated time
+    final double customerLat = latitude;
+    final double customerLon = longitude;
+    final double serviceProviderLat = savedSearchProviderData['latitude'];
+    final double serviceProviderLon = savedSearchProviderData['longitude'];
+
+    final double distance = GeoUtils.calculateDistance(
+      customerLat,
+      customerLon,
+      serviceProviderLat,
+      serviceProviderLon,
+    );
+
+    String estimatedTimeText;
+    if (distance < 1) {
+      // If the service provider is less than 1 km away, display the time in seconds
+      estimatedTimeText = '${(distance * 3600).toInt()} secs away';
+    } else if (distance < 60) {
+      // If the service provider is less than 60 km away, calculate the time in minutes
+      final int estimatedTime = (distance / 50 * 60).ceil();
+      estimatedTimeText = '$estimatedTime mins away';
+    } else if (distance < 1440) {
+      // If the service provider is less than 1440 km away (1 day), calculate the time in hours
+      final int estimatedTime = (distance / 50).ceil();
+      estimatedTimeText =
+          estimatedTime == 1 ? '1 hr away' : '$estimatedTime hrs away';
+    } else {
+      // If the service provider is more than 1 day away, calculate the time in days
+      final int estimatedTime = (distance / 50 / 24).ceil();
+      estimatedTimeText =
+          estimatedTime == 1 ? '1 day away' : '$estimatedTime days away';
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: ServiceProviderCard(
@@ -1317,6 +1363,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
         },
         guest: false,
         img: savedSearchProviderData['media_url1'],
+        distance: estimatedTimeText,
       ),
     );
   }
@@ -2083,6 +2130,55 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                   additionalProfileDataList![
                                                       index];
 
+                                              // calculate the distance and convert it to estimated time
+                                              final double customerLat =
+                                                  latitude;
+                                              final double customerLon =
+                                                  longitude;
+                                              final double serviceProviderLat =
+                                                  serviceProviderData[
+                                                      'latitude'];
+                                              final double serviceProviderLon =
+                                                  serviceProviderData[
+                                                      'longitude'];
+
+                                              final double distance =
+                                                  GeoUtils.calculateDistance(
+                                                customerLat,
+                                                customerLon,
+                                                serviceProviderLat,
+                                                serviceProviderLon,
+                                              );
+
+                                              String estimatedTimeText;
+                                              if (distance < 1) {
+                                                // If the service provider is less than 1 km away, display the time in seconds
+                                                estimatedTimeText =
+                                                    '${(distance * 3600).toInt()} secs away';
+                                              } else if (distance < 60) {
+                                                // If the service provider is less than 60 km away, calculate the time in minutes
+                                                final int estimatedTime =
+                                                    (distance / 50 * 60).ceil();
+                                                estimatedTimeText =
+                                                    '$estimatedTime mins away';
+                                              } else if (distance < 1440) {
+                                                // If the service provider is less than 1440 km away (1 day), calculate the time in hours
+                                                final int estimatedTime =
+                                                    (distance / 50).ceil();
+                                                estimatedTimeText =
+                                                    estimatedTime == 1
+                                                        ? '1 hr away'
+                                                        : '$estimatedTime hrs away';
+                                              } else {
+                                                // If the service provider is more than 1 day away, calculate the time in days
+                                                final int estimatedTime =
+                                                    (distance / 50 / 24).ceil();
+                                                estimatedTimeText =
+                                                    estimatedTime == 1
+                                                        ? '1 day away'
+                                                        : '$estimatedTime days away';
+                                              }
+
                                               return Column(
                                                 children: [
                                                   ServiceProviderCard(
@@ -2171,6 +2267,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                     guest: false,
                                                     img: serviceProviderData[
                                                         'media_url1'],
+                                                    distance: estimatedTimeText,
                                                   ),
                                                   SizedBox(
                                                     height: MediaQuery.sizeOf(

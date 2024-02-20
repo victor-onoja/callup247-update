@@ -4,6 +4,7 @@ import '../../responsive_text_styles.dart';
 class ServiceProviderCard extends StatelessWidget {
   final String name;
   final String bio;
+  final String distance;
   final ImageProvider? image;
   final String img;
   final Function() onPressedButton1;
@@ -22,7 +23,8 @@ class ServiceProviderCard extends StatelessWidget {
       required this.isOnline,
       required this.saved,
       required this.guest,
-      required this.img});
+      required this.img,
+      required this.distance});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,19 @@ class ServiceProviderCard extends StatelessWidget {
                 Text(name,
                     style:
                         responsiveTextStyle(context, 18, Colors.white, null)),
-                isOnline
+                Row(
+                  children: [
+                    Text(
+                      distance,
+                      style:
+                          responsiveTextStyle(context, 10, Colors.white, null),
+                    ),
+                    const SizedBox(
+                      width: 24,
+                    ),
+                    isOnline,
+                  ],
+                )
               ],
             ),
             const SizedBox(height: 2),

@@ -370,7 +370,7 @@ class _ServiceProviderProfileCreationState
     'Microbiologist',
     'Midwife',
     'Mining Engineer',
-    'Model Maker',
+    'Model',
     'Motor Vehicle Technician',
     'Motorcycle Instructor',
     'Motorcycle Technician',
@@ -786,6 +786,8 @@ class _ServiceProviderProfileCreationState
   String emailaddress = '';
   String fullname = '';
   var loading = false;
+  double latitude = 0.0;
+  double longitude = 0.0;
 
   // dispose
 
@@ -869,6 +871,8 @@ class _ServiceProviderProfileCreationState
     final prefs = await SharedPreferences.getInstance();
     final userProfileJson = prefs.getString('userprofile');
     final serviceProvider = prefs.getString('serviceproviderprofile');
+    final userLatitude = prefs.getDouble('userLatitude');
+    final userLongitude = prefs.getDouble('userLongitude');
     if (userProfileJson != null) {
       final userProfileMap = json.decode(userProfileJson);
       // To access specific fields like full name and email address:
@@ -890,6 +894,15 @@ class _ServiceProviderProfileCreationState
         MaterialPageRoute(
             builder: (BuildContext context) => const ServiceProviderHomePage()),
       );
+    }
+
+    if (userLongitude != null && userLatitude != null) {
+      setState(() {
+        latitude = userLatitude;
+        longitude = userLongitude;
+      });
+    } else {
+      // do something to make the code tighter
     }
   }
 
@@ -930,6 +943,8 @@ class _ServiceProviderProfileCreationState
       'experience': experience,
       'availability': availability,
       'special_offers': specialoffers,
+      'latitude': latitude,
+      'longitude': longitude
     };
 
     try {

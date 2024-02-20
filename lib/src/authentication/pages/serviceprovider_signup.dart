@@ -508,7 +508,7 @@ class _ServiceProviderSignUpScreenState
 
                       TextFormField(
                         controller: _confirmpasswordController,
-                        cursorColor: Colors.white,
+                        cursorColor: const Color(0xFFA6A6A6),
                         style: responsiveTextStyle(context, 14,
                             const Color(0xFFA6A6A6), FontWeight.w500),
                         decoration: InputDecoration(
