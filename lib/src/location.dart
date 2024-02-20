@@ -1,3 +1,4 @@
+import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -45,25 +46,23 @@ class LocationService {
             borderRadius: BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xFFF4E7D5),
-          title: const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 8),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Text(
               'Location Access is Necessary',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                color: Color(0xFF81571A),
-                fontWeight: FontWeight.bold,
+              style: responsiveTextStyle(
+                context,
+                22,
+                const Color(0xFF36DCFF),
+                FontWeight.bold,
               ),
             ),
           ),
           content: Text(
             'Callup247 needs access to your location to work properly. Please allow us to access your device\'s location services.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
-            ),
+            style: responsiveTextStyle(context, 16, Colors.grey.shade600, null),
           ),
         );
       },
@@ -80,25 +79,23 @@ class LocationService {
             borderRadius: BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xFFF4E7D5),
-          title: const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 8),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Text(
               'Enable GPS',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                color: Color(0xFF81571A),
-                fontWeight: FontWeight.bold,
+              style: responsiveTextStyle(
+                context,
+                22,
+                const Color(0xFF36DCFF),
+                FontWeight.bold,
               ),
             ),
           ),
           content: Text(
             'Callup247 needs access to GPS to display your location properly on the screen. Please enable GPS from the App Settings...',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
-            ),
+            style: responsiveTextStyle(context, 16, Colors.grey.shade600, null),
           ),
           actions: [
             Padding(
@@ -112,13 +109,13 @@ class LocationService {
                     const EdgeInsets.all(12),
                   ),
                   backgroundColor: MaterialStateProperty.all(
-                    const Color(0xFFFEC10F),
+                    Colors.white,
                   ),
                   foregroundColor: MaterialStateProperty.all(
-                    const Color(0xFF923A06),
+                    Colors.black,
                   ),
                   overlayColor: MaterialStateProperty.all(
-                    const Color(0xFF923A06).withOpacity(0.2),
+                    Colors.black.withOpacity(0.2),
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
@@ -128,10 +125,8 @@ class LocationService {
                 ),
                 child: Text(
                   'Ok'.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF81571A),
-                  ),
+                  style: responsiveTextStyle(
+                      context, 18, const Color(0xFF36DCFF), null),
                 ),
               ),
             ),

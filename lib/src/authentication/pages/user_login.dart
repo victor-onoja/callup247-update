@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:callup247/main.dart';
-import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:callup247/src/onboarding/pages/onboarding_choice_screen.dart';
-import 'package:callup247/src/profile/pages/serviceprovider_profile_creation_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -534,7 +532,72 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                         ),
                       )
                     ],
-                  )
+                  ),
+                  // quick links
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          const Color(0xFF003305)
+                              .withOpacity(0.8), // Adjust opacity as needed
+                          const Color(0xFF003305)
+                              .withOpacity(0.5), // Adjust opacity as needed
+                          const Color(0xFF003305)
+                              .withOpacity(0.2), // Adjust opacity as needed
+                          Colors.transparent, // Fully transparent
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/quicklink1.png'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(
+                                'Quick\nAdvert',
+                                style: responsiveTextStyle(
+                                    context, 10, Colors.white, FontWeight.w700),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Image.asset('assets/quicklink2.png'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(
+                                'Check\nService',
+                                style: responsiveTextStyle(
+                                    context, 10, Colors.white, FontWeight.w700),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Image.asset('assets/quicklink2.png'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(
+                                'Service\nProvider',
+                                style: responsiveTextStyle(
+                                    context, 10, Colors.white, FontWeight.w700),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
