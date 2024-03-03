@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:callup247/main.dart';
 import 'package:callup247/src/home/pages/customer_home.dart';
 import 'package:callup247/src/home/pages/serviceprovider_homepage.dart';
@@ -47,11 +46,8 @@ class SplashScreenState extends State<SplashScreen>
       await _storeUserLocationInSharedPreferences(position);
       // Store user's location in Supabase table
       await _storeUserLocationInSupabase(position);
-      print(position.latitude);
-      print(position.longitude);
     } catch (e) {
       // Handle location fetching error
-      print('Error fetching user location: $e');
     }
   }
 
@@ -86,9 +82,9 @@ class SplashScreenState extends State<SplashScreen>
             'latitude': userLatitude,
           });
         } on PostgrestException catch (error) {
-          print(error);
+          //
         } catch (e) {
-          print(e);
+          //
         }
       }
     }
