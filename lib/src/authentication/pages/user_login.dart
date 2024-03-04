@@ -159,6 +159,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
     _initrememberme();
   }
 
+// 06 - use case init remember me
+
   Future<void> _initrememberme() async {
     final prefs = await SharedPreferences.getInstance();
     final isremember = prefs.getBool('rememberme');
@@ -555,7 +557,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                       children: [
                         Row(
                           children: [
-                            Image.asset('assets/quicklink1.png'),
+                            Image.asset('assets/quicklink2.png'),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),

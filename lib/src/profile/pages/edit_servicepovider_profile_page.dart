@@ -147,7 +147,7 @@ class _EditServiceProviderProfileState
     );
   }
 
-  // 06A - use case pick image1
+  // 05A - use case pick image1
 
   Future<void> _pickImage1() async {
     final ImagePicker picker = ImagePicker();
@@ -159,7 +159,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 06B - use case pick image2
+  // 05B - use case pick image2
 
   Future<void> _pickImage2() async {
     final ImagePicker picker = ImagePicker();
@@ -171,7 +171,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 06C - use case pick image3
+  // 05C - use case pick image3
 
   Future<void> _pickImage3() async {
     final ImagePicker picker = ImagePicker();
@@ -183,7 +183,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 07 - use case check network
+  // 06 - use case check network
 
   Future<bool> _checkInternetConnectivity() async {
     try {
@@ -194,7 +194,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 08A - use case upload image1
+  // 07A - use case upload image1
 
   Future<void> _uploadImage1() async {
     bool isImage1Valid = await _checkImageValidity(media1);
@@ -229,7 +229,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 08B - use case upload image2
+  // 07B - use case upload image2
 
   Future<void> _uploadImage2() async {
     bool isImage2Valid = await _checkImageValidity(media2);
@@ -265,7 +265,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 08C - use case upload image3
+  // 07C - use case upload image3
 
   Future<void> _uploadImage3() async {
     bool isImage3Valid = await _checkImageValidity(media3);
@@ -300,7 +300,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 09 - use case create service provider profile
+  // 08 - use case create service provider profile
 
   Future<void> _updateServiceProviderProfile() async {
     final ig = _instagramController.text.trim();
@@ -375,7 +375,7 @@ class _EditServiceProviderProfileState
     }
   }
 
-  // 10 - use case create service provider profile
+  // 09 - use case create service provider profile
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final prefs = await SharedPreferences.getInstance();
@@ -398,6 +398,41 @@ class _EditServiceProviderProfileState
       await prefs.setString(
           'serviceproviderprofile', updatedServiceProviderJson);
     } else {}
+  }
+
+  // 10 - use case submit logic
+
+  Future<void> _performSubmit() async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      if (_image1 != null) {
+        await _uploadImage1();
+      }
+      if (_image2 != null) {
+        await _uploadImage2();
+      }
+      if (_image3 != null) {
+        await _uploadImage3();
+      }
+
+      await _updateServiceProviderProfile();
+      await _saveServiceProviderProfilelocally();
+    } catch (e) {
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
+        content: Text(
+          'An error occurred. Please try again later.',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   // variables
@@ -836,52 +871,36 @@ class _EditServiceProviderProfileState
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
                             onPressed: () async {
-                              setState(() {
-                                loading = true;
-                              });
-                              // Check network connectivity
-                              bool isConnected =
-                                  await _checkInternetConnectivity();
-                              if (!isConnected) {
-                                if (!context.mounted) return;
-                                // Show a snackbar for no network
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(
-                                    'No internet connection. Please check your network settings.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                setState(() {
-                                  loading = false;
-                                });
-                                return; // Exit the function if there's no network
-                              }
+                              final messenger = ScaffoldMessenger.of(context);
 
                               try {
-                                if (_image1 != null) {
-                                  await _uploadImage1();
-                                }
-                                if (_image2 != null) {
-                                  await _uploadImage2();
-                                }
-                                if (_image3 != null) {
-                                  await _uploadImage3();
+                                // Check network connectivity
+                                bool isConnected =
+                                    await _checkInternetConnectivity();
+                                if (!isConnected) {
+                                  if (!context.mounted) return;
+                                  // Show a snackbar for no network
+                                  messenger.showSnackBar(SnackBar(
+                                    content: Text(
+                                      'No internet connection. Please check your network settings.',
+                                      style: responsiveTextStyle(context, 16,
+                                          Colors.black, FontWeight.bold),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                  return; // Exit the function if there's no network
                                 }
 
-                                await _updateServiceProviderProfile();
-                                await _saveServiceProviderProfilelocally();
-
-                                await Future.delayed(
-                                    const Duration(seconds: 2));
-                                if (!context.mounted) return;
-                                Navigator.of(context).pop();
+                                setState(() {
+                                  loading = true;
+                                });
+                                await _performSubmit().then((_) {
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pop();
+                                });
                               } catch (error) {
                                 if (!context.mounted) return;
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'An error occurred. Please try again later.',
                                     style: responsiveTextStyle(context, 16,

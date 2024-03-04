@@ -760,6 +760,42 @@ class _ServiceProviderProfileCreationState
     }
   }
 
+  // 04 - use case submit logic
+
+  Future<void> _performSubmit() async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      if (_image1 != null) {
+        await _uploadImage1();
+      }
+      if (_image2 != null) {
+        await _uploadImage2();
+      }
+      if (_image3 != null) {
+        await _uploadImage3();
+      }
+
+      await _becomeAServiceProvider();
+      await _createServiceProviderProfile();
+      await _saveServiceProviderProfilelocally();
+    } catch (e) {
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
+        content: Text(
+          'An error occurred. Please try again later.',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
 // variables
 
   final searchFocusNode = FocusNode();
@@ -806,7 +842,7 @@ class _ServiceProviderProfileCreationState
     super.dispose();
   }
 
-  // 04 - use case upload image1
+  // 05 - use case upload image1
 
   Future<void> _uploadImage1() async {
     try {
@@ -823,7 +859,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 04B - use case upload image2
+  // 05B - use case upload image2
 
   Future<void> _uploadImage2() async {
     try {
@@ -840,7 +876,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 04C - use case upload image3
+  // 05C - use case upload image3
 
   Future<void> _uploadImage3() async {
     try {
@@ -865,7 +901,7 @@ class _ServiceProviderProfileCreationState
     _initializeData();
   }
 
-  // 05 - use case initialize data
+  // 06 - use case initialize data
 
   Future<void> _initializeData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -906,7 +942,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 06 - create service provider profile
+  // 07 - create service provider profile
 
   Future<void> _createServiceProviderProfile() async {
     final serviceprovided = _serviceProvidedController.text.trim();
@@ -994,7 +1030,7 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // 07 - use save service provider profile locally
+  // 08 - use save service provider profile locally
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final serviceprovided = _serviceProvidedController.text.trim();
@@ -1582,14 +1618,11 @@ class _ServiceProviderProfileCreationState
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
                             onPressed: () async {
-                              setState(() {
-                                loading = true;
-                              });
+                              final messenger = ScaffoldMessenger.of(context);
                               // prevent unregistered services
                               if (isTyping ||
                                   _serviceProvidedController.text.isEmpty) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'Please pick a registered service :(',
                                     style: responsiveTextStyle(context, 16,
@@ -1597,9 +1630,6 @@ class _ServiceProviderProfileCreationState
                                   ),
                                   backgroundColor: Colors.red,
                                 ));
-                                setState(() {
-                                  loading = false;
-                                });
                                 return;
                               }
                               // Check network connectivity
@@ -1608,8 +1638,7 @@ class _ServiceProviderProfileCreationState
                               if (!isConnected) {
                                 if (!context.mounted) return;
                                 // Show a snackbar for no network
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'No internet connection. Please check your network settings.',
                                     style: responsiveTextStyle(context, 16,
@@ -1617,40 +1646,24 @@ class _ServiceProviderProfileCreationState
                                   ),
                                   backgroundColor: Colors.red,
                                 ));
-                                setState(() {
-                                  loading = false;
-                                });
                                 return; // Exit the function if there's no network
                               }
 
-                              // todo: make this one request
+                              setState(() {
+                                loading = true;
+                              });
                               try {
-                                if (_image1 != null) {
-                                  await _uploadImage1();
-                                }
-                                if (_image2 != null) {
-                                  await _uploadImage2();
-                                }
-                                if (_image3 != null) {
-                                  await _uploadImage3();
-                                }
-
-                                await _becomeAServiceProvider();
-                                await _createServiceProviderProfile();
-                                await _saveServiceProviderProfilelocally();
-
-                                await Future.delayed(
-                                    const Duration(seconds: 2));
-                                if (!context.mounted) return;
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const ServiceProviderHomePage()),
-                                );
+                                await _performSubmit().then((_) {
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const ServiceProviderHomePage()),
+                                  );
+                                });
                               } catch (error) {
                                 if (!context.mounted) return;
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                messenger.showSnackBar(SnackBar(
                                   content: Text(
                                     'An error occurred. Please try again later.',
                                     style: responsiveTextStyle(context, 16,

@@ -230,24 +230,59 @@ class _ServiceProviderSignUpScreenState
     }
   }
 
-  // 08 - variables
+  //  08 - use case signup logic
+
+  Future<void> _performSignup() async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      // Run _createUser and wait for it to finish
+      await _createUser();
+
+      // Only run _uploadImage if _createUser has finished successfully
+      if (_image != null) {
+        await _uploadImage();
+      }
+
+      // Update profile locally and remotely
+      await _updateProfile();
+      await _saveProfileLocally();
+      await _signInUser();
+    } catch (e) {
+      if (!context.mounted) return;
+      messenger.showSnackBar(SnackBar(
+        content: Text(
+          'An error occurred. Please try again later.',
+          style:
+              responsiveTextStyle(context, 16, Colors.black, FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  // 09 - variables
 
   bool isPasswordVisible = false;
   bool isPasswordConfirmVisible = false;
   final _countryValue = TextEditingController();
   final _stateValue = TextEditingController();
   final _cityValue = TextEditingController();
-  File? _image;
   final _fullnameController = TextEditingController();
   final _emailaddressController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
+  File? _image;
   var loading = false;
   final _formKey = GlobalKey<FormState>();
   bool isPasswordReset = false;
   bool _isChecked = false;
 
-// 09 - dispose
+// 10 - dispose
 
   @override
   void dispose() {
@@ -260,7 +295,7 @@ class _ServiceProviderSignUpScreenState
     super.dispose();
   }
 
-  // 10 - build method
+  // 11 - build method
 
   @override
   Widget build(BuildContext context) {
@@ -545,7 +580,7 @@ class _ServiceProviderSignUpScreenState
                           if (value!.isEmpty) {
                             return 'Please re-type your password';
                           }
-                          // todo: confiirm password validation logic
+
                           if (value != _passwordController.text) {
                             return 'passwords must match';
                           }
@@ -628,79 +663,70 @@ class _ServiceProviderSignUpScreenState
                                     onPressed: () async {
                                       final messenger =
                                           ScaffoldMessenger.of(context);
+                                      try {
+                                        // Check network connectivity
+                                        bool isConnected =
+                                            await _checkInternetConnectivity();
+                                        if (!isConnected) {
+                                          if (!context.mounted) return;
+                                          // Show a snackbar for no network
+                                          messenger.showSnackBar(SnackBar(
+                                            content: Text(
+                                              'No internet connection. Please check your network settings.',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                          return; // Exit the function if there's no network
+                                        }
 
-                                      // Check network connectivity
-                                      bool isConnected =
-                                          await _checkInternetConnectivity();
-                                      if (!isConnected) {
-                                        if (!context.mounted) return;
-                                        // Show a snackbar for no network
-                                        messenger.showSnackBar(SnackBar(
-                                          content: Text(
-                                            'No internet connection. Please check your network settings.',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold),
-                                          ),
-                                          backgroundColor: Colors.red,
-                                        ));
-                                        return; // Exit the function if there's no network
-                                      }
+                                        // Validate form
+                                        if (!_formKey.currentState!
+                                            .validate()) {
+                                          return; // Exit the function if form validation fails
+                                        }
 
-                                      if (!_isChecked) {
-                                        if (!context.mounted) return;
-                                        // Show a snackbar for no network
-                                        messenger.showSnackBar(SnackBar(
-                                          content: Text(
-                                            'Please accept the Terms and Conditions.',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold),
-                                          ),
-                                          backgroundColor: Colors.red,
-                                        ));
-                                        return; // Exit the function if there's no network
-                                      }
+                                        if (!_isChecked) {
+                                          if (!context.mounted) return;
+                                          // Show a snackbar for no network
+                                          messenger.showSnackBar(SnackBar(
+                                            content: Text(
+                                              'Please accept the Terms and Conditions.',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                          return; // Exit the function if there's no network
+                                        }
 
-                                      if (_image == null) {
-                                        if (!context.mounted) return;
-                                        messenger.showSnackBar(SnackBar(
-                                          content: Text(
-                                            'Please add a display picture :)',
-                                            style: responsiveTextStyle(
-                                                context,
-                                                16,
-                                                Colors.black,
-                                                FontWeight.bold),
-                                          ),
-                                          backgroundColor: Colors.red,
-                                        ));
-                                        return;
-                                      }
-                                      // Add your sign-up logic here.
-                                      if (_formKey.currentState!.validate()) {
+                                        if (_image == null) {
+                                          if (!context.mounted) return;
+                                          messenger.showSnackBar(SnackBar(
+                                            content: Text(
+                                              'Please add a display picture :)',
+                                              style: responsiveTextStyle(
+                                                  context,
+                                                  16,
+                                                  Colors.black,
+                                                  FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                          return;
+                                        }
+
                                         setState(() {
                                           loading = true;
                                         });
-
-                                        try {
-                                          // Run _createUser and wait for it to finish
-                                          await _createUser();
-
-                                          // Only run _uploadImage if _createUser has finished successfully
-                                          if (_image != null) {
-                                            await _uploadImage();
-                                          }
-
-                                          // Update profile locally and remotely
-                                          await _saveProfileLocally();
-
-                                          await _updateProfile();
-                                          await _signInUser();
+                                        await _performSignup().then((_) {
                                           if (!context.mounted) return;
                                           messenger.showSnackBar(SnackBar(
                                             content: Text(
@@ -714,10 +740,6 @@ class _ServiceProviderSignUpScreenState
                                             backgroundColor: Colors.green,
                                           ));
 
-                                          // Delay and navigate
-                                          await Future.delayed(
-                                              const Duration(seconds: 1));
-                                          if (!context.mounted) return;
                                           Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                               builder: (BuildContext context) =>
@@ -730,24 +752,24 @@ class _ServiceProviderSignUpScreenState
                                               ),
                                             ),
                                           );
-                                        } catch (error) {
-                                          if (!context.mounted) return;
-                                          messenger.showSnackBar(SnackBar(
-                                            content: Text(
-                                              'An error occurred. Please try again later.',
-                                              style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.black,
-                                                  FontWeight.bold),
-                                            ),
-                                            backgroundColor: Colors.red,
-                                          ));
-                                        } finally {
-                                          setState(() {
-                                            loading = false;
-                                          });
-                                        }
+                                        });
+                                      } catch (error) {
+                                        if (!context.mounted) return;
+                                        messenger.showSnackBar(SnackBar(
+                                          content: Text(
+                                            'An error occurred. Please try again later.',
+                                            style: responsiveTextStyle(
+                                                context,
+                                                16,
+                                                Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ));
+                                      } finally {
+                                        setState(() {
+                                          loading = false;
+                                        });
                                       }
                                     },
                                     child: Padding(
