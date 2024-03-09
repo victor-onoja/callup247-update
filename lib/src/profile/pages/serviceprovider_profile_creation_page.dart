@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:callup247/src/home/pages/serviceprovider_homepage.dart';
+import 'package:callup247/src/profile/widgets/socialmedia_links_entry.dart';
 import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -715,39 +716,39 @@ class _ServiceProviderProfileCreationState
 
   // 02 - use case pick image1
 
-  Future<void> _pickImage1() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image1 = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _pickImage1() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image1 = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   // 02A - use case pick image2
 
-  Future<void> _pickImage2() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image2 = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _pickImage2() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image2 = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   // 02B - use case pick image3
 
-  Future<void> _pickImage3() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image3 = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _pickImage3() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image3 = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   // 03 - use case check network
 
@@ -766,15 +767,15 @@ class _ServiceProviderProfileCreationState
     final messenger = ScaffoldMessenger.of(context);
 
     try {
-      if (_image1 != null) {
-        await _uploadImage1();
-      }
-      if (_image2 != null) {
-        await _uploadImage2();
-      }
-      if (_image3 != null) {
-        await _uploadImage3();
-      }
+      // if (_image1 != null) {
+      //   await _uploadImage1();
+      // }
+      // if (_image2 != null) {
+      //   await _uploadImage2();
+      // }
+      // if (_image3 != null) {
+      //   await _uploadImage3();
+      // }
 
       await _becomeAServiceProvider();
       await _createServiceProviderProfile();
@@ -803,95 +804,97 @@ class _ServiceProviderProfileCreationState
       TextEditingController();
   List<String> filteredServices = []; // Initialize it as an empty list
   String searchchoice = '';
-  File? _image1;
-  File? _image2;
-  File? _image3;
+  // File? _image1;
+  // File? _image2;
+  // File? _image3;
   bool isTyping = false; // Initially, the user is not typing
   bool isSearching = false; // Initially the user is not searching
-  final TextEditingController _instagramController = TextEditingController();
-  final TextEditingController _linkedinController = TextEditingController();
-  final TextEditingController _xController = TextEditingController();
-  final TextEditingController _facebookController = TextEditingController();
-  final TextEditingController _websiteController = TextEditingController();
+  // final TextEditingController _instagramController = TextEditingController();
+  // final TextEditingController _linkedinController = TextEditingController();
+  // final TextEditingController _xController = TextEditingController();
+  // final TextEditingController _facebookController = TextEditingController();
+  // final TextEditingController _websiteController = TextEditingController();
   final TextEditingController _gmailController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
-  final TextEditingController _experienceController = TextEditingController();
-  final TextEditingController _availabilityController = TextEditingController();
-  final TextEditingController _specialOffersController =
-      TextEditingController();
+  // final TextEditingController _experienceController = TextEditingController();
+  // final TextEditingController _availabilityController = TextEditingController();
+  // final TextEditingController _specialOffersController =
+  //     TextEditingController();
   String emailaddress = '';
   String fullname = '';
   var loading = false;
   double latitude = 0.0;
   double longitude = 0.0;
+  List<SocialMediaLink> socialMediaLinks = [];
+  File? _image;
 
   // dispose
 
   @override
   void dispose() {
-    _instagramController.dispose();
-    _xController.dispose();
-    _linkedinController.dispose();
-    _facebookController.dispose();
-    _websiteController.dispose();
+    // _instagramController.dispose();
+    // _xController.dispose();
+    // _linkedinController.dispose();
+    // _facebookController.dispose();
+    // _websiteController.dispose();
     _gmailController.dispose();
     _bioController.dispose();
-    _experienceController.dispose();
-    _availabilityController.dispose();
-    _specialOffersController.dispose();
+    // _experienceController.dispose();
+    // _availabilityController.dispose();
+    // _specialOffersController.dispose();
     super.dispose();
   }
 
   // 05 - use case upload image1
 
-  Future<void> _uploadImage1() async {
-    try {
-      await supabase.storage.from('media1').upload(
-            fullname,
-            _image1!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-      //
-    } catch (error) {
-      //
-    }
-  }
+  // Future<void> _uploadImage1() async {
+  //   try {
+  //     await supabase.storage.from('media1').upload(
+  //           fullname,
+  //           _image1!,
+  //           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+  //         );
+  //     if (mounted) {}
+  //   } on PostgrestException catch (error) {
+  //     //
+  //   } catch (error) {
+  //     //
+  //   }
+  // }
 
   // 05B - use case upload image2
 
-  Future<void> _uploadImage2() async {
-    try {
-      await supabase.storage.from('media2').upload(
-            fullname,
-            _image2!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-      //
-    } catch (error) {
-      //
-    }
-  }
+  // Future<void> _uploadImage2() async {
+  //   try {
+  //     await supabase.storage.from('media2').upload(
+  //           fullname,
+  //           _image2!,
+  //           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+  //         );
+  //     if (mounted) {}
+  //   } on PostgrestException catch (error) {
+  //     //
+  //   } catch (error) {
+  //     //
+  //   }
+  // }
 
   // 05C - use case upload image3
 
-  Future<void> _uploadImage3() async {
-    try {
-      await supabase.storage.from('media3').upload(
-            fullname,
-            _image3!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-      //
-    } catch (error) {
-      //
-    }
-  }
+  // Future<void> _uploadImage3() async {
+  //   try {
+  //     await supabase.storage.from('media3').upload(
+  //           fullname,
+  //           _image3!,
+  //           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+  //         );
+  //     if (mounted) {}
+  //   } on PostgrestException catch (error) {
+  //     //
+  //   } catch (error) {
+  //     //
+  //   }
+  // }
 
   // init
 
@@ -949,16 +952,16 @@ class _ServiceProviderProfileCreationState
     final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
     final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    final ig = _instagramController.text.trim();
-    final x = _xController.text.trim();
-    final linkedin = _linkedinController.text.trim();
-    final fb = _facebookController.text.trim();
-    final web = _websiteController.text.trim();
+    // final ig = _instagramController.text.trim();
+    // final x = _xController.text.trim();
+    // final linkedin = _linkedinController.text.trim();
+    // final fb = _facebookController.text.trim();
+    // final web = _websiteController.text.trim();
     final gmail = emailaddress;
     final bio = _bioController.text.trim();
-    final experience = _experienceController.text.trim();
-    final availability = _availabilityController.text.trim();
-    final specialoffers = _specialOffersController.text.trim();
+    // final experience = _experienceController.text.trim();
+    // final availability = _availabilityController.text.trim();
+    // final specialoffers = _specialOffersController.text.trim();
 
     final user = supabase.auth.currentUser;
 
@@ -969,16 +972,16 @@ class _ServiceProviderProfileCreationState
       'media_url1': media1,
       'media_url2': media2,
       'media_url3': media3,
-      'ig_url': ig,
-      'x_url': x,
-      'linkedin_url': linkedin,
-      'fb_url': fb,
-      'web_link': web,
+      // 'ig_url': ig,
+      // 'x_url': x,
+      // 'linkedin_url': linkedin,
+      // 'fb_url': fb,
+      // 'web_link': web,
       'gmail_link': gmail,
       'bio': bio,
-      'experience': experience,
-      'availability': availability,
-      'special_offers': specialoffers,
+      // 'experience': experience,
+      // 'availability': availability,
+      // 'special_offers': specialoffers,
       'latitude': latitude,
       'longitude': longitude
     };
@@ -1037,32 +1040,32 @@ class _ServiceProviderProfileCreationState
     final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
     final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
     final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    final ig = _instagramController.text.trim();
-    final x = _xController.text.trim();
-    final linkedin = _linkedinController.text.trim();
-    final fb = _facebookController.text.trim();
-    final web = _websiteController.text.trim();
+    // final ig = _instagramController.text.trim();
+    // final x = _xController.text.trim();
+    // final linkedin = _linkedinController.text.trim();
+    // final fb = _facebookController.text.trim();
+    // final web = _websiteController.text.trim();
     final gmail = emailaddress;
     final bio = _bioController.text.trim();
-    final experience = _experienceController.text.trim();
-    final availability = _availabilityController.text.trim();
-    final specialoffers = _specialOffersController.text.trim();
+    // final experience = _experienceController.text.trim();
+    // final availability = _availabilityController.text.trim();
+    // final specialoffers = _specialOffersController.text.trim();
 
     final details = {
       'service_provided': serviceprovided,
       'media_url1': media1,
       'media_url2': media2,
       'media_url3': media3,
-      'ig_url': ig,
-      'x_url': x,
-      'linkedin_url': linkedin,
-      'fb_url': fb,
-      'web_link': web,
+      // 'ig_url': ig,
+      // 'x_url': x,
+      // 'linkedin_url': linkedin,
+      // 'fb_url': fb,
+      // 'web_link': web,
       'gmail_link': gmail,
       'bio': bio,
-      'experience': experience,
-      'availability': availability,
-      'special_offers': specialoffers,
+      // 'experience': experience,
+      // 'availability': availability,
+      // 'special_offers': specialoffers,
     };
 
     final jsonString = json.encode(details);
@@ -1072,631 +1075,979 @@ class _ServiceProviderProfileCreationState
     await prefs.setString('serviceproviderprofile', jsonString);
   }
 
+  void _addLinkOG(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Select Social Media Platform',
+            style: responsiveTextStyle(
+                context, 14, const Color(0xFF000000), FontWeight.w500),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildSocialMediaButton('LinkedIn', 'assets/linkedin-icon.png'),
+                _buildSocialMediaButton('Instagram', 'assets/ig-icon.png'),
+                _buildSocialMediaButton('X', 'assets/x-icon.webp'),
+                _buildSocialMediaButton('Facebook', 'assets/facebook.png'),
+                _buildSocialMediaButton('Website', 'assets/web-icon.png'),
+                // Add more social media options as needed
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSocialMediaButton(String platform, String icon) {
+    return TextButton(
+      onPressed: () {
+        // Close the dialog and display text field for the selected platform
+        Navigator.of(context).pop();
+        _showTextFieldForPlatform(platform);
+      },
+      child: Row(
+        children: [
+          Image.asset(
+            icon,
+            width: 20,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            platform,
+            style: responsiveTextStyle(
+                context, 12, const Color(0xFF6F6C6C), FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTextFieldForPlatform(String platform) {
+    String link = '';
+    String nav = '';
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Text(
+                'Add Link for $platform',
+                style: responsiveTextStyle(
+                    context, 14, const Color(0xFF000000), FontWeight.w500),
+              ),
+              IconButton(
+                onPressed: () async {
+                  if (platform == 'LinkedIn') {
+                    nav = 'https://www.linkedin.com/';
+                  } else if (platform == 'Instagram') {
+                    nav = 'https://www.instagram.com/';
+                  } else if (platform == 'X') {
+                    nav = 'https://twitter.com/';
+                  } else if (platform == 'Facebook') {
+                    nav = 'https://web.facebook.com/?_rdc=1&_rdr';
+                  } else {
+                    nav = 'https://www.google.com/';
+                  }
+                  final Uri url = Uri.parse(nav);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  } else {}
+                },
+                icon: const Icon(
+                  Icons.open_in_new,
+                  color: Color(0xFF000000),
+                ),
+              )
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  style: responsiveTextStyle(
+                      context, 16, const Color(0xFFA6A6A6), FontWeight.w500),
+                  onChanged: (value) {
+                    link = value; // Update the link as the user types
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter link',
+                      hintStyle: responsiveTextStyle(context, 14,
+                          const Color(0xFFA6A6A6), FontWeight.w500)),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF36DDFF)),
+                  onPressed: () {
+                    _addLink(context, platform,
+                        link); // Add the link when the user clicks the button
+                  },
+                  child: Text('Add Link',
+                      style: responsiveTextStyle(context, 14,
+                          const Color(0xFF000000), FontWeight.bold)),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _removeLink(String platform) {
+    setState(() {
+      socialMediaLinks.removeWhere((link) => link.platform == platform);
+    });
+  }
+
+  void _addLink(BuildContext context, String platform, String link) {
+    Navigator.of(context).pop(); // Close the dialog
+    setState(() {
+      socialMediaLinks.add(SocialMediaLink(platform: platform, link: link));
+    });
+  }
+
+  // 01 - use case pick image
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  // 02 - use case upload image
+
+  Future<void> _uploadImage() async {
+    // final filename = _fullnameController.text.trim();
+    const filename = '';
+    try {
+      await supabase.storage.from('avatars').upload(
+            filename,
+            _image!,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+      if (mounted) {}
+    } on PostgrestException catch (error) {
+      //
+    } catch (error) {
+      //
+    }
+  }
+
+  // todo: update image on supabase
+
+// todo: update image locally
+
 // build method
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          children: [
+            Text(
+              'Set up your Profile',
+              style: responsiveTextStyle(
+                  context, 20, Colors.black, FontWeight.bold),
+            ),
+            Text(
+              'Don\'t worry you can always change it later',
+              style: responsiveTextStyle(
+                  context, 10, const Color(0xFF373737), FontWeight.w500),
+            )
+          ],
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFB3F2FF),
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  Color(0xFF039fdc),
-                  Color(0xFF13CAF1),
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Set up your Profile',
-                        style: responsiveTextStyle(
-                            context, 20, Colors.black, FontWeight.bold),
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _pickImage();
+                      },
+                      child: Column(
+                        children: <Widget>[
+                          Stack(
+                            children: [
+                              _image != null
+                                  ? CircleAvatar(
+                                      backgroundImage: FileImage(_image!),
+                                      radius: 45,
+                                    )
+                                  : const CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage('assets/guest_dp.png'),
+                                      radius: 45,
+                                    ),
+                              Positioned(
+                                bottom: 8,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.black.withOpacity(
+                                        0.6), // Dark background color
+                                  ),
+                                  padding: const EdgeInsets.all(
+                                      3), // Adjust padding as needed
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-
-                  // add service
-
-                  Text(
-                    'What Service will you be providing ?',
-                    style: responsiveTextStyle(context, 20, Colors.black, null),
-                  ),
-                  Text(
-                    'hint: this can\'t be changed later, only through customer care :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null),
-                  ),
-
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _serviceProvidedController,
-                          focusNode: searchFocusNode,
-                          showCursor: false,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, FontWeight.bold),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.15,
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFB3F2FF),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8),
+                            child: Text(
+                              'Full Name',
+                              style: responsiveTextStyle(context, 14,
+                                  const Color(0xFF000000), FontWeight.w600),
                             ),
-                            suffixIcon: InkWell(
-                                radius: 50,
-                                splashColor: Colors.greenAccent,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Icon(
+                                  Icons.mail_outline_outlined,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'Email',
+                                  style: responsiveTextStyle(context, 12,
+                                      const Color(0xFF000000), FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+
+                // add service
+
+                Text(
+                  'Applicable Title',
+                  style: responsiveTextStyle(
+                      context, 16, Colors.black, FontWeight.w600),
+                ),
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _serviceProvidedController,
+                        focusNode: searchFocusNode,
+                        showCursor: false,
+                        style: responsiveTextStyle(context, 16,
+                            const Color(0xFFA6A6A6), FontWeight.bold),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 2),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Color(0xFFE2E2E5), width: 2),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.black54,
+                          ),
+                          suffixIcon: InkWell(
+                              radius: 50,
+                              splashColor: Colors.greenAccent,
+                              onTap: () {
+                                print(socialMediaLinks);
+                                FocusScope.of(context).unfocus();
+                                setState(() {
+                                  isSearching = false;
+                                  // When suffix icon is tapped, set isTyping to false
+                                  isTyping = false;
+                                  // You can also clear the text field if needed
+                                  _serviceProvidedController.clear();
+                                  // Update the filtered services here as well
+                                  filteredServices = [];
+                                });
+                              },
+                              child: const Icon(
+                                Icons.cancel,
+                                color: Colors.black54,
+                              )),
+                          hintText: 'Start typing to search...',
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            // Filter services here and update UI.
+                            filteredServices = servicesList
+                                .where((service) => service
+                                    .toLowerCase()
+                                    .startsWith(value.toLowerCase()))
+                                .toList();
+                            if (value.isNotEmpty) {
+                              isTyping =
+                                  true; // User is typing, hide the content above
+                            } else {
+                              isTyping =
+                                  false; // User has stopped typing, show the content above
+                            }
+                            isSearching = false;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                Visibility(
+                  visible: isTyping, // Content is visible when typing
+                  child: Container(
+                    color: Colors.white,
+                    height: MediaQuery.sizeOf(context).height * 0.7,
+                    child: filteredServices.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Sorry, we don't have this service currently. Please pick a registered service.\nhint: try a different name for the service e.g author, writer or journalist, reporter",
+                              style: responsiveTextStyle(
+                                  context, 16, Colors.black, FontWeight.bold),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: filteredServices.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  filteredServices[index],
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
                                 onTap: () {
+                                  // Handle user selection here.
                                   FocusScope.of(context).unfocus();
                                   setState(() {
-                                    isSearching = false;
-                                    // When suffix icon is tapped, set isTyping to false
+                                    isSearching = true;
+                                    // When tile is tapped, set isTyping to false
                                     isTyping = false;
-                                    // You can also clear the text field if needed
-                                    _serviceProvidedController.clear();
+                                    searchchoice = filteredServices[index];
+                                    _serviceProvidedController.text =
+                                        filteredServices[index];
+
                                     // Update the filtered services here as well
                                     filteredServices = [];
                                   });
                                 },
-                                child: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.black54,
-                                )),
-                            hintText: 'Start typing to search...',
+                              );
+                            },
                           ),
-                          onChanged: (value) {
+                  ),
+                ),
+
+// bio
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                Text(
+                  'Bio',
+                  style: responsiveTextStyle(
+                      context, 14, Colors.black, FontWeight.w600),
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.008),
+                TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: 3,
+                  controller: _bioController,
+                  cursorColor: const Color(0xFFA6A6A6),
+                  keyboardType: TextInputType.multiline,
+                  style: responsiveTextStyle(
+                      context, 16, const Color(0xFFA6A6A6), FontWeight.w500),
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Color(0xFFE2E2E5), width: 2),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Color(0xFFE2E2E5), width: 2),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+
+//  social media
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                Text(
+                  'Social Media',
+                  style: responsiveTextStyle(
+                      context, 14, Colors.black, FontWeight.w600),
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.008),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: socialMediaLinks.map((link) {
+                    return SocialMediaLinkEntry(
+                      platform: link.platform,
+                      link: link.link,
+                      onDelete: _removeLink,
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.008),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: const Color(0xFFE2E2E5))),
+                  child: Center(
+                    child: TextButton.icon(
+                        onPressed: () => _addLinkOG(context),
+                        icon: const Icon(
+                          Icons.add,
+                          color: Color(0xFF625B5B),
+                        ),
+                        label: Text(
+                          'Add Link',
+                          style: responsiveTextStyle(context, 12,
+                              const Color(0xFF625B5B), FontWeight.w500),
+                        )),
+                  ),
+                ),
+
+                // add media
+
+                // Text(
+                //   'Add Media :',
+                //   style: responsiveTextStyle(context, 20, Colors.black, null),
+                // ),
+                // Text(
+                //   'hint: you can add up to three images that showcase your work :)',
+                //   style: responsiveTextStyle(context, 12, Colors.black45, null),
+                // ),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // SingleChildScrollView(
+                //   scrollDirection: Axis.horizontal,
+                //   child: Row(
+                //     children: [
+                //       // image 1
+                //       Container(
+                //         color: Colors.black45,
+                //         height: 250,
+                //         width: 250,
+                //         child: GestureDetector(
+                //           onTap: () {
+                //             _pickImage1();
+                //           },
+                //           child: Column(
+                //             children: <Widget>[
+                //               if (_image1 != null)
+                //                 Image.file(
+                //                   _image1!,
+                //                   height: 250,
+                //                   width: 250,
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               else
+                //                 const Icon(
+                //                   Icons.camera_alt,
+                //                   size: 250,
+                //                 ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+                //       // image 2
+                //       Container(
+                //         color: Colors.black45,
+                //         height: 250,
+                //         width: 250,
+                //         child: GestureDetector(
+                //           onTap: () {
+                //             _pickImage2();
+                //           },
+                //           child: Column(
+                //             children: <Widget>[
+                //               if (_image2 != null)
+                //                 Image.file(
+                //                   _image2!,
+                //                   height: 250,
+                //                   width: 250,
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               else
+                //                 const Icon(
+                //                   Icons.camera_alt,
+                //                   size: 250,
+                //                 ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+                //       // image 3
+                //       Container(
+                //         color: Colors.black45,
+                //         height: 250,
+                //         width: 250,
+                //         child: GestureDetector(
+                //           onTap: () {
+                //             _pickImage3();
+                //           },
+                //           child: Column(
+                //             children: <Widget>[
+                //               if (_image3 != null)
+                //                 Image.file(
+                //                   _image3!,
+                //                   height: 250,
+                //                   width: 250,
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               else
+                //                 const Icon(
+                //                   Icons.camera_alt,
+                //                   size: 250,
+                //                 ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+
+                // Text(
+                //     'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
+                //     style:
+                //         responsiveTextStyle(context, 12, Colors.black45, null)),
+
+                // add social links
+
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+                // Text(
+                //   'Add Your Social links :',
+                //   style: responsiveTextStyle(context, 20, Colors.black, null),
+                // ),
+                // Text(
+                //     'hint: click on the app icons for easy navigation to share your proile :)',
+                //     style:
+                //         responsiveTextStyle(context, 12, Colors.black45, null)),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // Column(
+                //   children: [
+                //     Row(
+                //       children: [
+                //         GestureDetector(
+                //           onTap: () async {
+                //             final Uri url =
+                //                 Uri.parse('https://www.linkedin.com/');
+                //             if (await canLaunchUrl(url)) {
+                //               await launchUrl(url);
+                //             } else {}
+                //           },
+                //           child: Image.asset(
+                //             'assets/linkedin-icon.png',
+                //             width: 25,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Text('LinkedIn :',
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.black, null)),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Flexible(
+                //           child: TextField(
+                //             controller: _linkedinController,
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.white, null),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         GestureDetector(
+                //           onTap: () async {
+                //             final Uri url =
+                //                 Uri.parse('https://www.instagram.com/');
+                //             if (await canLaunchUrl(url)) {
+                //               await launchUrl(url);
+                //             } else {}
+                //           },
+                //           child: Image.asset(
+                //             'assets/ig-icon.png',
+                //             width: 25,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Text('Instagram :',
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.black, null)),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Flexible(
+                //           child: TextField(
+                //             controller: _instagramController,
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.white, null),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         GestureDetector(
+                //           onTap: () async {
+                //             final Uri url = Uri.parse('https://twitter.com/');
+                //             if (await canLaunchUrl(url)) {
+                //               await launchUrl(url);
+                //             } else {}
+                //           },
+                //           child: Image.asset(
+                //             'assets/x-icon.webp',
+                //             width: 25,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Text('X :',
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.black, null)),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Flexible(
+                //           child: TextField(
+                //             controller: _xController,
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.white, null),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         GestureDetector(
+                //           onTap: () async {
+                //             final Uri url = Uri.parse(
+                //                 'https://web.facebook.com/?_rdc=1&_rdr');
+                //             if (await canLaunchUrl(url)) {
+                //               await launchUrl(url);
+                //             } else {}
+                //           },
+                //           child: Image.asset(
+                //             'assets/facebook.png',
+                //             width: 25,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Text('Facebook :',
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.black, null)),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Flexible(
+                //           child: TextField(
+                //             controller: _facebookController,
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.white, null),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         GestureDetector(
+                //           onTap: () async {
+                //             final Uri url =
+                //                 Uri.parse('https://www.google.com/');
+                //             if (await canLaunchUrl(url)) {
+                //               await launchUrl(url);
+                //             } else {}
+                //           },
+                //           child: Image.asset(
+                //             'assets/web-icon.png',
+                //             width: 25,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Text('Website :',
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.black, null)),
+                //         SizedBox(
+                //             width: MediaQuery.sizeOf(context).width * 0.02),
+                //         Flexible(
+                //           child: TextField(
+                //             controller: _websiteController,
+                //             style: responsiveTextStyle(
+                //                 context, 16, Colors.white, null),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
+
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+
+                // add details
+
+                // Text(
+                //   'Add Your Details :',
+                //   style: responsiveTextStyle(context, 20, Colors.black, null),
+                // ),
+                // Text(
+                //   'hint: you can be as expressive as you like :)',
+                //   style: responsiveTextStyle(context, 12, Colors.black45, null),
+                // ),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // Row(
+                //   children: [
+                //     Text('Bio :',
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.black, null)),
+                //     SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                //     Flexible(
+                //       child: TextField(
+                //         textCapitalization: TextCapitalization.sentences,
+                //         controller: _bioController,
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.white, null),
+                //         decoration: const InputDecoration(
+                //           hintText:
+                //               'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   children: [
+                //     Text('Experience :',
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.black, null)),
+                //     SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                //     Flexible(
+                //       child: TextField(
+                //         controller: _experienceController,
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.white, null),
+                //         decoration: const InputDecoration(
+                //           hintText: 'E.g 5+ years',
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   children: [
+                //     Text('Availability :',
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.black, null)),
+                //     SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                //     Flexible(
+                //       child: TextField(
+                //         controller: _availabilityController,
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.white, null),
+                //         decoration: const InputDecoration(
+                //           hintText: 'E.g 9am - 5pm, Mon - Sat',
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Flexible(
+                //       child: Text(
+                //         'hint: you can let customers know if you\'re available or not by tapping available on your profile :)',
+                //         style: responsiveTextStyle(
+                //             context, 12, Colors.black45, null),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   children: [
+                //     Text('Special Offers :',
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.black, null)),
+                //     SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                //     Flexible(
+                //       child: TextField(
+                //         controller: _specialOffersController,
+                //         style: responsiveTextStyle(
+                //             context, 16, Colors.white, null),
+                //         decoration: const InputDecoration(
+                //           hintText: 'E.g 20% off till Jan 2024',
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
+
+                // submit button
+
+                Center(
+                  child: loading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+                            // prevent unregistered services
+                            if (isTyping ||
+                                _serviceProvidedController.text.isEmpty) {
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                  'Please pick a registered service :(',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              return;
+                            }
+                            // Check network connectivity
+                            bool isConnected =
+                                await _checkInternetConnectivity();
+                            if (!isConnected) {
+                              if (!context.mounted) return;
+                              // Show a snackbar for no network
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                  'No internet connection. Please check your network settings.',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              return; // Exit the function if there's no network
+                            }
+
                             setState(() {
-                              // Filter services here and update UI.
-                              filteredServices = servicesList
-                                  .where((service) => service
-                                      .toLowerCase()
-                                      .startsWith(value.toLowerCase()))
-                                  .toList();
-                              if (value.isNotEmpty) {
-                                isTyping =
-                                    true; // User is typing, hide the content above
-                              } else {
-                                isTyping =
-                                    false; // User has stopped typing, show the content above
-                              }
-                              isSearching = false;
+                              loading = true;
                             });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Visibility(
-                    visible: isTyping, // Content is visible when typing
-                    child: Container(
-                      color: Colors.white,
-                      height: MediaQuery.sizeOf(context).height * 0.7,
-                      child: filteredServices.isEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "Sorry, we don't have this service currently. Please pick a registered service.\nhint: try a different name for the service e.g author, writer or journalist, reporter",
-                                style: responsiveTextStyle(
-                                    context, 16, Colors.black, FontWeight.bold),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: filteredServices.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(
-                                    filteredServices[index],
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  onTap: () {
-                                    // Handle user selection here.
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      isSearching = true;
-                                      // When tile is tapped, set isTyping to false
-                                      isTyping = false;
-                                      searchchoice = filteredServices[index];
-                                      _serviceProvidedController.text =
-                                          filteredServices[index];
-
-                                      // Update the filtered services here as well
-                                      filteredServices = [];
-                                    });
-                                  },
+                            try {
+                              await _performSubmit().then((_) {
+                                if (!context.mounted) return;
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const ServiceProviderHomePage()),
                                 );
-                              },
-                            ),
-                    ),
-                  ),
-
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-
-                  // add media
-
-                  Text(
-                    'Add Media :',
-                    style: responsiveTextStyle(context, 20, Colors.black, null),
-                  ),
-                  Text(
-                    'hint: you can add up to three images that showcase your work :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        // image 1
-                        Container(
-                          color: Colors.black45,
-                          height: 250,
-                          width: 250,
-                          child: GestureDetector(
-                            onTap: () {
-                              _pickImage1();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image1 != null)
-                                  Image.file(
-                                    _image1!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  const Icon(
-                                    Icons.camera_alt,
-                                    size: 250,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.025),
-                        // image 2
-                        Container(
-                          color: Colors.black45,
-                          height: 250,
-                          width: 250,
-                          child: GestureDetector(
-                            onTap: () {
-                              _pickImage2();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image2 != null)
-                                  Image.file(
-                                    _image2!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  const Icon(
-                                    Icons.camera_alt,
-                                    size: 250,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.025),
-                        // image 3
-                        Container(
-                          color: Colors.black45,
-                          height: 250,
-                          width: 250,
-                          child: GestureDetector(
-                            onTap: () {
-                              _pickImage3();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image3 != null)
-                                  Image.file(
-                                    _image3!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  const Icon(
-                                    Icons.camera_alt,
-                                    size: 250,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-
-                  Text(
-                      'hint: you can always edit your profile from your hoemepage... if you don\'t have all your details now just hit submit and provide them later :)',
-                      style: responsiveTextStyle(
-                          context, 12, Colors.black45, null)),
-
-                  // add social links
-
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
-                  Text(
-                    'Add Your Social links :',
-                    style: responsiveTextStyle(context, 20, Colors.black, null),
-                  ),
-                  Text(
-                      'hint: click on the app icons for easy navigation to share your proile :)',
-                      style: responsiveTextStyle(
-                          context, 12, Colors.black45, null)),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url =
-                                  Uri.parse('https://www.linkedin.com/');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {}
-                            },
-                            child: Image.asset(
-                              'assets/linkedin-icon.png',
-                              width: 25,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Text('LinkedIn :',
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, null)),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Flexible(
-                            child: TextField(
-                              controller: _linkedinController,
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, null),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url =
-                                  Uri.parse('https://www.instagram.com/');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {}
-                            },
-                            child: Image.asset(
-                              'assets/ig-icon.png',
-                              width: 25,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Text('Instagram :',
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, null)),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Flexible(
-                            child: TextField(
-                              controller: _instagramController,
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, null),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url = Uri.parse('https://twitter.com/');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {}
-                            },
-                            child: Image.asset(
-                              'assets/x-icon.webp',
-                              width: 25,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Text('X :',
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, null)),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Flexible(
-                            child: TextField(
-                              controller: _xController,
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, null),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url = Uri.parse(
-                                  'https://web.facebook.com/?_rdc=1&_rdr');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {}
-                            },
-                            child: Image.asset(
-                              'assets/facebook.png',
-                              width: 25,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Text('Facebook :',
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, null)),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Flexible(
-                            child: TextField(
-                              controller: _facebookController,
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, null),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url =
-                                  Uri.parse('https://www.google.com/');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {}
-                            },
-                            child: Image.asset(
-                              'assets/web-icon.png',
-                              width: 25,
-                            ),
-                          ),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Text('Website :',
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.black, null)),
-                          SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.02),
-                          Flexible(
-                            child: TextField(
-                              controller: _websiteController,
-                              style: responsiveTextStyle(
-                                  context, 16, Colors.white, null),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-
-                  // add details
-
-                  Text(
-                    'Add Your Details :',
-                    style: responsiveTextStyle(context, 20, Colors.black, null),
-                  ),
-                  Text(
-                    'hint: you can be as expressive as you like :)',
-                    style:
-                        responsiveTextStyle(context, 12, Colors.black45, null),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                  Row(
-                    children: [
-                      Text('Bio :',
-                          style: responsiveTextStyle(
-                              context, 16, Colors.black, null)),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                      Flexible(
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          controller: _bioController,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, null),
-                          decoration: const InputDecoration(
-                            hintText:
-                                'E.g Experienced plumber with 5+ years of experience in fixing pipes.',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Experience :',
-                          style: responsiveTextStyle(
-                              context, 16, Colors.black, null)),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                      Flexible(
-                        child: TextField(
-                          controller: _experienceController,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, null),
-                          decoration: const InputDecoration(
-                            hintText: 'E.g 5+ years',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Availability :',
-                          style: responsiveTextStyle(
-                              context, 16, Colors.black, null)),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                      Flexible(
-                        child: TextField(
-                          controller: _availabilityController,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, null),
-                          decoration: const InputDecoration(
-                            hintText: 'E.g 9am - 5pm, Mon - Sat',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'hint: you can let customers know if you\'re available or not by tapping available on your profile :)',
-                          style: responsiveTextStyle(
-                              context, 12, Colors.black45, null),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Special Offers :',
-                          style: responsiveTextStyle(
-                              context, 16, Colors.black, null)),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
-                      Flexible(
-                        child: TextField(
-                          controller: _specialOffersController,
-                          style: responsiveTextStyle(
-                              context, 16, Colors.white, null),
-                          decoration: const InputDecoration(
-                            hintText: 'E.g 20% off till Jan 2024',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-
-                  // submit button
-
-                  Center(
-                    child: loading
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () async {
-                              final messenger = ScaffoldMessenger.of(context);
-                              // prevent unregistered services
-                              if (isTyping ||
-                                  _serviceProvidedController.text.isEmpty) {
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'Please pick a registered service :(',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return;
-                              }
-                              // Check network connectivity
-                              bool isConnected =
-                                  await _checkInternetConnectivity();
-                              if (!isConnected) {
-                                if (!context.mounted) return;
-                                // Show a snackbar for no network
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'No internet connection. Please check your network settings.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                                return; // Exit the function if there's no network
-                              }
-
-                              setState(() {
-                                loading = true;
                               });
-                              try {
-                                await _performSubmit().then((_) {
-                                  if (!context.mounted) return;
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const ServiceProviderHomePage()),
-                                  );
-                                });
-                              } catch (error) {
-                                if (!context.mounted) return;
-                                messenger.showSnackBar(SnackBar(
-                                  content: Text(
-                                    'An error occurred. Please try again later.',
-                                    style: responsiveTextStyle(context, 16,
-                                        Colors.black, FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ));
-                              } finally {
-                                setState(() {
-                                  loading = false;
-                                });
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF13CAF1),
-                              minimumSize: Size(
-                                  MediaQuery.sizeOf(context).width * 0.5,
-                                  MediaQuery.sizeOf(context).height *
-                                      0.06), // Set the button's width and height
-                            ),
-                            child: Text(
-                              'Submit',
-                              style: responsiveTextStyle(
-                                  context, 14, Colors.black, FontWeight.bold),
-                            ),
+                            } catch (error) {
+                              if (!context.mounted) return;
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                  'An error occurred. Please try again later.',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                            } finally {
+                              setState(() {
+                                loading = false;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF13CAF1),
+                            minimumSize: Size(
+                                MediaQuery.sizeOf(context).width * 0.5,
+                                MediaQuery.sizeOf(context).height *
+                                    0.06), // Set the button's width and height
                           ),
-                  )
-                ],
-              ),
+                          child: Text(
+                            'Submit Profile',
+                            style: responsiveTextStyle(
+                                context, 14, Colors.white, FontWeight.bold),
+                          ),
+                        ),
+                )
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class SocialMediaLink {
+  final String platform;
+  final String link;
+
+  SocialMediaLink({required this.platform, required this.link});
+
+  @override
+  String toString() {
+    return 'SocialMediaLink(platform: $platform, link: $link)';
   }
 }

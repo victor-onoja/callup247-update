@@ -23,33 +23,33 @@ class _ServiceProviderSignUpScreenState
     extends State<ServiceProviderSignUpScreen> {
   // 01 - use case pick image
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _pickImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   // 02 - use case upload image
 
-  Future<void> _uploadImage() async {
-    final filename = _fullnameController.text.trim();
-    try {
-      await supabase.storage.from('avatars').upload(
-            filename,
-            _image!,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
-      if (mounted) {}
-    } on PostgrestException catch (error) {
-      //
-    } catch (error) {
-      //
-    }
-  }
+  // Future<void> _uploadImage() async {
+  //   final filename = _fullnameController.text.trim();
+  //   try {
+  //     await supabase.storage.from('avatars').upload(
+  //           filename,
+  //           _image!,
+  //           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+  //         );
+  //     if (mounted) {}
+  //   } on PostgrestException catch (error) {
+  //     //
+  //   } catch (error) {
+  //     //
+  //   }
+  // }
 
   // 03 - use case create user
 
@@ -123,9 +123,9 @@ class _ServiceProviderSignUpScreenState
     final country = _countryValue.text;
     final state = _stateValue.text;
     final city = _cityValue.text;
-    final displaypicture = supabase.storage
-        .from('avatars')
-        .getPublicUrl(_fullnameController.text.trim());
+    // final displaypicture = supabase.storage
+    //     .from('avatars')
+    //     .getPublicUrl(_fullnameController.text.trim());
     final user = supabase.auth.currentUser;
     final details = {
       'id': user!.id,
@@ -135,7 +135,7 @@ class _ServiceProviderSignUpScreenState
       'country': country,
       'state': state,
       'city': city,
-      'avatar_url': displaypicture,
+      // 'avatar_url': displaypicture,
       'service_provider': 'TRUE'
     };
     final messenger = ScaffoldMessenger.of(context);
@@ -194,9 +194,9 @@ class _ServiceProviderSignUpScreenState
     final country = _countryValue.text;
     final state = _stateValue.text;
     final city = _cityValue.text;
-    final displaypicture = supabase.storage
-        .from('avatars')
-        .getPublicUrl(_fullnameController.text.trim());
+    // final displaypicture = supabase.storage
+    //     .from('avatars')
+    //     .getPublicUrl(_fullnameController.text.trim());
 
     // Create a map to represent the user's profile data
     final userProfile = {
@@ -205,7 +205,7 @@ class _ServiceProviderSignUpScreenState
       'country': country,
       'state': state,
       'city': city,
-      'displaypicture': displaypicture,
+      // 'displaypicture': displaypicture,
       'service_provider': 'TRUE'
     };
 
@@ -240,9 +240,9 @@ class _ServiceProviderSignUpScreenState
       await _createUser();
 
       // Only run _uploadImage if _createUser has finished successfully
-      if (_image != null) {
-        await _uploadImage();
-      }
+      // if (_image != null) {
+      //   await _uploadImage();
+      // }
 
       // Update profile locally and remotely
       await _updateProfile();
@@ -276,7 +276,7 @@ class _ServiceProviderSignUpScreenState
   final _emailaddressController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
-  File? _image;
+  // File? _image;
   var loading = false;
   final _formKey = GlobalKey<FormState>();
   bool isPasswordReset = false;
@@ -593,33 +593,33 @@ class _ServiceProviderSignUpScreenState
 
                       // display picture
 
-                      GestureDetector(
-                        onTap: () {
-                          _pickImage();
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            if (_image != null)
-                              Image.file(
-                                _image!,
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
-                              )
-                            else
-                              const Icon(
-                                Icons.camera_alt,
-                                size: 100,
-                                color: Color(0xFFA6A6A6),
-                              ),
-                            Text(
-                              'Add a display pictue :)',
-                              style: responsiveTextStyle(
-                                  context, 14, const Color(0xFFA6A6A6), null),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     _pickImage();
+                      //   },
+                      //   child: Column(
+                      //     children: <Widget>[
+                      //       if (_image != null)
+                      //         Image.file(
+                      //           _image!,
+                      //           height: 100,
+                      //           width: 100,
+                      //           fit: BoxFit.cover,
+                      //         )
+                      //       else
+                      //         const Icon(
+                      //           Icons.camera_alt,
+                      //           size: 100,
+                      //           color: Color(0xFFA6A6A6),
+                      //         ),
+                      //       Text(
+                      //         'Add a display pictue :)',
+                      //         style: responsiveTextStyle(
+                      //             context, 14, const Color(0xFFA6A6A6), null),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       SizedBox(
                           height: MediaQuery.sizeOf(context).height * 0.02),
 
@@ -707,21 +707,21 @@ class _ServiceProviderSignUpScreenState
                                           return; // Exit the function if there's no network
                                         }
 
-                                        if (_image == null) {
-                                          if (!context.mounted) return;
-                                          messenger.showSnackBar(SnackBar(
-                                            content: Text(
-                                              'Please add a display picture :)',
-                                              style: responsiveTextStyle(
-                                                  context,
-                                                  16,
-                                                  Colors.black,
-                                                  FontWeight.bold),
-                                            ),
-                                            backgroundColor: Colors.red,
-                                          ));
-                                          return;
-                                        }
+                                        // if (_image == null) {
+                                        //   if (!context.mounted) return;
+                                        //   messenger.showSnackBar(SnackBar(
+                                        //     content: Text(
+                                        //       'Please add a display picture :)',
+                                        //       style: responsiveTextStyle(
+                                        //           context,
+                                        //           16,
+                                        //           Colors.black,
+                                        //           FontWeight.bold),
+                                        //     ),
+                                        //     backgroundColor: Colors.red,
+                                        //   ));
+                                        //   return;
+                                        // }
 
                                         setState(() {
                                           loading = true;
