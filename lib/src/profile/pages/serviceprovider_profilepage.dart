@@ -59,9 +59,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
       final userFullname = userProfileMap['fullname'];
       final userEmail = userProfileMap['email'];
 
-      final userMedia1 = serviceProviderMap['media_url1'];
-      final userMedia2 = serviceProviderMap['media_url2'];
-      final userMedia3 = serviceProviderMap['media_url3'];
+      // final userMedia1 = serviceProviderMap['media_url1'];
+      // final userMedia2 = serviceProviderMap['media_url2'];
+      // final userMedia3 = serviceProviderMap['media_url3'];
 
       final useriglink = serviceProviderMap['ig_url'];
       final userxlink = serviceProviderMap['x_url'];
@@ -69,25 +69,25 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
       final userfblink = serviceProviderMap['fb_url'];
       final userweblink = serviceProviderMap['web_link'];
 
-      final userExperience = serviceProviderMap['experience'];
+      // final userExperience = serviceProviderMap['experience'];
       final userAvailability = serviceProviderMap['availability'];
-      final userSpecialOffers = serviceProviderMap['special_offers'];
+      // final userSpecialOffers = serviceProviderMap['special_offers'];
 
       setState(() {
         pfp = userPfp;
         fullname = userFullname;
         maillink = userEmail;
-        media1 = userMedia1;
-        media2 = userMedia2;
-        media3 = userMedia3;
+        // media1 = userMedia1;
+        // media2 = userMedia2;
+        // media3 = userMedia3;
         iglink = useriglink;
         xlink = userxlink;
         linkedinlink = userlinkedinlink;
         fblink = userfblink;
         weblink = userweblink;
-        experience = userExperience;
+        // experience = userExperience;
         availability = userAvailability;
-        specialoffers = userSpecialOffers;
+        // specialoffers = userSpecialOffers;
       });
     } else {}
   }
@@ -191,9 +191,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
 
   bool isOnline = true;
   String pfp = '';
-  String media1 = '';
-  String media2 = '';
-  String media3 = '';
+  // String media1 = '';
+  // String media2 = '';
+  // String media3 = '';
   String iglink = '';
   String xlink = '';
   String linkedinlink = '';
@@ -201,9 +201,9 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
   String weblink = '';
   String maillink = '';
   String fullname = '';
-  String experience = '';
+  // String experience = '';
   String availability = '';
-  String specialoffers = '';
+  // String specialoffers = '';
   bool isCustomer = false;
   bool isAvailable = false;
 
@@ -292,33 +292,33 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                             )
                           ],
                         ),
-                        SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.08),
-                        Text(
-                          'Media:',
-                          style: responsiveTextStyle(
-                              context, 20, null, FontWeight.bold),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01),
+                        // SizedBox(
+                        //     height: MediaQuery.sizeOf(context).height * 0.08),
+                        // Text(
+                        //   'Media:',
+                        //   style: responsiveTextStyle(
+                        //       context, 20, null, FontWeight.bold),
+                        // ),
+                        // SizedBox(
+                        //     height: MediaQuery.sizeOf(context).height * 0.01),
 
-                        // service provider media territory
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _buildImageWidget(media1),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.025),
-                              _buildImageWidget(media2),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.025),
-                              _buildImageWidget(media3),
-                            ],
-                          ),
-                        ),
+                        // // service provider media territory
+                        // SingleChildScrollView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   child: Row(
+                        //     children: [
+                        //       _buildImageWidget(media1),
+                        //       SizedBox(
+                        //           width:
+                        //               MediaQuery.sizeOf(context).width * 0.025),
+                        //       _buildImageWidget(media2),
+                        //       SizedBox(
+                        //           width:
+                        //               MediaQuery.sizeOf(context).width * 0.025),
+                        //       _buildImageWidget(media3),
+                        //     ],
+                        //   ),
+                        // ),
 
                         // end of service provider media territory
                         SizedBox(
@@ -790,18 +790,18 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text('Experience :- ', // Label
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.black, FontWeight.bold)),
-                            Flexible(
-                              child: Text(experience, // Information
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.white, FontWeight.bold)),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Text('Experience :- ', // Label
+                        //         style: responsiveTextStyle(context, 16,
+                        //             Colors.black, FontWeight.bold)),
+                        //     Flexible(
+                        //       child: Text(experience, // Information
+                        //           style: responsiveTextStyle(context, 16,
+                        //               Colors.white, FontWeight.bold)),
+                        //     ),
+                        //   ],
+                        // ),
                         Row(
                           children: [
                             Text('Availability :- ', // Label
@@ -814,18 +814,18 @@ class _ServiceProviderProfileState extends State<ServiceProviderProfile> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text('Special Offers :- ', // Label
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.black, FontWeight.bold)),
-                            Flexible(
-                              child: Text(specialoffers, // Information
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.white, FontWeight.bold)),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Text('Special Offers :- ', // Label
+                        //         style: responsiveTextStyle(context, 16,
+                        //             Colors.black, FontWeight.bold)),
+                        //     Flexible(
+                        //       child: Text(specialoffers, // Information
+                        //           style: responsiveTextStyle(context, 16,
+                        //               Colors.white, FontWeight.bold)),
+                        //     ),
+                        //   ],
+                        // ),
                         Row(
                           children: [
                             Text('Customers Review :- ', // Label

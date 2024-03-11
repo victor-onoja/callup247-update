@@ -5,8 +5,6 @@ import 'package:callup247/src/responsive_text_styles.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -135,7 +133,7 @@ class _ServiceProviderSignUpScreenState
       'country': country,
       'state': state,
       'city': city,
-      // 'avatar_url': displaypicture,
+      'avatar_url': '',
       'service_provider': 'TRUE'
     };
     final messenger = ScaffoldMessenger.of(context);
@@ -205,7 +203,7 @@ class _ServiceProviderSignUpScreenState
       'country': country,
       'state': state,
       'city': city,
-      // 'displaypicture': displaypicture,
+      'displaypicture': '',
       'service_provider': 'TRUE'
     };
 

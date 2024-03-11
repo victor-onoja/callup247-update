@@ -2048,8 +2048,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                 bio:
                                                                     savedSearchProviderData[
                                                                         'bio'],
-                                                                img: savedSearchProviderData[
-                                                                    'media_url1'],
+                                                                img: additionalProfileData[
+                                                                    'avatar_url'],
                                                                 guest: false,
                                                                 // view profile
                                                                 onPressedButton1:
@@ -2063,8 +2063,8 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                           ViewProfilePage(
                                                                         availability:
                                                                             savedSearchProviderData['availability'],
-                                                                        experience:
-                                                                            savedSearchProviderData['experience'],
+                                                                        // experience:
+                                                                        //     savedSearchProviderData['experience'],
                                                                         fbLink:
                                                                             savedSearchProviderData['fb_url'],
                                                                         fullname:
@@ -2075,16 +2075,16 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                                             savedSearchProviderData['linkedin_url'],
                                                                         mailLink:
                                                                             savedSearchProviderData['gmail_link'],
-                                                                        media1:
-                                                                            savedSearchProviderData['media_url1'],
-                                                                        media2:
-                                                                            savedSearchProviderData['media_url2'],
-                                                                        media3:
-                                                                            savedSearchProviderData['media_url3'],
+                                                                        // media1:
+                                                                        //     savedSearchProviderData['media_url1'],
+                                                                        // media2:
+                                                                        //     savedSearchProviderData['media_url2'],
+                                                                        // media3:
+                                                                        //     savedSearchProviderData['media_url3'],
                                                                         pfp: additionalProfileData[
                                                                             'avatar_url'],
-                                                                        specialoffers:
-                                                                            savedSearchProviderData['special_offers'],
+                                                                        // specialoffers:
+                                                                        //     savedSearchProviderData['special_offers'],
                                                                         webLink:
                                                                             savedSearchProviderData['web_link'],
                                                                         xLink: savedSearchProviderData[
@@ -2330,9 +2330,9 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                               availability:
                                                                   serviceProviderData[
                                                                       'availability'],
-                                                              experience:
-                                                                  serviceProviderData[
-                                                                      'experience'],
+                                                              // experience:
+                                                              //     serviceProviderData[
+                                                              //         'experience'],
                                                               fbLink:
                                                                   serviceProviderData[
                                                                       'fb_url'],
@@ -2348,17 +2348,17 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                               mailLink:
                                                                   serviceProviderData[
                                                                       'gmail_link'],
-                                                              media1: serviceProviderData[
-                                                                  'media_url1'],
-                                                              media2: serviceProviderData[
-                                                                  'media_url2'],
-                                                              media3: serviceProviderData[
-                                                                  'media_url3'],
+                                                              // media1: serviceProviderData[
+                                                              //     'media_url1'],
+                                                              // media2: serviceProviderData[
+                                                              //     'media_url2'],
+                                                              // media3: serviceProviderData[
+                                                              //     'media_url3'],
                                                               pfp: additionalProfileData[
                                                                   'avatar_url'],
-                                                              specialoffers:
-                                                                  serviceProviderData[
-                                                                      'special_offers'],
+                                                              // specialoffers:
+                                                              //     serviceProviderData[
+                                                              //         'special_offers'],
                                                               webLink:
                                                                   serviceProviderData[
                                                                       'web_link'],
@@ -2397,8 +2397,9 @@ class _ServiceProviderHomePageState extends State<ServiceProviderHomePage>
                                                               serviceProviderData[
                                                                   'id']),
                                                       guest: false,
-                                                      img: serviceProviderData[
-                                                          'media_url1'],
+                                                      img:
+                                                          additionalProfileData[
+                                                              'avatar_url'],
                                                       distance:
                                                           estimatedTimeText,
                                                     ),

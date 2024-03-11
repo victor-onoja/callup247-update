@@ -13,9 +13,9 @@ class ViewProfilePage extends StatefulWidget {
   const ViewProfilePage(
       {super.key,
       required this.pfp,
-      required this.media1,
-      required this.media2,
-      required this.media3,
+      // required this.media1,
+      // required this.media2,
+      // required this.media3,
       required this.igLink,
       required this.linkedinLink,
       required this.xLink,
@@ -23,15 +23,15 @@ class ViewProfilePage extends StatefulWidget {
       required this.webLink,
       required this.mailLink,
       required this.fullname,
-      required this.experience,
+      // required this.experience,
       required this.availability,
-      required this.specialoffers,
+      // required this.specialoffers,
       required this.id});
 
   final String pfp,
-      media1,
-      media2,
-      media3,
+      // media1,
+      // media2,
+      // media3,
       igLink,
       linkedinLink,
       xLink,
@@ -39,10 +39,10 @@ class ViewProfilePage extends StatefulWidget {
       webLink,
       mailLink,
       fullname,
-      experience,
+      // experience,
       availability,
-      id,
-      specialoffers;
+      id;
+  // specialoffers;
 
   @override
   State<ViewProfilePage> createState() => _ViewProfilePageState();
@@ -306,22 +306,22 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             height: MediaQuery.sizeOf(context).height * 0.01),
 
                         // service provider media territory
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _buildImageWidget(widget.media1),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.025),
-                              _buildImageWidget(widget.media2),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.025),
-                              _buildImageWidget(widget.media3),
-                            ],
-                          ),
-                        ),
+                        // SingleChildScrollView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   child: Row(
+                        //     children: [
+                        //       _buildImageWidget(widget.media1),
+                        //       SizedBox(
+                        //           width:
+                        //               MediaQuery.sizeOf(context).width * 0.025),
+                        //       _buildImageWidget(widget.media2),
+                        //       SizedBox(
+                        //           width:
+                        //               MediaQuery.sizeOf(context).width * 0.025),
+                        //       _buildImageWidget(widget.media3),
+                        //     ],
+                        //   ),
+                        // ),
                         // end of service provider media territory
                         SizedBox(
                             height: MediaQuery.sizeOf(context).height * 0.08),
@@ -792,18 +792,18 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text('Experience :- ', // Label
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.black, FontWeight.bold)),
-                            Flexible(
-                              child: Text(widget.experience, // Information
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.white, FontWeight.bold)),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Text('Experience :- ', // Label
+                        //         style: responsiveTextStyle(context, 16,
+                        //             Colors.black, FontWeight.bold)),
+                        //     Flexible(
+                        //       child: Text(widget.experience, // Information
+                        //           style: responsiveTextStyle(context, 16,
+                        //               Colors.white, FontWeight.bold)),
+                        //     ),
+                        //   ],
+                        // ),
 
                         Row(
                           children: [
@@ -818,18 +818,18 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ],
                         ),
 
-                        Row(
-                          children: [
-                            Text('Special Offers :- ', // Label
-                                style: responsiveTextStyle(context, 16,
-                                    Colors.black, FontWeight.bold)),
-                            Flexible(
-                              child: Text(widget.specialoffers, // Information
-                                  style: responsiveTextStyle(context, 16,
-                                      Colors.white, FontWeight.bold)),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Text('Special Offers :- ', // Label
+                        //         style: responsiveTextStyle(context, 16,
+                        //             Colors.black, FontWeight.bold)),
+                        //     Flexible(
+                        //       child: Text(widget.specialoffers, // Information
+                        //           style: responsiveTextStyle(context, 16,
+                        //               Colors.white, FontWeight.bold)),
+                        //     ),
+                        //   ],
+                        // ),
                         Row(
                           children: [
                             Text('Customers Review :- ', // Label

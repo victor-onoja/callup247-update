@@ -777,9 +777,13 @@ class _ServiceProviderProfileCreationState
       //   await _uploadImage3();
       // }
 
+      if (_image != null) {
+        await _uploadImage();
+      }
       await _becomeAServiceProvider();
       await _createServiceProviderProfile();
       await _saveServiceProviderProfilelocally();
+      await _updateProfileImage();
     } catch (e) {
       if (!context.mounted) return;
       messenger.showSnackBar(SnackBar(
@@ -949,38 +953,51 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _createServiceProviderProfile() async {
     final serviceprovided = _serviceProvidedController.text.trim();
-    final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
-    final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
-    final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    // final ig = _instagramController.text.trim();
-    // final x = _xController.text.trim();
-    // final linkedin = _linkedinController.text.trim();
-    // final fb = _facebookController.text.trim();
-    // final web = _websiteController.text.trim();
+    // final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
+    // final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
+    // final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
+    var ig = '';
+    var x = '';
+    var linkedin = '';
+    var fb = '';
+    var web = '';
     final gmail = emailaddress;
     final bio = _bioController.text.trim();
     // final experience = _experienceController.text.trim();
-    // final availability = _availabilityController.text.trim();
+    const availability = '';
     // final specialoffers = _specialOffersController.text.trim();
-
     final user = supabase.auth.currentUser;
+
+    for (var link in socialMediaLinks) {
+      if (link.platform == 'LinkedIn') {
+        linkedin = link.link;
+      } else if (link.platform == 'Instagram') {
+        ig = link.link;
+      } else if (link.platform == 'X') {
+        x = link.link;
+      } else if (link.platform == 'Facebook') {
+        fb = link.link;
+      } else if (link.platform == 'Website') {
+        web = link.link;
+      }
+    }
 
     final details = {
       'id': user!.id,
       'created_at': DateTime.now().toIso8601String(),
       'service_provided': serviceprovided,
-      'media_url1': media1,
-      'media_url2': media2,
-      'media_url3': media3,
-      // 'ig_url': ig,
-      // 'x_url': x,
-      // 'linkedin_url': linkedin,
-      // 'fb_url': fb,
-      // 'web_link': web,
+      // 'media_url1': media1,
+      // 'media_url2': media2,
+      // 'media_url3': media3,
+      'ig_url': ig,
+      'x_url': x,
+      'linkedin_url': linkedin,
+      'fb_url': fb,
+      'web_link': web,
       'gmail_link': gmail,
       'bio': bio,
       // 'experience': experience,
-      // 'availability': availability,
+      'availability': availability,
       // 'special_offers': specialoffers,
       'latitude': latitude,
       'longitude': longitude
@@ -1037,34 +1054,48 @@ class _ServiceProviderProfileCreationState
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final serviceprovided = _serviceProvidedController.text.trim();
-    final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
-    final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
-    final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
-    // final ig = _instagramController.text.trim();
-    // final x = _xController.text.trim();
-    // final linkedin = _linkedinController.text.trim();
-    // final fb = _facebookController.text.trim();
-    // final web = _websiteController.text.trim();
+    // final media1 = supabase.storage.from('media1').getPublicUrl(fullname);
+    // final media2 = supabase.storage.from('media2').getPublicUrl(fullname);
+    // final media3 = supabase.storage.from('media3').getPublicUrl(fullname);
+    var ig = '';
+    var x = '';
+    var linkedin = '';
+    var fb = '';
+    var web = '';
     final gmail = emailaddress;
     final bio = _bioController.text.trim();
     // final experience = _experienceController.text.trim();
-    // final availability = _availabilityController.text.trim();
+    const availability = '';
     // final specialoffers = _specialOffersController.text.trim();
+
+    for (var link in socialMediaLinks) {
+      if (link.platform == 'LinkedIn') {
+        linkedin = link.link;
+      } else if (link.platform == 'Instagram') {
+        ig = link.link;
+      } else if (link.platform == 'X') {
+        x = link.link;
+      } else if (link.platform == 'Facebook') {
+        fb = link.link;
+      } else if (link.platform == 'Website') {
+        web = link.link;
+      }
+    }
 
     final details = {
       'service_provided': serviceprovided,
-      'media_url1': media1,
-      'media_url2': media2,
-      'media_url3': media3,
-      // 'ig_url': ig,
-      // 'x_url': x,
-      // 'linkedin_url': linkedin,
-      // 'fb_url': fb,
-      // 'web_link': web,
+      // 'media_url1': media1,
+      // 'media_url2': media2,
+      // 'media_url3': media3,
+      'ig_url': ig,
+      'x_url': x,
+      'linkedin_url': linkedin,
+      'fb_url': fb,
+      'web_link': web,
       'gmail_link': gmail,
       'bio': bio,
       // 'experience': experience,
-      // 'availability': availability,
+      'availability': availability,
       // 'special_offers': specialoffers,
     };
 
@@ -1227,11 +1258,9 @@ class _ServiceProviderProfileCreationState
   // 02 - use case upload image
 
   Future<void> _uploadImage() async {
-    // final filename = _fullnameController.text.trim();
-    const filename = '';
     try {
       await supabase.storage.from('avatars').upload(
-            filename,
+            fullname,
             _image!,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
@@ -1243,9 +1272,33 @@ class _ServiceProviderProfileCreationState
     }
   }
 
-  // todo: update image on supabase
+  // todo: update image on profile table supabase
 
-// todo: update image locally
+  Future<void> _updateProfileImage() async {
+    final profilepicture =
+        supabase.storage.from('avatars').getPublicUrl(fullname);
+    try {
+      await supabase
+          .from('profiles')
+          .update({'avatar_url': profilepicture}).eq('avatar_url', '');
+    } on PostgrestException catch (error) {
+      //
+    } catch (error) {
+      //
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final userProfileJson = prefs.getString('userprofile');
+    if (userProfileJson != null) {
+      final userProfileMap = json.decode(userProfileJson);
+
+      userProfileMap['displaypicture'] = profilepicture;
+
+      final updatedUserProfileJson = json.encode(userProfileMap);
+
+      await prefs.setString('userprofile', updatedUserProfileJson);
+    }
+  }
 
 // build method
 
@@ -1335,7 +1388,7 @@ class _ServiceProviderProfileCreationState
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 8),
                             child: Text(
-                              'Full Name',
+                              fullname,
                               style: responsiveTextStyle(context, 14,
                                   const Color(0xFF000000), FontWeight.w600),
                             ),
@@ -1362,7 +1415,7 @@ class _ServiceProviderProfileCreationState
                                   width: 4,
                                 ),
                                 Text(
-                                  'Email',
+                                  emailaddress,
                                   style: responsiveTextStyle(context, 12,
                                       const Color(0xFF000000), FontWeight.w500),
                                 ),
@@ -1987,6 +2040,19 @@ class _ServiceProviderProfileCreationState
                                 backgroundColor: Colors.red,
                               ));
                               return; // Exit the function if there's no network
+                            }
+
+                            if (_image == null) {
+                              if (!context.mounted) return;
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                  'Please add a profile picture',
+                                  style: responsiveTextStyle(context, 16,
+                                      Colors.black, FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.red,
+                              ));
+                              return;
                             }
 
                             setState(() {

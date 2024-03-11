@@ -1336,17 +1336,17 @@ class _CustomerHomePageState extends State<CustomerHomePage>
             MaterialPageRoute(
               builder: (BuildContext context) => ViewProfilePage(
                 availability: savedSearchProviderData['availability'],
-                experience: savedSearchProviderData['experience'],
+                // experience: savedSearchProviderData['experience'],
                 fbLink: savedSearchProviderData['fb_url'],
                 fullname: additionalProfileData['full_name'],
                 igLink: savedSearchProviderData['ig_url'],
                 linkedinLink: savedSearchProviderData['linkedin_url'],
                 mailLink: savedSearchProviderData['gmail_link'],
-                media1: savedSearchProviderData['media_url1'],
-                media2: savedSearchProviderData['media_url2'],
-                media3: savedSearchProviderData['media_url3'],
+                // media1: savedSearchProviderData['media_url1'],
+                // media2: savedSearchProviderData['media_url2'],
+                // media3: savedSearchProviderData['media_url3'],
                 pfp: additionalProfileData['avatar_url'],
-                specialoffers: savedSearchProviderData['special_offers'],
+                // specialoffers: savedSearchProviderData['special_offers'],
                 webLink: savedSearchProviderData['web_link'],
                 xLink: savedSearchProviderData['x_url'],
                 id: savedSearchProviderData['id'],
@@ -1362,7 +1362,7 @@ class _CustomerHomePageState extends State<CustomerHomePage>
           _deleteSavedSearch(userid, serviceproviderid);
         },
         guest: false,
-        img: savedSearchProviderData['media_url1'],
+        img: additionalProfileData['avatar_url'],
         distance: estimatedTimeText,
       ),
     );
@@ -2198,9 +2198,9 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                             availability:
                                                                 serviceProviderData[
                                                                     'availability'],
-                                                            experience:
-                                                                serviceProviderData[
-                                                                    'experience'],
+                                                            // experience:
+                                                            //     serviceProviderData[
+                                                            //         'experience'],
                                                             fbLink:
                                                                 serviceProviderData[
                                                                     'fb_url'],
@@ -2216,20 +2216,20 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                             mailLink:
                                                                 serviceProviderData[
                                                                     'gmail_link'],
-                                                            media1:
-                                                                serviceProviderData[
-                                                                    'media_url1'],
-                                                            media2:
-                                                                serviceProviderData[
-                                                                    'media_url2'],
-                                                            media3:
-                                                                serviceProviderData[
-                                                                    'media_url3'],
+                                                            // media1:
+                                                            //     serviceProviderData[
+                                                            //         'media_url1'],
+                                                            // media2:
+                                                            //     serviceProviderData[
+                                                            //         'media_url2'],
+                                                            // media3:
+                                                            //     serviceProviderData[
+                                                            //         'media_url3'],
                                                             pfp: additionalProfileData[
                                                                 'avatar_url'],
-                                                            specialoffers:
-                                                                serviceProviderData[
-                                                                    'special_offers'],
+                                                            // specialoffers:
+                                                            //     serviceProviderData[
+                                                            //         'special_offers'],
                                                             webLink:
                                                                 serviceProviderData[
                                                                     'web_link'],
@@ -2265,8 +2265,8 @@ class _CustomerHomePageState extends State<CustomerHomePage>
                                                             serviceProviderData[
                                                                 'id']),
                                                     guest: false,
-                                                    img: serviceProviderData[
-                                                        'media_url1'],
+                                                    img: additionalProfileData[
+                                                        'avatar_url'],
                                                     distance: estimatedTimeText,
                                                   ),
                                                   SizedBox(

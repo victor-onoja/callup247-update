@@ -32,9 +32,9 @@ class _EditServiceProviderProfileState
       _facebookController.text = fblink;
       _websiteController.text = weblink;
       _bioController.text = bio;
-      _experienceController.text = experience;
+      // _experienceController.text = experience;
       _availabilityController.text = availability;
-      _specialOffersController.text = specialoffers;
+      // _specialOffersController.text = specialoffers;
     });
   }
 
@@ -55,9 +55,9 @@ class _EditServiceProviderProfileState
     if (serviceProviderProfileJson != null) {
       final serviceProviderMap = json.decode(serviceProviderProfileJson);
 
-      final userMedia1 = serviceProviderMap['media_url1'];
-      final userMedia2 = serviceProviderMap['media_url2'];
-      final userMedia3 = serviceProviderMap['media_url3'];
+      // final userMedia1 = serviceProviderMap['media_url1'];
+      // final userMedia2 = serviceProviderMap['media_url2'];
+      // final userMedia3 = serviceProviderMap['media_url3'];
 
       final useriglink = serviceProviderMap['ig_url'];
       final userlinkedinlink = serviceProviderMap['linkedin_url'];
@@ -65,15 +65,15 @@ class _EditServiceProviderProfileState
       final userfblink = serviceProviderMap['fb_url'];
       final userweblink = serviceProviderMap['web_link'];
 
-      final userExperience = serviceProviderMap['experience'];
+      // final userExperience = serviceProviderMap['experience'];
       final userBio = serviceProviderMap['bio'];
       final userAvailability = serviceProviderMap['availability'];
-      final userSpecialOffers = serviceProviderMap['special_offers'];
+      // final userSpecialOffers = serviceProviderMap['special_offers'];
 
       setState(() {
-        media1 = userMedia1;
-        media2 = userMedia2;
-        media3 = userMedia3;
+        // media1 = userMedia1;
+        // media2 = userMedia2;
+        // media3 = userMedia3;
 
         iglink = useriglink;
         linkedinlink = userlinkedinlink;
@@ -81,9 +81,9 @@ class _EditServiceProviderProfileState
         fblink = userfblink;
         weblink = userweblink;
         bio = userBio;
-        experience = userExperience;
+        // experience = userExperience;
         availability = userAvailability;
-        specialoffers = userSpecialOffers;
+        // specialoffers = userSpecialOffers;
       });
     } else {}
   }
@@ -196,109 +196,109 @@ class _EditServiceProviderProfileState
 
   // 07A - use case upload image1
 
-  Future<void> _uploadImage1() async {
-    bool isImage1Valid = await _checkImageValidity(media1);
-    if (isImage1Valid) {
-      try {
-        await supabase.storage.from('media1').update(
-              fullname,
-              _image1!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: true),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    } else {
-      try {
-        await supabase.storage.from('media1').upload(
-              fullname,
-              _image1!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: false),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    }
-  }
+  // Future<void> _uploadImage1() async {
+  //   bool isImage1Valid = await _checkImageValidity(media1);
+  //   if (isImage1Valid) {
+  //     try {
+  //       await supabase.storage.from('media1').update(
+  //             fullname,
+  //             _image1!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: true),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   } else {
+  //     try {
+  //       await supabase.storage.from('media1').upload(
+  //             fullname,
+  //             _image1!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: false),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   }
+  // }
 
   // 07B - use case upload image2
 
-  Future<void> _uploadImage2() async {
-    bool isImage2Valid = await _checkImageValidity(media2);
-    if (isImage2Valid) {
-      try {
-        // print('upload image start');
-        await supabase.storage.from('media2').update(
-              fullname,
-              _image2!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: true),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    } else {
-      try {
-        await supabase.storage.from('media2').upload(
-              fullname,
-              _image2!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: false),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    }
-  }
+  // Future<void> _uploadImage2() async {
+  //   bool isImage2Valid = await _checkImageValidity(media2);
+  //   if (isImage2Valid) {
+  //     try {
+  //       // print('upload image start');
+  //       await supabase.storage.from('media2').update(
+  //             fullname,
+  //             _image2!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: true),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   } else {
+  //     try {
+  //       await supabase.storage.from('media2').upload(
+  //             fullname,
+  //             _image2!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: false),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   }
+  // }
 
   // 07C - use case upload image3
 
-  Future<void> _uploadImage3() async {
-    bool isImage3Valid = await _checkImageValidity(media3);
-    if (isImage3Valid) {
-      try {
-        await supabase.storage.from('media3').update(
-              fullname,
-              _image3!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: true),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    } else {
-      try {
-        await supabase.storage.from('media3').upload(
-              fullname,
-              _image3!,
-              fileOptions:
-                  const FileOptions(cacheControl: '3600', upsert: false),
-            );
-        if (mounted) {}
-      } on PostgrestException catch (error) {
-        //
-      } catch (error) {
-        //
-      }
-    }
-  }
+  // Future<void> _uploadImage3() async {
+  //   bool isImage3Valid = await _checkImageValidity(media3);
+  //   if (isImage3Valid) {
+  //     try {
+  //       await supabase.storage.from('media3').update(
+  //             fullname,
+  //             _image3!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: true),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   } else {
+  //     try {
+  //       await supabase.storage.from('media3').upload(
+  //             fullname,
+  //             _image3!,
+  //             fileOptions:
+  //                 const FileOptions(cacheControl: '3600', upsert: false),
+  //           );
+  //       if (mounted) {}
+  //     } on PostgrestException catch (error) {
+  //       //
+  //     } catch (error) {
+  //       //
+  //     }
+  //   }
+  // }
 
   // 08 - use case create service provider profile
 
@@ -406,15 +406,15 @@ class _EditServiceProviderProfileState
     final messenger = ScaffoldMessenger.of(context);
 
     try {
-      if (_image1 != null) {
-        await _uploadImage1();
-      }
-      if (_image2 != null) {
-        await _uploadImage2();
-      }
-      if (_image3 != null) {
-        await _uploadImage3();
-      }
+      // if (_image1 != null) {
+      //   await _uploadImage1();
+      // }
+      // if (_image2 != null) {
+      //   await _uploadImage2();
+      // }
+      // if (_image3 != null) {
+      //   await _uploadImage3();
+      // }
 
       await _updateServiceProviderProfile();
       await _saveServiceProviderProfilelocally();
@@ -437,9 +437,9 @@ class _EditServiceProviderProfileState
 
   // variables
 
-  String media1 = '';
-  String media2 = '';
-  String media3 = '';
+  // String media1 = '';
+  // String media2 = '';
+  // String media3 = '';
 
   File? _image1;
   File? _image2;
@@ -451,11 +451,11 @@ class _EditServiceProviderProfileState
   String fblink = '';
   String weblink = '';
   String bio = '';
-  String experience = '';
+  // String experience = '';
 
   String availability = '';
 
-  String specialoffers = '';
+  // String specialoffers = '';
   String fullname = '';
   var loading = false;
   late final TextEditingController _instagramController =
@@ -534,78 +534,78 @@ class _EditServiceProviderProfileState
 
                   // edit media
 
-                  Text(
-                    'Edit your Media :',
-                    style: responsiveTextStyle(context, 20, Colors.black, null),
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        // image 1
-                        GestureDetector(
-                            onTap: () {
-                              _pickImage1();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image1 != null)
-                                  Image.file(
-                                    _image1!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  _buildImageWidget(media1),
-                              ],
-                            )),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.025),
-                        // image 2
-                        GestureDetector(
-                            onTap: () {
-                              _pickImage2();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image2 != null)
-                                  Image.file(
-                                    _image2!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  _buildImageWidget(media2),
-                              ],
-                            )),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.025),
-                        // image 3
-                        GestureDetector(
-                            onTap: () {
-                              _pickImage3();
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                if (_image3 != null)
-                                  Image.file(
-                                    _image3!,
-                                    height: 250,
-                                    width: 250,
-                                    fit: BoxFit.cover,
-                                  )
-                                else
-                                  _buildImageWidget(media3),
-                              ],
-                            )),
-                        SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.025),
-                      ],
-                    ),
-                  ),
+                  // Text(
+                  //   'Edit your Media :',
+                  //   style: responsiveTextStyle(context, 20, Colors.black, null),
+                  // ),
+                  // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   child: Row(
+                  //     children: [
+                  //       // image 1
+                  //       GestureDetector(
+                  //           onTap: () {
+                  //             _pickImage1();
+                  //           },
+                  //           child: Column(
+                  //             children: <Widget>[
+                  //               if (_image1 != null)
+                  //                 Image.file(
+                  //                   _image1!,
+                  //                   height: 250,
+                  //                   width: 250,
+                  //                   fit: BoxFit.cover,
+                  //                 )
+                  //               else
+                  //                 _buildImageWidget(media1),
+                  //             ],
+                  //           )),
+                  //       SizedBox(
+                  //           width: MediaQuery.sizeOf(context).width * 0.025),
+                  //       // image 2
+                  //       GestureDetector(
+                  //           onTap: () {
+                  //             _pickImage2();
+                  //           },
+                  //           child: Column(
+                  //             children: <Widget>[
+                  //               if (_image2 != null)
+                  //                 Image.file(
+                  //                   _image2!,
+                  //                   height: 250,
+                  //                   width: 250,
+                  //                   fit: BoxFit.cover,
+                  //                 )
+                  //               else
+                  //                 _buildImageWidget(media2),
+                  //             ],
+                  //           )),
+                  //       SizedBox(
+                  //           width: MediaQuery.sizeOf(context).width * 0.025),
+                  //       // image 3
+                  //       GestureDetector(
+                  //           onTap: () {
+                  //             _pickImage3();
+                  //           },
+                  //           child: Column(
+                  //             children: <Widget>[
+                  //               if (_image3 != null)
+                  //                 Image.file(
+                  //                   _image3!,
+                  //                   height: 250,
+                  //                   width: 250,
+                  //                   fit: BoxFit.cover,
+                  //                 )
+                  //               else
+                  //                 _buildImageWidget(media3),
+                  //             ],
+                  //           )),
+                  //       SizedBox(
+                  //           width: MediaQuery.sizeOf(context).width * 0.025),
+                  //     ],
+                  //   ),
+                  // ),
 
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
 

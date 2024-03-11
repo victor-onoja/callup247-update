@@ -289,33 +289,33 @@ class _VerificationScreenState extends State<VerificationScreen>
 
   Future<void> _saveServiceProviderProfilelocally() async {
     final serviceprovided = userResponse2['service_provided'];
-    final media1 = userResponse2['media_url1'];
-    final media2 = userResponse2['media_url2'];
-    final media3 = userResponse2['media_url3'];
+    // final media1 = userResponse2['media_url1'];
+    // final media2 = userResponse2['media_url2'];
+    // final media3 = userResponse2['media_url3'];
     final ig = userResponse2['ig_url'];
     final x = userResponse2['x_url'];
     final fb = userResponse2['fb_url'];
     final web = userResponse2['web_link'];
     final gmail = userResponse2['gmail_link'];
     final bio = userResponse2['bio'];
-    final experience = userResponse2['experience'];
+    // final experience = userResponse2['experience'];
     final availability = userResponse2['availability'];
-    final specialoffers = userResponse2['special_offers'];
+    // final specialoffers = userResponse2['special_offers'];
 
     final details = {
       'service_provided': serviceprovided,
-      'media_url1': media1,
-      'media_url2': media2,
-      'media_url3': media3,
+      // 'media_url1': media1,
+      // 'media_url2': media2,
+      // 'media_url3': media3,
       'ig_url': ig,
       'x_url': x,
       'fb_url': fb,
       'web_link': web,
       'gmail_link': gmail,
       'bio': bio,
-      'experience': experience,
+      // 'experience': experience,
       'availability': availability,
-      'special_offers': specialoffers,
+      // 'special_offers': specialoffers,
     };
 
     final jsonString = json.encode(details);
