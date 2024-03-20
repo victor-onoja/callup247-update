@@ -60,7 +60,7 @@ class _EditServiceProviderProfileState
       // final userMedia3 = serviceProviderMap['media_url3'];
 
       final useriglink = serviceProviderMap['ig_url'];
-      final userlinkedinlink = serviceProviderMap['linkedin_url'];
+      // final userlinkedinlink = serviceProviderMap['linkedin_url'];
       final userxlink = serviceProviderMap['x_url'];
       final userfblink = serviceProviderMap['fb_url'];
       final userweblink = serviceProviderMap['web_link'];
@@ -76,7 +76,7 @@ class _EditServiceProviderProfileState
         // media3 = userMedia3;
 
         iglink = useriglink;
-        linkedinlink = userlinkedinlink;
+        // linkedinlink = userlinkedinlink;
         xlink = userxlink;
         fblink = userfblink;
         weblink = userweblink;
